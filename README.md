@@ -1,2 +1,3 @@
-# pugr48
+# dine
 
+This is the webapp for dine
