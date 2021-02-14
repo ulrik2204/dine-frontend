@@ -1,26 +1,22 @@
 image: node:latest
 
 stages:
-  - build
+  - install
   - test
 
-build_react:
-  stage: build
+install_react:
+  stage: install
   script:
-    - echo "Building deploy package"
     - yarn install
-    - yarn build
-    - echo "Build successful"
   artifacts:
     expire_in: 1 hour
     paths:
-      - build
-      - node_modules/    ### This will make the modules available to other dependent jobs
+      - node_modules/
 
 
 test_react:
   stage: test
-  needs: [build_react]
+  needs: [install_react]
   script:
     - echo "Testing project"
     - yarn test -- --coverage --watchAll=false
