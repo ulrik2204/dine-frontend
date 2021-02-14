@@ -1,5 +1,11 @@
 import React from 'react';
+import DinnerInfo from '../../components/DinnerInfo/DinnerInfo';
+
 const DinnerPage: React.FunctionComponent = () => {
-  return <div>Here comes the Dinner page!</div>;
+  return (
+    <div>
+      <DinnerInfo />
+    </div>
+  );
 };
 export default DinnerPage;
