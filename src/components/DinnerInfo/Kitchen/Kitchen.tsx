@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 //This will state what kitchen the course belongs to.
 const Kitchen: React.FunctionComponent = () => {
+  const kitchen = useState('Italiensk');
   return (
     <div>
-      <h1>Eksempelrett</h1>
+      <h1>Kjøkken</h1>
+      <h3>{kitchen}</h3>
     </div>
   );
 };

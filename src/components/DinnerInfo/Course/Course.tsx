@@ -1,9 +1,14 @@
 import React from 'react';
 //This will be the name of the course
 const Course: React.FunctionComponent = () => {
+  const course = React.useState('Pasta med reker');
+
   return (
     <div>
-      <h1>Eksempelrett</h1>
+      {
+        //det under er en eksempelrett
+      }
+      <h1 className="Course_headline">{course}</h1>
     </div>
   );
 };
