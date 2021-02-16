@@ -1,4 +1,5 @@
 import React from 'react';
+
 //This will be the name of the course
 const Course: React.FunctionComponent = () => {
   const course = React.useState('Pasta med reker');
@@ -8,7 +9,7 @@ const Course: React.FunctionComponent = () => {
       {
         //det under er en eksempelrett
       }
-      <h1 className="Course_headline">{course}</h1>
+      <h1 className="courseHeadline">{course}</h1>
     </div>
   );
 };

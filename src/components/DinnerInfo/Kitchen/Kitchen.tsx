@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const Kitchen: React.FunctionComponent = () => {
   const kitchen = useState('Italiensk');
   return (
-    <div>
+    <div className="dinnerContainer">
       <h1>Kjøkken</h1>
       <h3>{kitchen}</h3>
     </div>

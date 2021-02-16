@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 
 //When the dinner event will take place.
 const Time: React.FunctionComponent = () => {
-  const [time] = useState('04.03.2021');
+  const [date] = useState('Fredag 22.feb');
+  const [time] = useState('18:20');
 
   return (
-    <div>
+    <div className="dinnerContainer">
       <h1>Tidspunkt</h1>
-      <h3>{time}</h3>
+      <div className="dinnerTimeDate">
+        <div>
+          <h3>{date}</h3>
+        </div>
+
+        <div>
+          <h3>{time}</h3>
+        </div>
+      </div>
     </div>
   );
 };
