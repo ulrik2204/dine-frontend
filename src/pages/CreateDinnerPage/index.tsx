@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 const sendForm = (course: string, kitchen: string, dateTime: string, location: string) => {
   console.log(course, kitchen, dateTime, location);
 };
-
 /**
  * The component page for creating a dinner element
  */
