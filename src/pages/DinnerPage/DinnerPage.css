@@ -1,62 +1,46 @@
 @font-face {
-    font-family: 'Roboto';
-    src: local('Roboto'), url(../../fonts/Roboto-Thin.ttf) format('truetype');
+  font-family: 'Roboto';
+  src: local('Roboto'), url(../../fonts/Roboto-Thin.ttf) format('truetype');
 }
 
-body{
-    background-color: #F0EFEB;
+body {
+  background-color: #f0efeb;
 }
-.dinnerPageContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto-Thin', sans-serif;
-}
-.dinnerPageInfo{
-    align-items: flex-start;
-    justify-content: left;
-    width: 100%;
+.dinnerPageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto-Thin', sans-serif;
 }
 
-.courseHeadline{
-    text-align: center;
-    color: #E85D04;
-    /*font-family: 'Roboto', sans-serif;*/
+.courseHeadline {
+  text-align: center;
+  color: #e85d04;
 
+  /*font-family: 'Roboto', sans-serif;*/
 }
 
-.dinnerTimeDate{
-    display: flex;
-    flex-direction: row;
-    /*-ms-flex-align: right;*/
-    justify-content: space-between;
-
+h1 {
+  color: #e85d04;
 }
 
-h1{
-    color: #E85D04;
+h3 {
+  color: black;
+}
+img {
+  width: 60%;
+  height: 300px;
+  object-fit: cover;
+  align-self: center;
 }
 
-.dinnerContainer{
-    border-bottom: solid #E85D04 2px;
-}
-
-h3{
-    color:black;
-    
-}
-img{
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-}
-
-#signUp{
-    background-color: #E85D04;
-    padding: 20px;
-    margin: 10px;
-    text-align: center;
-    border-radius: 5px;
-    border: none;
+#signUp {
+  background-color: #e85d04;
+  align-self: center;
+  padding: 20px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 5px;
+  border: none;
 }
