@@ -4,6 +4,7 @@ import Overview from './pages/Overview';
 import React from 'react';
 import Menu from './components/Menu';
 import DinnerPage from './pages/DinnerPage';
+import CreateDinnerPage from './pages/CreateDinnerPage';
 
 const App: React.FunctionComponent = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FunctionComponent = () => {
         <Switch>
           <Route exact path="/" component={Overview} />
           <Route exact path="/dinner" component={DinnerPage} />
+          <Route exact path="/createdinnerevent" component={CreateDinnerPage} />
         </Switch>
       </div>
     </Router>
