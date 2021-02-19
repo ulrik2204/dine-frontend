@@ -3,14 +3,25 @@ import { useCallback, useState } from 'react';
 import { Dinner } from '../util/types';
 
 /**
- * A hook retrieving the data from the backend
- * @return a variable the fetched data will be placed in, and a function to get the data
+ * A hook for retrieving the data from the backend
+ * @return An array of a variable the fetched data will be placed in,
+ * and a function to perform the GET request and place the data in
+ * the other returned variable.
+ *
+ * @remarks
+ * The first element of the array is the data variable, which is a Dinner object.
+ *
+ * The other element of the array is the returned function.
+ *
+ * It takes in
+ * @param urlPath The path of the url after https://localhost:8000
+ *
  */
 /* eslint-disable no-unused-vars */
 export const useGetFromAPI = (): [Dinner[] | undefined, (urlPath: string) => void] => {
   const [data, setData] = useState<Dinner[]>();
 
-  // The actual GET request for a URL
+  // The function to perform the GET request.
   const getDinnerData = useCallback(
     (urlPath: string) => {
       axios
@@ -26,17 +37,28 @@ export const useGetFromAPI = (): [Dinner[] | undefined, (urlPath: string) => voi
 };
 
 /**
- * A function for posting a Dinner to the API
- * @param urlPath The path of the url after http://localhost:8000
- * @param dinner The dinner object to post
- * @return Status code as a number, indicating if the request was successful
+ * A hook for posting a Dinner to the API
+ * @return An array of a status code as a number, indicating if the request was successful,
+ * and a function to perform the POST request and place the status code in the
+ * other returned variable.
+ *
+ * @remarks
+ * The first element of the array is the status variable, which is a number.
+ *
+ * The second element of the array is the returned function.
+ *
+ * It takes in
+ * @param urlPath The string path of the url after https://localhost:8000
+ * @param dinner The dinner object to POST to the API.
+ *
  */
 export const usePostToAPI = (): [number | undefined, (urlPath: string, dinner: Dinner) => void] => {
   const [status, setStatus] = useState<number>();
   const headers = {
     'Content-Type': 'application/json',
   };
-  // The actual post request
+
+  // The function to perform the POST request
   const postDinner = useCallback(
     (urlPath: string, dinner: Dinner): void => {
       axios
