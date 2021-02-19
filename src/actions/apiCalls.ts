@@ -1,26 +1,30 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Dinner } from '../util/types';
 
 /**
  * A hook retrieving the data from the backend
- * @param urlPath the path of the url after http://localhost:8000
- * @return a dinner object including all the parameters of Dinner
+ * @return a variable the fetched data will be placed in, and a function to get the data
  */
-export const useFetchFromAPI = (urlPath: string): Dinner[] => {
-  const [state, setState] = useState<Dinner[]>([{ id: 0, dish: '', cuisine: '', date: '', location: '', owner: '' }]);
+/* eslint-disable no-unused-vars */
+export const useFetchFromAPI = (): [Dinner[] | undefined, (urlPath: string) => void] => {
+  const [state, setState] = useState<Dinner[]>();
 
-  useEffect(() => {
-    // The actual GET request
-    axios
-      .get<Dinner[]>(urlPath)
-      // After the response is recieved, take that data and put it in a state
-      .then((res) => setState(res.data))
-      .catch((err) => console.log(err));
-  }, [urlPath, setState]);
+  // The actual GET request for a URL
+  const getDinner = useCallback(
+    (urlPath: string) => {
+      axios
+        .get<Dinner[]>(urlPath)
+        // After the response is recieved, take that data and put it in a state
+        .then((res) => setState(res.data))
+        .catch((err) => console.log(err));
+    },
+    [setState],
+  );
   // Return that state
-  return state;
+  return [state, getDinner];
 };
+/* eslint-enable no-unused-vars */
 
 /**
  * A function for posting a Dinner to the API
