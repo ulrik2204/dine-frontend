@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
 
-const sendForm = (course: string, kitchen: string, dateTime: string, location: string) => {
-  console.log(course, kitchen, dateTime, location);
-};
+const sendForm = (course: string, kitchen: string, dateTime: string, location: string) => {};
+
 /**
  * The component page for creating a dinner element
  */
@@ -15,10 +16,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [kitchen, setKitchen] = useState('Fransk');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-
-  useEffect(() => {
-    console.log(dateTime);
-  }, [dateTime, setDateTime]);
 
   return (
     <div>
