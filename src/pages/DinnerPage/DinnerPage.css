@@ -1,36 +1,36 @@
-/*@font-face {
-  font-family: 'Roboto';
-  src: local('Roboto'), url(../../fonts/Roboto-Thin.ttf) format('truetype');
-}*/
+/**
+ * Importing the font Roboto from google fonts
+ */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap');
 
-
+/**
+ * The style for the dinner evnet page
+ */
 body {
-  background-color: #F0EFEB;
+  background-color: #f0efeb;
 }
 .dinnerPageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
-h1,h3,img{
+h1,
+h3,
+img {
   width: 70%;
-  text-align: left
+  text-align: left;
 }
-.dinnerHeadline{
+.dinnerHeadline {
   text-align: center;
   margin: 10px;
   padding: 5px;
   font-size: 40px;
 }
-
 h1 {
   color: #e85d04;
   margin-bottom: 0%;
   font-family: 'Roboto', sans-serif;
 }
-
 h3 {
   color: black;
   border-bottom: #e85d04 solid 1px;
@@ -43,7 +43,6 @@ img {
   object-fit: cover;
   align-self: center;
 }
-
 #signUp {
   background-color: #e85d04;
   padding: 20px;
