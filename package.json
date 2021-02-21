@@ -17,17 +17,8 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
-<<<<<<< HEAD
     "typescript": "^4.1.2",
-<<<<<<< HEAD
     "web-vitals": "^1.1.0"
-=======
-    "web-vitals": "^1.0.1",
-    "yarn": "^1.22.10"
->>>>>>> 0a88788 (Put all components in page)
-=======
-    "typescript": "^4.1.2"
->>>>>>> cfb926a (delete changes from package.json and fix .gitignore)
   },
   "scripts": {
     "start": "react-scripts start",

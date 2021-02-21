@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
 
-const sendForm = (course: string, kitchen: string, dateTime: string, location: string) => {};
+const sendForm = (course: string, kitchen: string, dateTime: string, location: string) => {
+  console.log(course, dateTime, location, kitchen);
+};
 
 /**
  * The component page for creating a dinner element

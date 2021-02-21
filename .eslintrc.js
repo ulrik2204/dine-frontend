@@ -30,10 +30,7 @@ module.exports = {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
-<<<<<<< HEAD
     'tsdoc/syntax': 'warn',
-=======
->>>>>>> 0a88788 (Put all components in page)
   },
   env: {
     browser: true,
