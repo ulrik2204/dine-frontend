@@ -21,12 +21,14 @@ const CreateDinnerPage: React.FunctionComponent = () => {
     <div>
       <h1>Opprett Middag</h1>
       <h2>Rett</h2>
-      <input value={course} onChange={(event) => setCourse(event.target.value)}></input>
+      <TextField value={course} onChange={(event) => setCourse(event.target.value)}></TextField>
+      <br></br>
       <h2>Kjøkken</h2>
       <NativeSelect onChange={(e) => setKitchen(e.target.value)}>
         <option value={'Fransk'}>Fransk</option>
         <option value={'Italiensk'}>Italiensk</option>
       </NativeSelect>
+      <br></br>
       <h2>Tidspunkt</h2>
       <form noValidate>
         <TextField
@@ -40,7 +42,9 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           }}
         />
       </form>
-      <input value={location} onChange={(event) => setLocation(event.target.value)}></input>
+      <br></br>
+      <h2>Lokasjon</h2>
+      <TextField value={location} onChange={(event) => setLocation(event.target.value)}></TextField>
       <br></br>
       <br></br>
       <Button variant="contained" color="primary" onClick={() => sendForm(course, kitchen, dateTime, location)}>
