@@ -1,0 +1,17 @@
+image: node:latest
+
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - test
+
+test_react:
+  stage: test
+
+  script:
+    - yarn install
+    - echo "Testing project"
+    - yarn test -- --coverage --watchAll=false
+    - echo "Test successful"
