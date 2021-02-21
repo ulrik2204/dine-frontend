@@ -1,9 +1,11 @@
 import React from 'react';
 import './Menu.css';
+import { ReactComponent as ReactLogo } from '../../assets/dine_logo.svg';
+
 const Menu: React.FunctionComponent = () => {
   return (
     <div className="headerPage">
-      <img id="headerLogo" src="../../assets/dine_logo.svg" alt="logo" />
+      <ReactLogo id="headerLogo" />
       <h1 id="header">dine</h1>
     </div>
   );
