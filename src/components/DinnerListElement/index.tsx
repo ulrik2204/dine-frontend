@@ -1,12 +1,10 @@
 import './DinnnerListElement.css';
 import React, { useEffect } from 'react';
-//import Button from '@material-ui/core/Button';
-//import { Dinner } from '../../util/types';
-//import axios from 'axios';
 import { useGetFromAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { Avatar, ButtonBase, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import DinnerAvatar from '../../assets/italian.jpg';
+import { Redirect, useHistory } from 'react-router-dom';
 
 type DinnerLEProps = {
   dinner: Dinner;
@@ -23,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: '12px',
       backgroundColor: '#E85D04',
       color: 'white',
+      cursor: 'pointer',
     },
     image: {
       width: 128,
@@ -36,16 +35,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: DinnerLEProps) => {
-  const [data, getData] = useGetFromAPI();
-  useEffect(() => {
-    getData(`/api/${props.dinner.id}`);
-    console.log(data);
-  }, []);
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} onClick={() => history.push(`/dinner/${props.dinner.id}`)}>
         <Grid container spacing={2}>
           <Grid item>
             <Avatar className={classes.image}>

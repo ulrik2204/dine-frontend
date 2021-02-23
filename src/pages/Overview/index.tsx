@@ -27,7 +27,7 @@ const Overview: React.FunctionComponent = () => {
           const content: JSX.Element[] = [];
           if (data != undefined) {
             (data as Dinner[]).forEach((dinner: Dinner) => {
-              content.push(<DinnerListElement dinner={dinner} />);
+              content.push(<DinnerListElement dinner={dinner} key={dinner.id} />);
             });
           }
           return content;
