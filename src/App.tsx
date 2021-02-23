@@ -13,7 +13,11 @@ const App: React.FunctionComponent = () => {
         <Menu />
         <Switch>
           <Route exact path="/" component={Overview} />
-          <Route exact path="/dinner" component={DinnerPage} />
+          <Route
+            exact
+            path="/dinner/:dinnerID"
+            render={(props) => <DinnerPage dinnerID={props.match.params.dinnerID} />}
+          />
           <Route exact path="/createdinnerevent" component={CreateDinnerPage} />
         </Switch>
       </div>

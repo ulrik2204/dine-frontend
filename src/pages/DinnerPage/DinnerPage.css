@@ -6,17 +6,16 @@
 /**
  * The style for the dinner evnet page
  */
-body {
-}
 .dinnerPageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 5%;
 }
 .dinnerPageH1,
 .dinnerPageH3,
 #dinnerPageImage {
-  width: 70%;
+  width: 50%;
   text-align: left;
 }
 .dinnerPageHeadline {

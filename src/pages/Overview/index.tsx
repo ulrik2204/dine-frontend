@@ -4,6 +4,7 @@ import { useGetFromAPI } from '../../actions/apiCalls';
 import DinnerListElement from '../../components/DinnerListElement';
 import './Overview.css';
 import OverviewBackground from '../../assets/ingredients3.jpg';
+import { Dinner } from '../../util/types';
 const Overview: React.FunctionComponent = () => {
   const [data, getData] = useGetFromAPI();
 
@@ -25,7 +26,7 @@ const Overview: React.FunctionComponent = () => {
         {(() => {
           const content: JSX.Element[] = [];
           if (data != undefined) {
-            data.forEach((dinner) => {
+            (data as Dinner[]).forEach((dinner: Dinner) => {
               content.push(<DinnerListElement dinner={dinner} />);
             });
           }
