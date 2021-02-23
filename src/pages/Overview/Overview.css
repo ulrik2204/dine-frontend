@@ -1,0 +1,14 @@
+
+.dinnerElement{
+    background-color: #E85D04;
+    color: white;
+    width: 80%;
+    margin-left: 10%;
+
+}
+
+#overviewDiv{
+    width: 70%;
+    display: block;
+    margin-left: 15%;
+}
