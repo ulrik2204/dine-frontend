@@ -18,10 +18,12 @@ const useStyles = makeStyles((theme: Theme) =>
 const Menu: React.FunctionComponent = () => {
   const classes = useStyles();
   return (
-    <AppBar position="fixed" className={classes.appbar}>
-      <ReactLogo id="headerLogo" />
-      <h1 id="header">dine</h1>
-    </AppBar>
+    <div>
+      <AppBar position="fixed" className={classes.appbar}>
+        <ReactLogo id="headerLogo" />
+        <h1 id="header">dine</h1>
+      </AppBar>
+    </div>
   );
 };
 
