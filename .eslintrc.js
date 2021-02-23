@@ -37,4 +37,15 @@ module.exports = {
     amd: true,
     node: true,
   },
+  globals: {
+    React: true,
+    mount: true,
+    mountWithRouter: true,
+    shallow: true,
+    shallowWithRouter: true,
+    context: true,
+    expect: true,
+    jsdom: true,
+    JSX: true,
+  },
 };
