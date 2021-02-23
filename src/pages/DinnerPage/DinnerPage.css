@@ -7,7 +7,6 @@
  * The style for the dinner evnet page
  */
 body {
-  background-color: #f0efeb;
 }
 .dinnerPageContainer {
   display: flex;
@@ -30,14 +29,12 @@ body {
 .dinnerPageH1 {
   color: #e85d04;
   margin-bottom: 0%;
-  font-family: 'Roboto', sans-serif;
 }
 .dinnerPageH3 {
   color: black;
   border-bottom: #e85d04 solid 1px;
   margin-top: 1.5px;
   padding: 2px;
-  font-family: 'Roboto', sans-serif;
 }
 #dinnerPageImage {
   height: 300px;
