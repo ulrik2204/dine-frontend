@@ -33,6 +33,10 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
 
       <h1 className="dinnerPageH1">Tidspunkt</h1>
       <h3 className="dinnerPageH3">{dinner == undefined ? '' : new Date((dinner as Dinner).date).toLocaleString()}</h3>
+
+      <h1 className="dinnerPageH1">Sted</h1>
+      <h3 className="dinnerPageH3">{dinner == undefined ? '' : (dinner as Dinner).location}</h3>
+
       {/* 
       <button id="signUp" type="submit">
         Meld på
