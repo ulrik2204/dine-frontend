@@ -1,8 +1,7 @@
 import './DinnnerListElement.css';
-import React, { useEffect } from 'react';
-import { useGetFromAPI } from '../../actions/apiCalls';
+import React from 'react';
 import { Dinner } from '../../util/types';
-import { Avatar, ButtonBase, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
+import { Avatar, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import DinnerAvatar from '../../assets/italian.jpg';
 import { useHistory } from 'react-router-dom';
 

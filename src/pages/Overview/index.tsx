@@ -1,4 +1,4 @@
-import { Button, List, Paper } from '@material-ui/core';
+import { Button, List } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useGetFromAPI } from '../../actions/apiCalls';
 import DinnerListElement from '../../components/DinnerListElement';
@@ -19,7 +19,7 @@ const Overview: React.FunctionComponent = () => {
   useEffect(() => {
     getData('/api/');
   }, []);
-  
+
   return (
     <div
       id="overviewDiv"

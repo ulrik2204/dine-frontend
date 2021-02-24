@@ -1,10 +1,10 @@
 import React from 'react';
 import './Menu.css';
 import { ReactComponent as ReactLogo } from '../../assets/dine_logo.svg';
-import { AppBar, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { AppBar, createStyles, makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 // Styles with material ui
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     appbar: {
       background: '#370617',

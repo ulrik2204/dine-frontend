@@ -1,6 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
-  plugins: ['@typescript-eslint/eslint-plugin', 'eslint-plugin-tsdoc'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'eslint-plugin-tsdoc', 'only-warn'],
   parserOptions: {
     ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
@@ -31,9 +31,9 @@ module.exports = {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     'prettier/prettier': ['warn', { endOfLine: 'auto' }],
     'tsdoc/syntax': 'warn',
-    'no-unused-vars': 'warn',
-    'react/prop-types': 'warn',
-    'prettier/prettier': 'warn',
+    // 'no-unused-vars': 'warn',
+    // 'react/prop-types': 'warn',
+    // 'prettier/prettier': 'warn',
   },
   env: {
     browser: true,

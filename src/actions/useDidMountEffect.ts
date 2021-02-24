@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 /**
  * A hook like useEffect, except it does not activate on the first render
  * @param func The function useEffect should execute
