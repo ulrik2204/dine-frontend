@@ -6,6 +6,33 @@ import { usePostToAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
+import './CreateDinnerPage.css';
+import { createMuiTheme, createStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#e85d04',
+    },
+  },
+});
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    inputField: {
+      width: '80%',
+      marginLeft: '10%',
+    },
+    buttonField: {
+      width: '150px',
+      textAlign: 'center',
+    },
+    buttonDiv: {
+      width: '100%',
+      textAlign: 'center',
+    },
+  }),
+);
 
 /**
  * The component page for creating a dinner element
@@ -20,6 +47,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [status, post] = usePostToAPI();
   const [usedStatus, setUsedStatus] = useState<number>();
   const history = useHistory();
+  const classes = useStyles();
 
   // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback((dish: string, cuisine: string, date: string, location: string, owner: string) => {
@@ -60,45 +88,67 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   }, [usedStatus, setUsedStatus]);
 
   return (
-    <div>
-      <h1>Opprett Middag</h1>
-      <h2>Rett</h2>
-      <TextField value={course} onChange={(event) => setCourse(event.target.value)}></TextField>
-      <br></br>
-      <h2>Kjøkken</h2>
-      <NativeSelect onChange={(e) => setKitchen(e.target.value)}>
-        <option value={'Fransk'}>Fransk</option>
-        <option value={'Italiensk'}>Italiensk</option>
-        <option value={'Japansk'}>Japansk</option>
-        <option value={'Kinesisk'}>Kinesisk</option>
-        <option value={'Norsk'}>Norsk</option>
-      </NativeSelect>
-      <br></br>
-      <h2>Tidspunkt</h2>
-      <form noValidate>
+    <ThemeProvider theme={theme}>
+      <div className="createDinnerContainer">
+        <h1 className="createDinnerH1">Opprett Middag</h1>
+        <h2 className="createDinnerH2">Rett</h2>
         <TextField
-          onChange={(event) => setDateTime(event.target.value)}
-          id="datetime-local"
-          label="Next appointment"
-          type="datetime-local"
-          value={dateTime}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </form>
-      <br></br>
-      <h2>Lokasjon</h2>
-      <TextField value={location} onChange={(event) => setLocation(event.target.value)}></TextField>
-      <br></br>
-      <h2>Vert</h2>
-      <TextField value={owner} onChange={(event) => setOwner(event.target.value)}></TextField>
-      <br />
-      <br></br>
-      <Button variant="contained" color="primary" onClick={() => sendForm(course, kitchen, dateTime, location, owner)}>
-        Opprett
-      </Button>
-    </div>
+          className={classes.inputField}
+          value={course}
+          onChange={(event) => setCourse(event.target.value)}
+        ></TextField>
+        <br></br>
+        <h2 className="createDinnerH2">Kjøkken</h2>
+        <NativeSelect className={classes.inputField} onChange={(e) => setKitchen(e.target.value)}>
+          <option value={'Fransk'}>Fransk</option>
+          <option value={'Italiensk'}>Italiensk</option>
+          <option value={'Japansk'}>Japansk</option>
+          <option value={'Kinesisk'}>Kinesisk</option>
+          <option value={'Norsk'}>Norsk</option>
+        </NativeSelect>
+        <br></br>
+        <h2 className="createDinnerH2">Tidspunkt</h2>
+        <form noValidate>
+          <TextField
+            onChange={(event) => setDateTime(event.target.value)}
+            id="datetime-local"
+            label="Next appointment"
+            type="datetime-local"
+            value={dateTime}
+            className={classes.inputField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </form>
+        <br></br>
+        <h2 className="createDinnerH2">Lokasjon</h2>
+        <TextField
+          className={classes.inputField}
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+        ></TextField>
+        <br></br>
+        <h2 className="createDinnerH2">Vert</h2>
+        <TextField
+          className={classes.inputField}
+          value={owner}
+          onChange={(event) => setOwner(event.target.value)}
+        ></TextField>
+        <br />
+        <br></br>
+        <div className={classes.buttonDiv}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => sendForm(course, kitchen, dateTime, location, owner)}
+            className={classes.buttonField}
+          >
+            Opprett
+          </Button>
+        </div>
+      </div>
+    </ThemeProvider>
   );
 };
 export default CreateDinnerPage;
