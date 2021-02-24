@@ -37,7 +37,7 @@ const Overview: React.FunctionComponent = () => {
           </Button>
         </div>
 
-        <List style={{ overflow: 'auto', maxHeight: '68vh' }}>
+        <List style={{ overflow: 'auto', maxHeight: '75vh' }}>
           {(() => {
             const content: JSX.Element[] = [];
             if (data != undefined) {
