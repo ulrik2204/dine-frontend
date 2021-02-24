@@ -4,11 +4,14 @@ import { useGetFromAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { Avatar, ButtonBase, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import DinnerAvatar from '../../assets/italian.jpg';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
+// Props for the DinnerListelement
 type DinnerLEProps = {
   dinner: Dinner;
 };
+
+// Some styles for this component
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -34,6 +37,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+/**
+ * The component for displaying a preview of a Dinner event as a list element
+ * @param props The dinner element to diplay in the list element
+ */
 const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: DinnerLEProps) => {
   const classes = useStyles();
   const history = useHistory();
@@ -67,9 +74,9 @@ const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: Dinner
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                  {/*  Remove */}
-                </Typography>
+                {/* <Typography variant="body2" style={{ cursor: 'pointer' }}>
+                    Remove
+                </Typography> */}
               </Grid>
             </Grid>
           </Grid>

@@ -6,14 +6,20 @@ import './Overview.css';
 import OverviewBackground from '../../assets/ingredients3.jpg';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
+
+/**
+ * The overview page component
+ */
 const Overview: React.FunctionComponent = () => {
+  // API and history hooks
   const [data, getData] = useGetFromAPI();
   const history = useHistory();
 
+  // On render, get all data fromi the API
   useEffect(() => {
     getData('/api/');
-    console.log('Render');
   }, []);
+  
   return (
     <div
       id="overviewDiv"

@@ -4,14 +4,14 @@ import '../../fonts/Roboto-Thin.ttf';
 import { Dinner } from '../../util/types';
 import { useGetFromAPI } from '../../actions/apiCalls';
 
-/**
- * Component for dinner page.
- */
-
+// All you need to see a dinner page is the dinnerID
 type DinnerPageProps = {
   dinnerID: number;
 };
 
+/**
+ * Component for dinner page.
+ */
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
   const [dinner, getDinner] = useGetFromAPI();
   useEffect(() => {

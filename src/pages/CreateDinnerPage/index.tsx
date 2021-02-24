@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
@@ -18,9 +18,21 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [location, setLocation] = useState('');
   const [owner, setOwner] = useState('');
   const [status, post] = usePostToAPI();
+  const [usedStatus, setUsedStatus] = useState<number>();
   const history = useHistory();
 
+  // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback((dish: string, cuisine: string, date: string, location: string, owner: string) => {
+    // Check if the input is correct
+    if (dish === '' || cuisine === '' || location === '' || owner === '') {
+      alert('Du må skrive inn alle feltene');
+      return;
+    }
+    // Not checking date, as a datefield is used to secure this.
+    // If a request with a bad date is sent directly to the backend,
+    //the backend will handle that
+
+    // The sent dinner event
     const dinner: Dinner = {
       dish: dish,
       cuisine: cuisine,
@@ -31,10 +43,21 @@ const CreateDinnerPage: React.FunctionComponent = () => {
     post('/api/', dinner);
   }, []);
 
-  useDidMountEffect(() => {
-    alert('Middagen ble opprettet!');
-    history.push('/');
+  // Every time status is updated, update usedStatus
+  useEffect(() => {
+    setUsedStatus(status);
   }, [status]);
+
+  // When the status is recieved, move to the
+  useDidMountEffect(() => {
+    if (usedStatus == 201) {
+      alert('Middagen ble opprettet!');
+      history.push('/');
+    } else {
+      alert('Noe gikk galt, prøv på nytt');
+      setUsedStatus(0);
+    }
+  }, [usedStatus, setUsedStatus]);
 
   return (
     <div>

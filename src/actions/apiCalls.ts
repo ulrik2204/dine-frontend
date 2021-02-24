@@ -67,7 +67,10 @@ export const usePostToAPI = (): [number | undefined, (urlPath: string, dinner: D
         })
         // After a response is recieved, retrieve its status code
         .then((res) => setStatus(res.status))
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setStatus(400);
+        });
     },
     [setStatus],
   );
