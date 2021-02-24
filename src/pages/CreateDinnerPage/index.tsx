@@ -39,8 +39,8 @@ const useStyles = makeStyles(() =>
  */
 const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
-  const [course, setCourse] = useState('');
-  const [kitchen, setKitchen] = useState('Fransk');
+  const [dish, setDish] = useState('');
+  const [cuisine, setCuisine] = useState('Fransk');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
   const [owner, setOwner] = useState('');
@@ -94,17 +94,19 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <h2 className="createDinnerH2">Rett</h2>
         <TextField
           className={classes.inputField}
-          value={course}
-          onChange={(event) => setCourse(event.target.value)}
+          value={dish}
+          onChange={(event) => setDish(event.target.value)}
         ></TextField>
         <br></br>
         <h2 className="createDinnerH2">Kjøkken</h2>
-        <NativeSelect className={classes.inputField} onChange={(e) => setKitchen(e.target.value)}>
+        <NativeSelect className={classes.inputField} onChange={(e) => setCuisine(e.target.value)}>
+          <option value={'Andre'}>Andre</option>
           <option value={'Fransk'}>Fransk</option>
+          <option value={'Indisk'}>Indisk</option>
           <option value={'Italiensk'}>Italiensk</option>
           <option value={'Japansk'}>Japansk</option>
           <option value={'Kinesisk'}>Kinesisk</option>
-          <option value={'Norsk'}>Norsk</option>
+          <option value={'Meksikansk'}>Norsk</option>
         </NativeSelect>
         <br></br>
         <h2 className="createDinnerH2">Tidspunkt</h2>
@@ -122,7 +124,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           />
         </form>
         <br></br>
-        <h2 className="createDinnerH2">Lokasjon</h2>
+        <h2 className="createDinnerH2">Sted</h2>
         <TextField
           className={classes.inputField}
           value={location}
@@ -141,7 +143,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => sendForm(course, kitchen, dateTime, location, owner)}
+            onClick={() => sendForm(dish, cuisine, dateTime, location, owner)}
             className={classes.buttonField}
           >
             Opprett
