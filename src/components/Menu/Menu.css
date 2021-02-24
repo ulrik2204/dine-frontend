@@ -3,24 +3,16 @@
  */
  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap');
 
-.headerPage {
-    background-color: #370617;
-    color: #E85D04;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif;
-}
-
 #header{
     padding: 10px;
     margin: 5px;
-    font-size: 50px;
+    font-size: 40px;
+    cursor: pointer;
 }
 #headerLogo{
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     object-fit: fill;
     padding: 10px;
+    cursor: pointer;
 }

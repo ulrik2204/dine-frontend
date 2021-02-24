@@ -18,7 +18,7 @@ import { Dinner } from '../util/types';
  *
  */
 /* eslint-disable no-unused-vars */
-export const useGetFromAPI = (): [Dinner[] | undefined, (urlPath: string) => void] => {
+export const useGetFromAPI = (): [Dinner[] | Dinner | undefined, (urlPath: string) => void] => {
   const [data, setData] = useState<Dinner[]>();
 
   // The function to perform the GET request.
@@ -67,7 +67,10 @@ export const usePostToAPI = (): [number | undefined, (urlPath: string, dinner: D
         })
         // After a response is recieved, retrieve its status code
         .then((res) => setStatus(res.status))
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setStatus(400);
+        });
     },
     [setStatus],
   );
