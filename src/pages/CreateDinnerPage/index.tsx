@@ -106,7 +106,8 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <option value={'Italiensk'}>Italiensk</option>
           <option value={'Japansk'}>Japansk</option>
           <option value={'Kinesisk'}>Kinesisk</option>
-          <option value={'Meksikansk'}>Norsk</option>
+          <option value={'Meksikansk'}>Meksikansk</option>
+          <option value={'Norsk'}>Norsk</option>
         </NativeSelect>
         <br></br>
         <h2 className="createDinnerH2">Tidspunkt</h2>
