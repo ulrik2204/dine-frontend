@@ -26,6 +26,7 @@ const useStyles = makeStyles(() =>
     buttonField: {
       width: '150px',
       textAlign: 'center',
+      backgroundColor: '#e85d04',
     },
     buttonDiv: {
       width: '100%',
