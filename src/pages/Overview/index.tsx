@@ -2,10 +2,9 @@ import { Button, List } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useGetFromAPI } from '../../actions/apiCalls';
 import DinnerListElement from '../../components/DinnerListElement';
-import './Overview.css';
-import OverviewBackground from '../../assets/ingredients3.jpg';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
+import styles from './styles.module.css';
 
 /**
  * The overview page component
@@ -21,23 +20,16 @@ const Overview: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <div
-      id="overviewDiv"
-      style={{
-        backgroundImage: `url(${OverviewBackground})`,
-        backgroundRepeat: 'no-repeat',
-        height: '100%',
-      }}
-    >
+    <div className={styles.overviewDiv}>
       .
-      <div id="overviewContent">
-        <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
+      <div className={styles.overviewContent}>
+        <div className={styles.buttonDiv}>
           <Button variant="contained" onClick={() => history.push('/createdinnerevent')}>
             Lag middag
           </Button>
         </div>
 
-        <List style={{ overflow: 'auto', maxHeight: '75vh' }}>
+        <List className={styles.dinnerList}>
           {(() => {
             const content: JSX.Element[] = [];
             if (data != undefined) {
