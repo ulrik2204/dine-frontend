@@ -1,6 +1,13 @@
 /**
  * A file for some global types
  */
+/**
+ * Allergy type
+ */
+export type Allergy = {
+  id?: number;
+  allergy: string;
+};
 
 /**
  * The Dinner type defining what
@@ -13,4 +20,6 @@ export type Dinner = {
   date: string;
   location: string;
   owner: string;
+  description?: string;
+  allergies?: Allergy[];
 };
