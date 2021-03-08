@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
-import { usePostToAPI } from '../../actions/apiCalls';
+import { usePostDinnerToAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
@@ -15,14 +15,11 @@ import { StylesProvider } from '@material-ui/core/styles';
 const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('Fransk');
+  const [cuisine, setCuisine] = useState('');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
   const [owner, setOwner] = useState('');
-  // API call and status
-  const [status, post] = usePostToAPI();
-  const [usedStatus, setUsedStatus] = useState<number>();
-  // history
+  const [status, postDinner] = usePostDinnerToAPI();
   const history = useHistory();
 
   // The function for taking in the form input and sening it as a post request to the backend
@@ -44,24 +41,18 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       location: location,
       owner: owner,
     };
-    post('/api/', dinner);
+    postDinner(dinner);
   }, []);
-
-  // Every time status is updated, update usedStatus
-  useEffect(() => {
-    setUsedStatus(status);
-  }, [status]);
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
-    if (usedStatus == 201) {
+    if (status == 201) {
       alert('Middagen ble opprettet!');
       history.push('/');
     } else {
       alert('Noe gikk galt, prøv på nytt');
-      setUsedStatus(0);
     }
-  }, [usedStatus, setUsedStatus]);
+  }, [status]);
 
   return (
     <StylesProvider injectFirst>

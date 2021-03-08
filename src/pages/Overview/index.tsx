@@ -1,6 +1,6 @@
 import { Button, List } from '@material-ui/core';
 import React, { useEffect } from 'react';
-import { useGetFromAPI } from '../../actions/apiCalls';
+import { useGetAllDinnersFromAPI } from '../../actions/apiCalls';
 import DinnerListElement from '../../components/DinnerListElement';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
@@ -11,12 +11,12 @@ import styles from './styles.module.css';
  */
 const Overview: React.FunctionComponent = () => {
   // API and history hooks
-  const [data, getData] = useGetFromAPI();
+  const [dinnerList, getData] = useGetAllDinnersFromAPI();
   const history = useHistory();
 
   // On render, get all data fromi the API
   useEffect(() => {
-    getData('/api/');
+    getData();
   }, []);
 
   return (
@@ -32,8 +32,8 @@ const Overview: React.FunctionComponent = () => {
         <List className={styles.dinnerList}>
           {(() => {
             const content: JSX.Element[] = [];
-            if (data != undefined) {
-              (data as Dinner[]).forEach((dinner: Dinner) => {
+            if (dinnerList != undefined) {
+              dinnerList.forEach((dinner: Dinner) => {
                 content.push(<DinnerListElement dinner={dinner} key={dinner.id} />);
               });
             }

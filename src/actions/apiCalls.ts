@@ -10,7 +10,6 @@ const defaultDinner: Dinner = {
   date: '',
   location: '',
   owner: '',
-  description: '',
 };
 /**
  * A hook for retrieving the data from the backend
@@ -26,7 +25,7 @@ const defaultDinner: Dinner = {
  *
  */
 /* eslint-disable no-unused-vars */
-export const useGetFromAPI = (urlPath: string): [any, () => void] => {
+const useGetFromAPI = (urlPath: string): [any, () => void] => {
   const [data, setData] = useState();
 
   // The function to perform the GET request.
@@ -73,7 +72,7 @@ export const useGetAllDinnersFromAPI = (): [Dinner[], () => void] => {
  * request and place the result in the variable mentioned above.
  */
 export const useGetDinnerFromAPI = (id: number): [Dinner, () => void] => {
-  const [dinnerAPI, getDinner] = useGetFromAPI(`/api/dinner/${id}`);
+  const [dinnerAPI, getDinner] = useGetFromAPI(`/api/dinners/${id}/`);
   // The DinnerList cannot be undefined, thus it returns a default dinner
   const [dinner, setDinner] = useState(defaultDinner);
   // Update dinner when the dinnertAPI changes, but not on first render
@@ -101,7 +100,7 @@ export const useGetDinnerFromAPI = (id: number): [Dinner, () => void] => {
  * @param obj The object to POST to the API.
  *
  */
-export const usePostToAPI = (urlPath: string): [number, (obj: object) => void] => {
+const usePostToAPI = (urlPath: string): [number, (obj: object) => void] => {
   const [status, setStatus] = useState<number>(0);
   const headers = {
     'Content-Type': 'application/json',
@@ -142,7 +141,7 @@ export const usePostToAPI = (urlPath: string): [number, (obj: object) => void] =
  * @param dinner The dinner object to POST to the API.
  */
 export const usePostDinnerToAPI = (): [number, (dinner: Dinner) => void] => {
-  const [status, postDinner] = usePostToAPI('/api/dinners');
+  const [status, postDinner] = usePostToAPI('/api/dinners/');
   return [status, postDinner];
 };
 /* eslint-enable no-unused-vars */
