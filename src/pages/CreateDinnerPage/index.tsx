@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+import { Description } from '@material-ui/icons';
 
 /**
  * The component page for creating a dinner element
@@ -20,6 +21,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [location, setLocation] = useState('');
   const [owner, setOwner] = useState('');
   const [status, postDinner] = usePostDinnerToAPI();
+  const [description, setDescription] = useState('');
   const history = useHistory();
 
   // The function for taking in the form input and sening it as a post request to the backend
@@ -40,6 +42,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       date: date,
       location: location,
       owner: owner,
+      description: description,
     };
     postDinner(dinner);
   }, []);
@@ -107,6 +110,12 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         ></TextField>
         <br />
         <br></br>
+        <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
+        <TextField
+          className={styles.inputField}
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+        ></TextField>
         <div className={styles.buttonDiv}>
           <Button
             variant="contained"

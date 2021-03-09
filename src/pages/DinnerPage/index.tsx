@@ -39,6 +39,11 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
       <h1 className={styles.dinnerPageH1}>Sted</h1>
       <h3 className={styles.dinnerPageH3}>{dinner == undefined ? '' : (dinner as Dinner).location}</h3>
 
+      <h1 className={styles.dinnerPageH1}>Allergi</h1>
+      <h3 className={styles.dinnerPageH3}>{dinner == undefined ? '' : (dinner as Dinner).allergies}</h3>
+
+      <h1 className={styles.dinnerPageH1}>Beskrivelse</h1>
+      <h3 className={styles.dinnerPageH3}>{dinner == undefined ? '' : (dinner as Dinner).description}</h3>
       {/* 
       <button className={classes.signUp}>
         Meld på
