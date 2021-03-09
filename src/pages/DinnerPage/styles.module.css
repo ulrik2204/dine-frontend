@@ -1,0 +1,49 @@
+
+.dinnerPageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px
+}
+
+.dinnerPageHeadline {
+    text-align: center;
+    padding: 5px;
+    color: #e85d04;
+}
+
+.dinnerPageH1 {
+    color: #e85d04;
+    margin-bottom: 0%;
+    width: 40%;
+    text-align: left;
+}
+
+.dinnerPageH3 {
+    color: black;
+    border-bottom: #e85d04 solid 1px;
+    margin-top: 1.5px;
+    padding: 2px;
+    width: 40%;
+    text-align: left;
+}
+
+.dinnerPageImage {
+    height: 250px;
+    object-fit: cover;
+    align-self: center;
+    width: 40%;
+    text-align: left;
+}
+
+.signUp {
+    background-color: #e85d04;
+    padding: 20px;
+    margin: 15px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    width: 20%;
+    color: white;
+    font-size: 18px;
+}

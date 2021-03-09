@@ -1,0 +1,27 @@
+.dinnerElement{
+    width: 80%;
+}   
+
+.root {
+    flex-grow: 1,
+}
+
+.paper {
+    padding: 20px;
+    margin: auto;
+    max-width: 500px;
+    margin-bottom: 12px;
+    background-color: #E85D04;
+    color: white;
+    cursor: pointer;
+}
+
+.image {
+    width: 128px;
+    height: 128px;
+}
+
+.img{
+    margin: auto;
+    display: block;
+}

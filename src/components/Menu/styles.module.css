@@ -1,0 +1,24 @@
+.header{
+    padding: 10px;
+    margin: 5px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.headerLogo{
+    width: 60px;
+    height: 60px;
+    object-fit: fill;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.appbar {
+    background: #370617;
+    color: #E85D04;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif;
+}

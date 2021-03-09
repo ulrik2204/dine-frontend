@@ -1,0 +1,40 @@
+.inputField {
+    width: 80%;
+    margin-left: 10%;
+}
+
+.buttonField {
+    width: 150px;
+    text-align: center;
+    background-color: #e85d04;
+}
+
+.buttonDiv {
+    width: 100%;
+    text-align: center;
+}
+
+.createDinnerContainer {
+    flex-direction: column;
+    align-items: left;
+    margin-left: 30%;
+    width: 40%;
+    margin-top: 100px;
+}
+
+.createDinnerH1 {
+    text-align: center;
+    color: #e85d04;
+    width: 80%;
+    margin-left: 10%;
+    color: #e85d04;
+}
+
+.createDinnerH2 {
+    margin-bottom: 0%;
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+    width: 80%;
+    margin-left: 10%;
+    color: #e85d04;
+}
