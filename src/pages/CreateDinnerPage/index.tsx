@@ -6,7 +6,6 @@ import { usePostToAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
-// import useCreateDinnerPageStyles from './stylesCreateDinnerPage';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 
@@ -23,7 +22,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   // API call and status
   const [status, post] = usePostToAPI();
   const [usedStatus, setUsedStatus] = useState<number>();
-  // history and css
+  // history
   const history = useHistory();
 
   // The function for taking in the form input and sening it as a post request to the backend

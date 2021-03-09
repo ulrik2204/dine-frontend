@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReactComponent as ReactLogo } from '../../assets/dine_logo.svg';
-import { AppBar, createStyles, makeStyles } from '@material-ui/core';
+import { AppBar } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';

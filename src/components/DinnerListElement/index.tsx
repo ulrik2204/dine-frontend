@@ -1,7 +1,7 @@
 // import './DinnnerListElement.css';
 import React from 'react';
 import { Dinner } from '../../util/types';
-import { Avatar, createStyles, Grid, Paper, Theme, Typography } from '@material-ui/core';
+import { Avatar, Grid, Paper, Typography } from '@material-ui/core';
 import DinnerAvatar from '../../assets/italian.jpg';
 import { useHistory } from 'react-router-dom';
 import styles from './styles.module.css';
@@ -17,7 +17,6 @@ type DinnerLEProps = {
  * @param props The dinner element to diplay in the list element
  */
 const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: DinnerLEProps) => {
-  // const styles = useStyles();
   const history = useHistory();
 
   return (
