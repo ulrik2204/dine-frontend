@@ -6,7 +6,7 @@
 .buttonField {
     width: 150px;
     text-align: center;
-    background-color: #e85d04;
+    background-color: #e85d04!important;
 }
 
 .buttonDiv {
