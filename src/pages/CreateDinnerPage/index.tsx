@@ -8,10 +8,13 @@ import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+<<<<<<< HEAD
 import { defaultDinner } from '../../util/constants';
 import Select from '@material-ui/core/Select';
 import { Checkbox, FormControl, Input, ListItemText, MenuItem } from '@material-ui/core';
 import { toast } from 'react-toastify';
+=======
+>>>>>>> cd2b066 (Fix tests)
 
 /**
  * The component page for creating a dinner element
@@ -131,6 +134,17 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setLocation(event.target.value)}
         ></TextField>
         <br></br>
+<<<<<<< HEAD
+=======
+        <h2 className={styles.createDinnerH2}>Vert</h2>
+        <TextField
+          inputProps={{ 'data-testid': 'ownerInput' }}
+          className={styles.inputField}
+          value={owner}
+          onChange={(event) => setOwner(event.target.value)}
+        ></TextField>
+        <br />
+>>>>>>> cd2b066 (Fix tests)
         <br></br>
         <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
         <TextField
