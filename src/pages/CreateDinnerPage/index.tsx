@@ -165,6 +165,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
         <div className={styles.buttonDiv}>
           <Button
+            data-testid="sendKnapp"
             variant="contained"
             color="primary"
             onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
