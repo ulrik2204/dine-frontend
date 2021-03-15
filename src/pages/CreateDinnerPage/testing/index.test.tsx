@@ -3,83 +3,101 @@ import { act } from 'react-dom/test-utils';
 import { render, unmountComponentAtNode } from 'react-dom';
 
 import CreateDinnerPage from '../index';
+import { fireEvent, getByTestId } from '@testing-library/dom';
 
 let container: any = null;
 beforeEach(() => {
   // setup a DOM element as a render target
   container = document.createElement('div');
   document.body.appendChild(container);
+  act(() => {
+    render(<CreateDinnerPage />, container);
+    const dishInput = getByTestId(container, 'dishInput');
+    const locationInput = getByTestId(container, 'locationInput');
+    const ownerInput = getByTestId(container, 'ownerInput');
+    const descriptionInput = getByTestId(container, 'descriptionInput');
+    const dateTimeInput = getByTestId(container, 'dateTimeInput');
+    fireEvent.change(dishInput, { target: { value: 'abc' } });
+    fireEvent.change(locationInput, { target: { value: 'abc' } });
+    fireEvent.change(ownerInput, { target: { value: 'abc' } });
+    fireEvent.change(descriptionInput, { target: { value: 'abc' } });
+    fireEvent.change(dateTimeInput, { target: { value: 'abc' } });
+  });
 });
-
 afterEach(() => {
   // cleanup on exiting
+
   unmountComponentAtNode(container);
   container.remove();
   container = null;
 });
 
-it('Error if cusine empty', () => {
+it('Error if dish empty', () => {
   act(() => {
-    render(<CreateDinnerPage />, container);
-    container.CreateDinnerPage.setCuisine('');
+    const input = getByTestId(container, 'dishInput');
+    fireEvent.change(input, { target: { value: '' } });
   });
   try {
-    container.CreateDinnerPage.sendKnapp.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    throw new Error('No error when cusine empty');
+    act(() => {
+      const button = getByTestId(container, 'sendKnapp');
+      fireEvent.click(button);
+      throw new Error('No error when dish empty');
+    });
   } catch {}
 });
 
 it('Error if location empty', () => {
   act(() => {
-    render(<CreateDinnerPage />, container);
-    container.CreateDinnerPage.setLocation('');
+    const input = getByTestId(container, 'locationInput');
+    fireEvent.change(input, { target: { value: '' } });
   });
   try {
-    container.CreateDinnerPage.sendKnapp.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    throw new Error('No error when location empty');
+    act(() => {
+      const button = getByTestId(container, 'sendKnapp');
+      fireEvent.click(button);
+      throw new Error('No error when location empty');
+    });
   } catch {}
 });
 
-it('Error if dish empty', () => {
+it('Error if owner empty', () => {
   act(() => {
-    render(<CreateDinnerPage />, container);
-    container.CreateDinnerPage.setDish('');
+    const input = getByTestId(container, 'ownerInput');
+    fireEvent.change(input, { target: { value: '' } });
   });
   try {
-    container.CreateDinnerPage.sendKnapp.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    throw new Error('No error when dish empty');
-  } catch {}
-});
-
-it('Error if dish empty', () => {
-  act(() => {
-    render(<CreateDinnerPage />, container);
-    container.CreateDinnerPage.setDish('');
-  });
-  try {
-    container.CreateDinnerPage.sendKnapp.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    throw new Error('No error when dish empty');
+    act(() => {
+      const button = getByTestId(container, 'sendKnapp');
+      fireEvent.click(button);
+      throw new Error('No error when owner empty');
+    });
   } catch {}
 });
 
 it('Error if description empty', () => {
   act(() => {
-    render(<CreateDinnerPage />, container);
-    container.CreateDinnerPage.setDescription('');
+    const input = getByTestId(container, 'descriptionInput');
+    fireEvent.change(input, { target: { value: '' } });
   });
   try {
-    container.CreateDinnerPage.sendKnapp.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    throw new Error('No error when description empty');
+    act(() => {
+      const button = getByTestId(container, 'sendKnapp');
+      fireEvent.click(button);
+      throw new Error('No error when description empty');
+    });
   } catch {}
 });
 
-it('Error if DateTime empty', () => {
+it('Error if dateTime empty', () => {
   act(() => {
-    render(<CreateDinnerPage />, container);
-    container.CreateDinnerPage.setDateTime(new Date().toISOString());
+    const input = getByTestId(container, 'dateTimeInput');
+    fireEvent.change(input, { target: { value: '' } });
   });
   try {
-    container.CreateDinnerPage.sendKnapp.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    throw new Error('No error when DateTime empty');
+    act(() => {
+      const button = getByTestId(container, 'sendKnapp');
+      fireEvent.click(button);
+      throw new Error('No error when dateTime empty');
+    });
   } catch {}
 });
