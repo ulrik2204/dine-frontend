@@ -7,9 +7,9 @@ import useDidMountEffect from './useDidMountEffect';
 const defaultDinner: Dinner = {
   dish: '',
   cuisine: '',
-  date: '',
+  date: '2021-03-15',
   location: '',
-  owner: '',
+  owner: 1,
 };
 /**
  * A hook for retrieving the data from the backend
