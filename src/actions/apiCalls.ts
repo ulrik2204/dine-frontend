@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
-import { Allergy, Dinner } from '../util/types';
+import { useContext, useEffect, useState } from 'react';
+import { Allergy, Dinner, User, RegistrationUser } from '../util/types';
+import UserContext from '../util/UserContext';
 import useDidMountEffect from './useDidMountEffect';
 
 // A default, emtpy dinner object
-const defaultDinner: Dinner = {
+export const defaultDinner: Dinner = {
   dish: '',
   cuisine: '',
   date: '2021-03-15',
@@ -13,8 +14,16 @@ const defaultDinner: Dinner = {
 };
 
 // A default, empty Allergy element
-const defaultAllergy: Allergy = {
+export const defaultAllergy: Allergy = {
   allergy: '',
+};
+
+// An empty, default User object
+export const defaultUser: User = {
+  username: '',
+  first_name: '',
+  last_name: '',
+  address: '',
 };
 
 /**
@@ -24,11 +33,15 @@ const defaultAllergy: Allergy = {
  */
 const useGetFromAPI = (urlPath: string): any => {
   const [data, setData] = useState();
-
+  const { userToken } = useContext(UserContext);
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: 'Token ' + userToken,
+  };
   // The function to perform the GET request.
   useEffect(() => {
     axios
-      .get(urlPath)
+      .get(urlPath, { headers: headers })
       // After the response is recieved, take that data and put it in a state
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
@@ -54,29 +67,28 @@ const useGetFromAPI = (urlPath: string): any => {
  * @param obj The object to POST to the API.
  *
  */
-const usePostToAPI = (urlPath: string): [number, (obj: object) => void] => {
+const usePostToAPI = (urlPath: string, obj: object): number => {
   const [status, setStatus] = useState<number>(0);
+  const { userToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
+    Authorization: 'Token ' + userToken,
   };
 
-  // The function to perform the POST request
-  const postObj = useCallback(
-    (obj: object): void => {
-      axios
-        .post(urlPath, JSON.stringify(obj), {
-          headers: headers,
-        })
-        // After a response is recieved, retrieve its status code
-        .then((res) => setStatus(res.status))
-        .catch((err) => {
-          console.log(err);
-          setStatus(400);
-        });
-    },
-    [setStatus],
-  );
-  return [status, postObj];
+  // The post request is not performed at hook declaration, but after the value is changed
+  useDidMountEffect(() => {
+    axios
+      .post(urlPath, JSON.stringify(obj), {
+        headers: headers,
+      })
+      // After a response is recieved, retrieve its status code
+      .then((res) => setStatus(res.status))
+      .catch((err) => {
+        console.log(err);
+        setStatus(400);
+      });
+  }, [setStatus, urlPath, obj]);
+  return status;
 };
 
 /**
@@ -127,9 +139,8 @@ export const useGetDinnerFromAPI = (id: number): Dinner => {
  * It takes in
  * @param dinner The dinner object to POST to the API.
  */
-export const usePostDinnerToAPI = (): [number, (dinner: Dinner) => void] => {
-  const [status, postDinner] = usePostToAPI('/api/dinners/');
-  return [status, postDinner];
+export const usePostDinnerToAPI = (dinner: Dinner): number => {
+  return usePostToAPI('/api/dinners/', dinner);
 };
 
 /**
@@ -158,4 +169,84 @@ export const useGetAllergyFromAPI = (allergyID: number): Allergy => {
     setAllergy(allergyAPI);
   }, [allergyAPI]);
   return allergy as Allergy;
+};
+
+/**
+ * Hook t o get all users from API
+ * @return All users in the API (not including password)
+ */
+export const useGetAllUsersFromAPI = (): User[] => {
+  const usersAPI = useGetFromAPI('/api/users/');
+  const [users, setUsers] = useState([defaultUser]);
+
+  useDidMountEffect(() => {
+    setUsers(usersAPI);
+  }, [usersAPI]);
+  return users as User[];
+};
+/**
+ * Hook to get the data for a single user from the API
+ * @param userID The  id of the use to get
+ * @returns A user object for the user
+ */
+export const useGetUserFromAPI = (userID: number): User => {
+  const userAPI = useGetFromAPI(`/api/users/${userID}/`);
+  const [user, setUser] = useState(defaultUser);
+
+  useDidMountEffect(() => {
+    setUser(userAPI);
+  }, [userAPI]);
+  return user as User;
+};
+
+/**
+ * A hook register a user to the API
+ * @param user The user object to post
+ * @returns
+ */
+export const useRegisterUser = (user: RegistrationUser): number => {
+  return usePostToAPI('/api/users/register/', user);
+};
+
+/**
+ * A hook to login a user with a username and password. Setting the userToken as well
+ * @param username The username to login with
+ * @param password The password to login with
+ * @returns A status code that indicates the result of the request
+ */
+export const useLoginUser = (username: string, password: string): number => {
+  const [status, setStatus] = useState<number>(0);
+  const [token, setToken] = useState<string>('');
+  const { setUserToken } = useContext(UserContext);
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  const credentials = { username: username, password: password };
+
+  // The post request is not performed at hook declaration, but after the value is changed
+  useEffect(() => {
+    axios
+      .post('/api/users/login/', JSON.stringify(credentials), {
+        headers: headers,
+      })
+      // After a response is recieved, retrieve its status code
+      .then((res) => {
+        setStatus(res.status);
+        // Get the token from the result if the login was successful
+        setToken(res.data.token);
+      })
+      .catch((err) => {
+        console.log(err);
+        setStatus(400);
+      });
+    if (token != '') {
+      // Set the userToken - and we have a successful login
+      setUserToken(token);
+    } else {
+      // Else, it is a bad request, this should aldready have been logged
+      setStatus(400);
+    }
+  }, [setStatus, setToken]);
+
+  return status;
 };

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
-import { usePostDinnerToAPI } from '../../actions/apiCalls';
+import { defaultDinner, usePostDinnerToAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
@@ -19,8 +19,9 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  const [status, postDinner] = usePostDinnerToAPI();
   const [description, setDescription] = useState('');
+  const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
+  const status = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
 
   // The function for taking in the form input and sening it as a post request to the backend
@@ -42,9 +43,8 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         date: date,
         location: location,
         owner: owner,
-        description: description,
       };
-      postDinner(dinner);
+      setDinnerState(dinner);
     },
     [],
   );
