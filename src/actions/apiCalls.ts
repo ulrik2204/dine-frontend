@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
-import { Dinner } from '../util/types';
+import { Allergy, Dinner } from '../util/types';
 import useDidMountEffect from './useDidMountEffect';
 
 // A default, emtpy dinner object
@@ -11,6 +11,12 @@ const defaultDinner: Dinner = {
   location: '',
   owner: 1,
 };
+
+// A default, empty Allergy element
+const defaultAllergy: Allergy = {
+  allergy: '',
+};
+
 /**
  * A hook for retrieving the data from the backend
  * @param urlPath The path of the url to get from after https://localhost:8000
@@ -38,6 +44,48 @@ const useGetFromAPI = (urlPath: string): [any, () => void] => {
   }, [setData]);
   // Return that state
   return [data, getData];
+};
+
+/**
+ * A hook for posting a Dinner to the API
+ * @param urlPath The string path to post to of the url after https://localhost:8000
+ * @return An array of a status code as a number, indicating if the request was successful,
+ * and a function to perform the POST request and place the status code in the
+ * other returned variable.
+ *
+ * @remarks
+ * The first element of the array is the status variable, which is a number.
+ * The status is only valid if it is not 0.
+ *
+ * The second element of the array is the returned function.
+ *
+ * It takes in
+ * @param obj The object to POST to the API.
+ *
+ */
+const usePostToAPI = (urlPath: string): [number, (obj: object) => void] => {
+  const [status, setStatus] = useState<number>(0);
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  // The function to perform the POST request
+  const postObj = useCallback(
+    (obj: object): void => {
+      axios
+        .post(urlPath, JSON.stringify(obj), {
+          headers: headers,
+        })
+        // After a response is recieved, retrieve its status code
+        .then((res) => setStatus(res.status))
+        .catch((err) => {
+          console.log(err);
+          setStatus(400);
+        });
+    },
+    [setStatus],
+  );
+  return [status, postObj];
 };
 
 /**
@@ -84,48 +132,6 @@ export const useGetDinnerFromAPI = (id: number): [Dinner, () => void] => {
 };
 
 /**
- * A hook for posting a Dinner to the API
- * @param urlPath The string path to post to of the url after https://localhost:8000
- * @return An array of a status code as a number, indicating if the request was successful,
- * and a function to perform the POST request and place the status code in the
- * other returned variable.
- *
- * @remarks
- * The first element of the array is the status variable, which is a number.
- * The status is only valid if it is not 0.
- *
- * The second element of the array is the returned function.
- *
- * It takes in
- * @param obj The object to POST to the API.
- *
- */
-const usePostToAPI = (urlPath: string): [number, (obj: object) => void] => {
-  const [status, setStatus] = useState<number>(0);
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-
-  // The function to perform the POST request
-  const postObj = useCallback(
-    (obj: object): void => {
-      axios
-        .post(urlPath, JSON.stringify(obj), {
-          headers: headers,
-        })
-        // After a response is recieved, retrieve its status code
-        .then((res) => setStatus(res.status))
-        .catch((err) => {
-          console.log(err);
-          setStatus(400);
-        });
-    },
-    [setStatus],
-  );
-  return [status, postObj];
-};
-
-/**
  * A post request to post a dinner to the API
  * @return An array of a status code as a number, indicating if the request was successful,
  * and a function to perform the POST request and place the status code in the
@@ -144,4 +150,40 @@ export const usePostDinnerToAPI = (): [number, (dinner: Dinner) => void] => {
   const [status, postDinner] = usePostToAPI('/api/dinners/');
   return [status, postDinner];
 };
+
+export const useSignUpForDinner = (dinnerID: number) => {
+
+};
+
+/**
+ * A GET request to fetch all the allergies registered in the API
+ * @return An array of the array of allergies from the API (by default a single emtpy allergy),
+ * and a function to perform the GET request and put the result in the aformntioned variable
+ */
+export const useGetAllAllergiesFromAPI = (): [Allergy[], () => void] => {
+  const [allergiesAPI, getAllergiesAPI] = useGetFromAPI('/api/allergies/');
+  const [allergies, setAllergies] = useState([defaultAllergy]);
+
+  useDidMountEffect(() => {
+    setAllergies(allergiesAPI);
+  }, [allergiesAPI]);
+  return [allergies as Allergy[], getAllergiesAPI];
+};
+
+/**
+ * A GET request to fetch one allergy by their ID
+ * @return An array consisting of: an allergy (default en emtpy allergy) and a function to get the allergy by the id
+ */
+export const useGetAllergyFromAPI = (allergyID: number): [Allergy, () => void] => {
+  const [allergyAPI, getAllergyAPI] = useGetFromAPI(`/api/allergies/${allergyID}/`);
+  const [allergy, setAllergy] = useState(defaultAllergy);
+
+  useDidMountEffect(() => {
+    setAllergy(allergyAPI);
+  }, [allergyAPI]);
+  return [allergy as Allergy, getAllergyAPI];
+};
+
+
+
 /* eslint-enable no-unused-vars */
