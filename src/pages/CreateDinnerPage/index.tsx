@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+import { Description } from '@material-ui/icons';
 
 /**
  * The component page for creating a dinner element
@@ -20,29 +21,34 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [location, setLocation] = useState('');
   const [owner, setOwner] = useState('');
   const [status, postDinner] = usePostDinnerToAPI();
+  const [description, setDescription] = useState('');
   const history = useHistory();
 
   // The function for taking in the form input and sening it as a post request to the backend
-  const sendForm = useCallback((dish: string, cuisine: string, date: string, location: string, owner: string) => {
-    // Check if the input is correct
-    if (dish === '' || cuisine === '' || location === '' || owner === '') {
-      alert('Du må skrive inn alle feltene');
-      return;
-    }
-    // Not checking date, as a datefield is used to secure this.
-    // If a request with a bad date is sent directly to the backend,
-    //the backend will handle that
+  const sendForm = useCallback(
+    (dish: string, cuisine: string, date: string, location: string, owner: string, description: string) => {
+      // Check if the input is correct
+      if (dish === '' || cuisine === '' || location === '' || owner === '') {
+        alert('Du må skrive inn alle feltene');
+        return;
+      }
+      // Not checking date, as a datefield is used to secure this.
+      // If a request with a bad date is sent directly to the backend,
+      //the backend will handle that
 
-    // The sent dinner event
-    const dinner: Dinner = {
-      dish: dish,
-      cuisine: cuisine,
-      date: date,
-      location: location,
-      owner: owner,
-    };
-    postDinner(dinner);
-  }, []);
+      // The sent dinner event
+      const dinner: Dinner = {
+        dish: dish,
+        cuisine: cuisine,
+        date: date,
+        location: location,
+        owner: owner,
+        description: description,
+      };
+      postDinner(dinner);
+    },
+    [],
+  );
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
@@ -107,11 +113,17 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         ></TextField>
         <br />
         <br></br>
+        <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
+        <TextField
+          className={styles.inputField}
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+        ></TextField>
         <div className={styles.buttonDiv}>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => sendForm(dish, cuisine, dateTime, location, owner)}
+            onClick={() => sendForm(dish, cuisine, dateTime, location, owner, description)}
             className={styles.buttonField}
           >
             Opprett
