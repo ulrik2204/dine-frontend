@@ -89,6 +89,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <h1 className={'title'}>Opprett Middag</h1>
         <h2 className={styles.createDinnerH2}>Rett</h2>
         <TextField
+          inputProps={{ 'data-testid': 'dishInput' }}
           className={styles.inputField}
           value={dish}
           onChange={(event) => setDish(event.target.value)}
@@ -110,6 +111,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <form noValidate>
           <TextField
             onChange={(event) => setDateTime(event.target.value)}
+            inputProps={{ 'data-testid': 'dateTimeInput' }}
             id="datetime-local"
             label="Next appointment"
             type="datetime-local"
@@ -123,14 +125,27 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <br></br>
         <h2 className={styles.createDinnerH2}>Sted</h2>
         <TextField
+          inputProps={{ 'data-testid': 'locationInput' }}
           className={styles.inputField}
           value={location}
           onChange={(event) => setLocation(event.target.value)}
         ></TextField>
         <br></br>
+<<<<<<< HEAD
+=======
+        <h2 className={styles.createDinnerH2}>Vert</h2>
+        <TextField
+          inputProps={{ 'data-testid': 'ownerInput' }}
+          className={styles.inputField}
+          value={owner}
+          onChange={(event) => setOwner(event.target.value)}
+        ></TextField>
+        <br />
+>>>>>>> cd2b066 (Fix tests)
         <br></br>
         <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
         <TextField
+          inputProps={{ 'data-testid': 'descriptionInput' }}
           className={styles.inputField}
           value={description}
           onChange={(event) => setDescription(event.target.value)}
