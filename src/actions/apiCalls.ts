@@ -20,30 +20,21 @@ const defaultAllergy: Allergy = {
 /**
  * A hook for retrieving the data from the backend
  * @param urlPath The path of the url to get from after https://localhost:8000
- * @return An array of a variable the fetched data will be placed in,
- * and a function to perform the GET request and place the data in
- * the other returned variable.
- *
- * @remarks
- * The first element of the array is the data variable, which is a Dinner object.
- * The other element of the array is the returned function.
- *
- *
+ * @return The data fetched from the API
  */
-/* eslint-disable no-unused-vars */
-const useGetFromAPI = (urlPath: string): [any, () => void] => {
+const useGetFromAPI = (urlPath: string): any => {
   const [data, setData] = useState();
 
   // The function to perform the GET request.
-  const getData = useCallback(() => {
+  useEffect(() => {
     axios
       .get(urlPath)
       // After the response is recieved, take that data and put it in a state
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
-  }, [setData]);
+  }, [setData, urlPath]);
   // Return that state
-  return [data, getData];
+  return data;
 };
 
 /**
@@ -89,16 +80,11 @@ const usePostToAPI = (urlPath: string): [number, (obj: object) => void] => {
 };
 
 /**
- * Method to get all Dinners from the API
- * @returns An array consisting of a variable and a function.
- *
- * @remarks
- * The first element in the array is the list of Dinner objects from the backend
- * The second element in the array is the functuon to perform the GET
- * request and place the result in the variable mentioned above.
+ * Hook to get all Dinners from the API
+ * @returns All dinners in the API
  */
-export const useGetAllDinnersFromAPI = (): [Dinner[], () => void] => {
-  const [dinnerListAPI, getAllDinners] = useGetFromAPI('/api/dinners/');
+export const useGetAllDinnersFromAPI = (): Dinner[] => {
+  const dinnerListAPI = useGetFromAPI('/api/dinners/');
   // The DinnerList cannot be undefined, thus it returns a default dinner
   const [dinnerList, setDinnerList] = useState([defaultDinner]);
   // Update dinnerList when the dinnerListAPI changes, but not on first render
@@ -106,21 +92,16 @@ export const useGetAllDinnersFromAPI = (): [Dinner[], () => void] => {
   useDidMountEffect(() => {
     setDinnerList(dinnerListAPI);
   }, [dinnerListAPI]);
-  return [dinnerList as Dinner[], getAllDinners];
+  return dinnerList as Dinner[];
 };
 
 /**
  * A hook to get a single Dinner from the API
  * @param id The id of the dinner you want to fetch from the API
- * @returns An array consisting of a variable and a function.
- *
- * @remarks
- * The first element in the array is the Dinner object from the backend
- * The second element in the array is the functuon to perform the GET
- * request and place the result in the variable mentioned above.
+ * @returns The dinner with that id in the API
  */
-export const useGetDinnerFromAPI = (id: number): [Dinner, () => void] => {
-  const [dinnerAPI, getDinner] = useGetFromAPI(`/api/dinners/${id}/`);
+export const useGetDinnerFromAPI = (id: number): Dinner => {
+  const dinnerAPI = useGetFromAPI(`/api/dinners/${id}/`);
   // The DinnerList cannot be undefined, thus it returns a default dinner
   const [dinner, setDinner] = useState(defaultDinner);
   // Update dinner when the dinnertAPI changes, but not on first render
@@ -128,7 +109,7 @@ export const useGetDinnerFromAPI = (id: number): [Dinner, () => void] => {
   useDidMountEffect(() => {
     setDinner(dinnerAPI);
   }, [dinnerAPI]);
-  return [dinner as Dinner, getDinner];
+  return dinner as Dinner;
 };
 
 /**
@@ -151,39 +132,30 @@ export const usePostDinnerToAPI = (): [number, (dinner: Dinner) => void] => {
   return [status, postDinner];
 };
 
-export const useSignUpForDinner = (dinnerID: number) => {
-
-};
-
 /**
  * A GET request to fetch all the allergies registered in the API
- * @return An array of the array of allergies from the API (by default a single emtpy allergy),
- * and a function to perform the GET request and put the result in the aformntioned variable
+ * @return All the Allergies registered in the API
  */
-export const useGetAllAllergiesFromAPI = (): [Allergy[], () => void] => {
-  const [allergiesAPI, getAllergiesAPI] = useGetFromAPI('/api/allergies/');
+export const useGetAllAllergiesFromAPI = (): Allergy[] => {
+  const allergiesAPI = useGetFromAPI('/api/allergies/');
   const [allergies, setAllergies] = useState([defaultAllergy]);
 
   useDidMountEffect(() => {
     setAllergies(allergiesAPI);
   }, [allergiesAPI]);
-  return [allergies as Allergy[], getAllergiesAPI];
+  return allergies as Allergy[];
 };
 
 /**
  * A GET request to fetch one allergy by their ID
  * @return An array consisting of: an allergy (default en emtpy allergy) and a function to get the allergy by the id
  */
-export const useGetAllergyFromAPI = (allergyID: number): [Allergy, () => void] => {
-  const [allergyAPI, getAllergyAPI] = useGetFromAPI(`/api/allergies/${allergyID}/`);
+export const useGetAllergyFromAPI = (allergyID: number): Allergy => {
+  const allergyAPI = useGetFromAPI(`/api/allergies/${allergyID}/`);
   const [allergy, setAllergy] = useState(defaultAllergy);
 
   useDidMountEffect(() => {
     setAllergy(allergyAPI);
   }, [allergyAPI]);
-  return [allergy as Allergy, getAllergyAPI];
+  return allergy as Allergy;
 };
-
-
-
-/* eslint-enable no-unused-vars */

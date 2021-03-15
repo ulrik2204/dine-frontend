@@ -11,13 +11,9 @@ import styles from './styles.module.css';
  */
 const Overview: React.FunctionComponent = () => {
   // API and history hooks
-  const [dinnerList, getData] = useGetAllDinnersFromAPI();
+  const dinnerList= useGetAllDinnersFromAPI();
   const history = useHistory();
 
-  // On render, get all data fromi the API
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <div className={styles.overviewDiv}>

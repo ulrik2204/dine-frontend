@@ -16,7 +16,7 @@ import { Description } from '@material-ui/icons';
 const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('');
+  const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
   const [status, postDinner] = usePostDinnerToAPI();
