@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
-import { usePostDinnerToAPI } from '../../actions/apiCalls';
+import { useGetAllAllergiesFromAPI, usePostDinnerToAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
+import Select from 'react-select';
 
 /**
  * The component page for creating a dinner element
@@ -19,10 +20,12 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
+  const [allergy, setAllergy] = useState('');
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
   const status = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
+  const allergies = useGetAllAllergiesFromAPI();
 
   // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback(
@@ -58,6 +61,10 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       alert('Noe gikk galt, prøv på nytt');
     }
   }, [status]);
+
+  const allergyOptions = allergies.map((item) => {
+    return { value: item.id, label: item.allergy };
+  });
 
   return (
     <StylesProvider injectFirst>
@@ -111,6 +118,11 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
+        <h2 className={styles.createDinnerH2}>allergies</h2>
+        <br></br>
+
+        <Select options={allergyOptions} placeholder="Select an option" isMulti isSearchable />
+
         <div className={styles.buttonDiv}>
           <Button
             variant="contained"
