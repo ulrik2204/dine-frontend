@@ -1,8 +1,4 @@
-body{
-    display: flex;
-    align-items: center;
-}
-.logInPage{
+.regInPage{
     background-color: white;
     width: 40%;
     margin-top: 160px;
@@ -14,26 +10,8 @@ body{
     padding-bottom: 60px;
 }
 
-.link{
-    color:  #e85d04;
-    margin: 20px;
-}
-
-.logInButton{
-    background-color: #e85d04;
-    padding: 5px;
-    margin: 15px;
-    margin-bottom: 2px;
-    text-align: center;
-    border-radius: 5px;
-    border: none;
-    width: 35%;
-    color: white;
-    font-size: 15px;
-}
-
 .inputText{
-    margin: 30px 10px 10px 10px;
+    margin: 30px 10px 1px 10px;
     text-align: left;
     font-family: 'Roboto', sans-serif;
     width: 80%;
@@ -44,5 +22,18 @@ body{
 .input{
     width: 80%;
     margin-left: 10%;
-    margin: 20px;
+    margin: 5px 10px 10px 10px;
+}
+
+.regInButton{
+    background-color: #e85d04;
+    padding: 5px;
+    margin: 15px;
+    margin-bottom: 2px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    width: 35%;
+    color: white;
+    font-size: 15px;
 }
