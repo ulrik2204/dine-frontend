@@ -43,3 +43,8 @@ export type RegistrationUser = {
   password: string;
   password2: string;
 };
+
+export type LoginUser = {
+  username: string;
+  password: string;
+};
