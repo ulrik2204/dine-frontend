@@ -13,12 +13,12 @@ beforeEach(() => {
     fireEvent.change(locationInput, { target: { value: 'abc' } });
     fireEvent.change(descriptionInput, { target: { value: 'abc' } });
     fireEvent.change(dateTimeInput, { target: { value: '123' } });
+    jest.spyOn(window, 'alert');
   });
 });
 
 it('Error if dish empty', () => {
   act(() => {
-    jest.spyOn(window, 'alert');
     const input = getByTestId(document.body, 'dishInput');
     fireEvent.change(input, { target: { value: '' } });
     const button = getByTestId(document.body, 'sendKnapp');
