@@ -19,7 +19,32 @@ export type Dinner = {
   cuisine: string;
   date: string;
   location: string;
-  owner: string;
+  owner: number; // The id of the owner user
   description?: string;
-  allergies?: Allergy[];
+  allergies?: number[]; // A list of allergy ids
+  signed_up_users?: number[]; // A list of the ids of users signed up for this dinner
+};
+
+export type User = {
+  id?: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  allergies?: number[];
+  aboutMe?: string;
+};
+
+export type RegistrationUser = {
+  username: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  password: string;
+  password2: string;
+};
+
+export type LoginUser = {
+  username: string;
+  password: string;
 };

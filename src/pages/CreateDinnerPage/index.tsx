@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
-import { Description } from '@material-ui/icons';
+import { defaultDinner } from '../../util/constants';
 
 /**
  * The component page for creating a dinner element
@@ -16,19 +16,19 @@ import { Description } from '@material-ui/icons';
 const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('');
+  const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  const [owner, setOwner] = useState('');
-  const [status, postDinner] = usePostDinnerToAPI();
   const [description, setDescription] = useState('');
+  const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
+  const status = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
 
   // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback(
-    (dish: string, cuisine: string, date: string, location: string, owner: string, description: string) => {
+    (dish: string, cuisine: string, date: string, location: string, owner: number, description: string) => {
       // Check if the input is correct
-      if (dish === '' || cuisine === '' || location === '' || owner === '') {
+      if (dish === '' || cuisine === '' || location === '' || owner == undefined) {
         alert('Du må skrive inn alle feltene');
         return;
       }
@@ -43,9 +43,8 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         date: date,
         location: location,
         owner: owner,
-        description: description,
       };
-      postDinner(dinner);
+      setDinnerState(dinner);
     },
     [],
   );
@@ -105,13 +104,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setLocation(event.target.value)}
         ></TextField>
         <br></br>
-        <h2 className={styles.createDinnerH2}>Vert</h2>
-        <TextField
-          className={styles.inputField}
-          value={owner}
-          onChange={(event) => setOwner(event.target.value)}
-        ></TextField>
-        <br />
         <br></br>
         <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
         <TextField
@@ -123,7 +115,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => sendForm(dish, cuisine, dateTime, location, owner, description)}
+            onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description)}
             className={styles.buttonField}
           >
             Opprett

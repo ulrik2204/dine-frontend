@@ -13,10 +13,8 @@ type DinnerPageProps = {
  * Component for dinner page.
  */
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
-  const [dinner, getDinner] = useGetDinnerFromAPI(props.dinnerID);
-  useEffect(() => {
-    getDinner();
-  }, []);
+  const dinner = useGetDinnerFromAPI(props.dinnerID);
+
   return (
     <div className={styles.dinnerPageContainer}>
       <h1 className="title">{dinner.dish}</h1>
