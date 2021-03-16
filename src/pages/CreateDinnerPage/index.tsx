@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
-import { defaultDinner, usePostDinnerToAPI } from '../../actions/apiCalls';
+import { usePostDinnerToAPI } from '../../actions/apiCalls';
 import { Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
-import { Description } from '@material-ui/icons';
+import { defaultDinner } from '../../util/constants';
 
 /**
  * The component page for creating a dinner element

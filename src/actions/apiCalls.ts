@@ -1,30 +1,9 @@
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
-import { Allergy, Dinner, User, RegistrationUser } from '../util/types';
+import { defaultAllergy, defaultDinner, defaultUser } from '../util/constants';
+import { Allergy, Dinner, User, RegistrationUser, LoginUser } from '../util/types';
 import UserContext from '../util/UserContext';
 import useDidMountEffect from './useDidMountEffect';
-
-// A default, emtpy dinner object
-export const defaultDinner: Dinner = {
-  dish: '',
-  cuisine: '',
-  date: '2021-03-15',
-  location: '',
-  owner: 1,
-};
-
-// A default, empty Allergy element
-export const defaultAllergy: Allergy = {
-  allergy: '',
-};
-
-// An empty, default User object
-export const defaultUser: User = {
-  username: '',
-  first_name: '',
-  last_name: '',
-  address: '',
-};
 
 /**
  * A hook for retrieving the data from the backend
@@ -36,8 +15,11 @@ const useGetFromAPI = (urlPath: string): any => {
   const { userToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: 'Token ' + userToken,
+    Authorization: '',
   };
+  if (userToken != '') {
+    headers.Authorization = 'Token ' + userToken;
+  }
   // The function to perform the GET request.
   useEffect(() => {
     axios
@@ -62,8 +44,11 @@ const usePostToAPI = (urlPath: string, obj: object): number => {
   const { userToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: 'Token ' + userToken,
+    Authorization: '',
   };
+  if (userToken != '') {
+    headers.Authorization = 'Token ' + userToken;
+  }
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
@@ -194,51 +179,90 @@ export const useGetUserFromAPI = (userID: number): User => {
 /**
  * A hook register a user to the API
  * @param user The user object to post
- * @returns
+ * @returns A HTTP status number
+ * @remarks The request is not sent the first time, but when the registerUser is changed.
  */
 export const useRegisterUser = (user: RegistrationUser): number => {
-  return usePostToAPI('/api/users/register/', user);
+  const [{ status, token }, setStatusToken] = useState<{ status: number; token: string }>({ status: 0, token: '' });
+  const { userToken, setUserToken } = useContext(UserContext);
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  // The post request is not performed at hook declaration, but after the value is changed
+  useDidMountEffect(() => {
+    axios
+      .post('/api/users/register/', JSON.stringify(user), {
+        headers: headers,
+      })
+      // After a response is recieved, retrieve its status code
+      .then(
+        (res) => setStatusToken({ status: res.status, token: res.data.token }),
+        // Get the token from the result if the login was successful
+      )
+      .catch((err) => {
+        console.log(err);
+        return setStatusToken({ status: 400, token: '' });
+      });
+  }, [setStatusToken, user]);
+
+  // When token is updated, the context userToken should also be updated if token is not empty
+  useEffect(() => {
+    if (token != '') {
+      // Set the userToken - and we have a successful login
+      console.log('Hei');
+      setUserToken(token);
+      console.log(userToken);
+    } else {
+      // Else, it is a bad request, this should aldready have been logged
+      setStatusToken({ status: 400, token: '' });
+    }
+  }, [token]);
+
+  return status;
 };
 
 /**
  * A hook to login a user with a username and password. Setting the userToken as well
- * @param username The username to login with
- * @param password The password to login with
+ * @param loginUserv object with username and password to log in with
  * @returns A status code that indicates the result of the request
+ * @remarks The request is not sent the first time, but when the loginUser is changed.
  */
-export const useLoginUser = (username: string, password: string): number => {
-  const [status, setStatus] = useState<number>(0);
-  const [token, setToken] = useState<string>('');
+export const useLoginUser = (loginUser: LoginUser): number => {
+  const [{ status, token }, setStatusToken] = useState<{ status: number; token: string }>({ status: 0, token: '' });
   const { setUserToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
   };
-  const credentials = { username: username, password: password };
 
   // The post request is not performed at hook declaration, but after the value is changed
-  useEffect(() => {
+  useDidMountEffect(() => {
     axios
-      .post('/api/users/login/', JSON.stringify(credentials), {
+      .post('/api/users/login/', JSON.stringify(loginUser), {
         headers: headers,
       })
       // After a response is recieved, retrieve its status code
-      .then((res) => {
-        setStatus(res.status);
+      .then(
+        (res) => setStatusToken({ status: res.status, token: res.data.token }),
         // Get the token from the result if the login was successful
-        setToken(res.data.token);
-      })
+      )
       .catch((err) => {
         console.log(err);
-        setStatus(400);
+        return setStatusToken({ status: 400, token: '' });
       });
+  }, [setStatusToken, loginUser]);
+
+  // When token is updated, the context userToken should also be updated if token is not empty
+  useEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
+      console.log('Hei');
       setUserToken(token);
     } else {
       // Else, it is a bad request, this should aldready have been logged
-      setStatus(400);
+      setStatusToken({ status: 400, token: '' });
     }
-  }, [setStatus, setToken]);
+  }, [token]);
 
   return status;
 };

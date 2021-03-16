@@ -1,5 +1,5 @@
 import { Button, List } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useGetAllDinnersFromAPI } from '../../actions/apiCalls';
 import DinnerListElement from '../../components/DinnerListElement';
 import { Dinner } from '../../util/types';
@@ -11,9 +11,8 @@ import styles from './styles.module.css';
  */
 const Overview: React.FunctionComponent = () => {
   // API and history hooks
-  const dinnerList= useGetAllDinnersFromAPI();
+  const dinnerList = useGetAllDinnersFromAPI();
   const history = useHistory();
-
 
   return (
     <div className={styles.overviewDiv}>
