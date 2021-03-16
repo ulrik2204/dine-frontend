@@ -113,11 +113,34 @@ export const usePostDinnerToAPI = (dinner: Dinner): number => {
 /**
  * Hook to sign the user that is logged in for a dinner.
  * @param dinnerID The dinner to sign up for
- * @returns A status number
- * @remarks The request is not sent the first time, but when the dinnerID is changed.
+ * @returns A HTTP status number
+ * @remarks The PUT request is not sent the first time, but when the dinnerID is changed.
  */
 export const useSignupForDinner = (dinnerID: number): number => {
-  return usePostToAPI(`/api/dinners/${dinnerID}/signup/`, {});
+  const [status, setStatus] = useState<number>(0);
+  const { userToken } = useContext(UserContext);
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: '',
+  };
+  if (userToken != '') {
+    headers.Authorization = 'Token ' + userToken;
+  }
+
+  // The post request is not performed at hook declaration, but after the value is changed
+  useDidMountEffect(() => {
+    axios
+      .put(`/api/dinners/${dinnerID}/signup/`, JSON.stringify({}), {
+        headers: headers,
+      })
+      // After a response is recieved, retrieve its status code
+      .then((res) => setStatus(res.status))
+      .catch((err) => {
+        console.log(err);
+        setStatus(400);
+      });
+  }, [setStatus, dinnerID]);
+  return status;
 };
 
 /**
