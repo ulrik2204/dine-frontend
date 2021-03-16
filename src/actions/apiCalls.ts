@@ -51,21 +51,11 @@ const useGetFromAPI = (urlPath: string): any => {
 };
 
 /**
- * A hook for posting a Dinner to the API
- * @param urlPath The string path to post to of the url after https://localhost:8000
- * @return An array of a status code as a number, indicating if the request was successful,
- * and a function to perform the POST request and place the status code in the
- * other returned variable.
- *
+ * The hook to perform a POST request to the API
+ * @param urlPath The urlpath to send the post request to (path after localhost:8000)
+ * @param obj The object to post
  * @remarks
- * The first element of the array is the status variable, which is a number.
- * The status is only valid if it is not 0.
- *
- * The second element of the array is the returned function.
- *
- * It takes in
- * @param obj The object to POST to the API.
- *
+ * The request is not sent the first time, but when the onject or urlPath is changed.
  */
 const usePostToAPI = (urlPath: string, obj: object): number => {
   const [status, setStatus] = useState<number>(0);
@@ -126,21 +116,23 @@ export const useGetDinnerFromAPI = (id: number): Dinner => {
 
 /**
  * A post request to post a dinner to the API
- * @return An array of a status code as a number, indicating if the request was successful,
- * and a function to perform the POST request and place the status code in the
- * other returned variable.
- *
- * @remarks
- * The first element of the array is the status variable, which is a number.
- * The status is only valid if it is not 0.
- *
- * The second element of the array is the returned function.
- *
- * It takes in
  * @param dinner The dinner object to POST to the API.
+ * @returns The http status number
+ * @remarks
+ * The request is not sent the first time, but when the dinner object is changed.
  */
 export const usePostDinnerToAPI = (dinner: Dinner): number => {
   return usePostToAPI('/api/dinners/', dinner);
+};
+
+/**
+ * Hook to sign the user that is logged in for a dinner.
+ * @param dinnerID The dinner to sign up for
+ * @returns A status number
+ * @remarks The request is not sent the first time, but when the dinnerID is changed.
+ */
+export const useSignupForDinner = (dinnerID: number): number => {
+  return usePostToAPI(`/api/dinners/${dinnerID}/signup/`, {});
 };
 
 /**
