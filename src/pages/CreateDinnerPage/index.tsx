@@ -29,7 +29,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const history = useHistory();
   const allergies = useGetAllAllergiesFromAPI();
 
-  // The function for taking in the form input and sening it as a post request to the backend
+  // The function for taking in the form input and sending it as a post request to the backend
   const sendForm = useCallback(
     (
       dish: string,
@@ -131,17 +131,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setLocation(event.target.value)}
         ></TextField>
         <br></br>
-<<<<<<< HEAD
-=======
-        <h2 className={styles.createDinnerH2}>Vert</h2>
-        <TextField
-          inputProps={{ 'data-testid': 'ownerInput' }}
-          className={styles.inputField}
-          value={owner}
-          onChange={(event) => setOwner(event.target.value)}
-        ></TextField>
-        <br />
->>>>>>> cd2b066 (Fix tests)
         <br></br>
         <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
         <TextField
