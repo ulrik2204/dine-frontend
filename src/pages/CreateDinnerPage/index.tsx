@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { SetStateAction, useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
@@ -9,7 +9,8 @@ import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
-import Select from 'react-select';
+import Select from '@material-ui/core/Select';
+import { Checkbox, FormControl, Input, InputLabel, ListItemText, MenuItem } from '@material-ui/core';
 
 /**
  * The component page for creating a dinner element
@@ -20,7 +21,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  const [allergy, setAllergy] = useState('');
+  const [allergy, setAllergy] = useState(['']);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
   const status = usePostDinnerToAPI(dinnerState);
@@ -65,6 +66,10 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const allergyOptions = allergies.map((item) => {
     return { value: item.id, label: item.allergy };
   });
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setAllergy(event.target.value as SetStateAction<string[]>);
+  };
 
   return (
     <StylesProvider injectFirst>
@@ -118,10 +123,28 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>allergies</h2>
+        <h2 className={styles.createDinnerH2}>Allergi</h2>
         <br></br>
 
-        <Select options={allergyOptions} placeholder="Select an option" isMulti isSearchable />
+        <FormControl>
+          <InputLabel id="demo-mutiple-checkbox-label">Allergi</InputLabel>
+          <Select
+            labelId="demo-mutiple-checkbox-label"
+            id="demo-mutiple-checkbox"
+            multiple
+            value={allergy}
+            onChange={handleChange}
+            input={<Input />}
+            renderValue={(selected) => (selected as string[]).join(', ')}
+          >
+            {allergies.map((item) => (
+              <MenuItem key={item.id} value={item.allergy}>
+                <Checkbox checked={allergy.indexOf(item.allergy) > -1} />
+                <ListItemText primary={item.allergy} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <div className={styles.buttonDiv}>
           <Button
