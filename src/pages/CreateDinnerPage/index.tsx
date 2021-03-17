@@ -10,7 +10,7 @@ import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
 import Select from '@material-ui/core/Select';
-import { Checkbox, FormControl, Input, InputLabel, ListItemText, MenuItem } from '@material-ui/core';
+import { Checkbox, FormControl, Input, ListItemText, MenuItem } from '@material-ui/core';
 
 /**
  * The component page for creating a dinner element
@@ -21,7 +21,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  const [allergy, setAllergy] = useState(['']);
+  const [allergy, setAllergy] = useState<string[]>([]);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
   const status = usePostDinnerToAPI(dinnerState);
