@@ -63,10 +63,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
     }
   }, [status]);
 
-  const allergyOptions = allergies.map((item) => {
-    return { value: item.id, label: item.allergy };
-  });
-
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setAllergy(event.target.value as SetStateAction<string[]>);
   };
@@ -126,8 +122,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <h2 className={styles.createDinnerH2}>Allergi</h2>
         <br></br>
 
-        <FormControl>
-          <InputLabel id="demo-mutiple-checkbox-label">Allergi</InputLabel>
+        <FormControl className={styles.inputField}>
           <Select
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"
@@ -145,6 +140,8 @@ const CreateDinnerPage: React.FunctionComponent = () => {
             ))}
           </Select>
         </FormControl>
+        <br></br>
+        <br></br>
 
         <div className={styles.buttonDiv}>
           <Button
