@@ -64,7 +64,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   }, [status]);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAllergy(event.target.value as SetStateAction<string[]>);
+    setAllergy(event.target.value as string[]);
   };
 
   return (
