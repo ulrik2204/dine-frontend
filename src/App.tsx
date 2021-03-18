@@ -8,6 +8,7 @@ import CreateDinnerPage from './pages/CreateDinnerPage';
 import UserContext from './util/UserContext';
 import LogInPage from './pages/LogIn';
 import RegInPage from './pages/RegIn';
+import ProfilePage from './pages/ProfilePage';
 
 const App: React.FunctionComponent = () => {
   const [userToken, setUserToken] = useState<string>('');
@@ -24,6 +25,7 @@ const App: React.FunctionComponent = () => {
             <Route path="/createdinnerevent" component={CreateDinnerPage} />
             <Route exact path="/login" component={LogInPage} />
             <Route exact path="/regin" component={RegInPage} />
+            <Route exact path="/profile" component={ProfilePage} />
           </Switch>
         </UserContext.Provider>
       </div>
