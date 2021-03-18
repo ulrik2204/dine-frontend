@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { useState } from 'react';
 import styles from './styles.module.css';
+import { StylesProvider } from '@material-ui/core/styles';
 
 const RegInPage: React.FunctionComponent = () => {
     const [name, setName] = useState('');
@@ -10,11 +11,11 @@ const RegInPage: React.FunctionComponent = () => {
     const [address, setAddress] = useState('');
     const [allergy, setAllergy] = useState('');
     const [password, setPassword] = useState('');
-    const [password_2, setPassword_2] = useState('');
+    const [password2, setPassword2] = useState('');
 
-    const sendRegIn = useCallback((name: string, userName: string, address: string, allergy: string, password: string, password_2: string) => {
+    const sendRegIn = useCallback((name: string, userName: string, address: string, allergy: string, password: string, password2: string) => {
         // Check if the input is correct
-        if (name === '' || userName === '' || address === '' || allergy === '' || password === '' || password_2 === '') {
+        if (name === '' || userName === '' || address === '' || allergy === '' || password === '' || password2 === '') {
             alert('Du må skrive inn i alle feltene');
             return;
 
@@ -22,6 +23,7 @@ const RegInPage: React.FunctionComponent = () => {
     }, []);
 
     return (
+        <StylesProvider injectFirst>
         <div className={styles.regInPage}>
             <h1>Register deg</h1>
             <h2 className={styles.inputText}>Navn</h2>
@@ -41,12 +43,13 @@ const RegInPage: React.FunctionComponent = () => {
             <TextField className={styles.input} value={password} onChange={(event) => setPassword(event.target.value)}>
             </TextField>
             <h2 className={styles.inputText}>Gjenta passord</h2>
-            <TextField className={styles.input} value={password_2} onChange={(event) => setPassword_2(event.target.value)}>
+            <TextField className={styles.input} value={password2} onChange={(event) => setPassword2(event.target.value)}>
             </TextField>
-            <Button className={styles.regInButton} onClick={() => sendRegIn(name, userName, address, allergy, password, password_2)}>
+            <Button className={styles.regInButton} onClick={() => sendRegIn(name, userName, address, allergy, password, password2)}>
                 Registrer
             </Button>
         </div>
+        </StylesProvider>
     );
     };
 export default RegInPage;
