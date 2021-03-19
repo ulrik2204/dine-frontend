@@ -7,11 +7,12 @@ import useDidMountEffect from './useDidMountEffect';
 
 /**
  * A hook for retrieving the data from the backend
- * @param urlPath The path of the url to get from after https://localhost:8000
- * @return The data fetched from the API
+ * @param urlPath - The path of the url to get from after https://localhost:8000
+ * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
+ * @returns The data fetched from the API
  */
-const useGetFromAPI = (urlPath: string): any => {
-  const [data, setData] = useState();
+const useGetFromAPI = (urlPath: string, immediate = true): any => {
+  const [data, setData] = useState<any>();
   const { userToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
@@ -21,25 +22,29 @@ const useGetFromAPI = (urlPath: string): any => {
     headers.Authorization = 'Token ' + userToken;
   }
   // The function to perform the GET request.
-  useEffect(() => {
-    axios
-      .get(urlPath, { headers: headers })
-      // After the response is recieved, take that data and put it in a state
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
-  }, [setData, urlPath]);
+  useDidMountEffect(
+    () => {
+      axios
+        .get(urlPath, { headers: headers })
+        // After the response is recieved, take that data and put it in a state
+        .then((res) => setData(res.data))
+        .catch((err) => console.log(err));
+    },
+    [setData, urlPath],
+    immediate,
+  );
   // Return that state
   return data;
 };
 
 /**
  * The hook to perform a POST request to the API
- * @param urlPath The urlpath to send the post request to (path after localhost:8000)
- * @param obj The object to post
+ * @param urlPath - The urlpath to send the post request to (path after localhost:8000)
+ * @param obj - The object to post
  * @remarks
  * The request is not sent the first time, but when the onject or urlPath is changed.
  */
-const usePostToAPI = (urlPath: string, obj: object): number => {
+const usePostToAPI = (urlPath: string, obj: unknown): number => {
   const [status, setStatus] = useState<number>(0);
   const { userToken } = useContext(UserContext);
   const headers = {
@@ -71,37 +76,26 @@ const usePostToAPI = (urlPath: string, obj: object): number => {
  * @returns All dinners in the API
  */
 export const useGetAllDinnersFromAPI = (): Dinner[] => {
-  const dinnerListAPI = useGetFromAPI('/api/dinners/');
+  const dinnerListAPI = useGetFromAPI('/api/dinners/', true);
   // The DinnerList cannot be undefined, thus it returns a default dinner
-  const [dinnerList, setDinnerList] = useState([defaultDinner]);
-  // Update dinnerList when the dinnerListAPI changes, but not on first render
-  // because then the dinnerListAPI is null
-  useDidMountEffect(() => {
-    setDinnerList(dinnerListAPI);
-  }, [dinnerListAPI]);
-  return dinnerList as Dinner[];
+  return dinnerListAPI || [defaultDinner];
 };
 
 /**
  * A hook to get a single Dinner from the API
- * @param id The id of the dinner you want to fetch from the API
+ * @param id - The id of the dinner you want to fetch from the API
+ * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
  * @returns The dinner with that id in the API
  */
-export const useGetDinnerFromAPI = (id: number): Dinner => {
-  const dinnerAPI = useGetFromAPI(`/api/dinners/${id}/`);
+export const useGetDinnerFromAPI = (id: number, immediate = true): Dinner => {
+  const dinnerAPI = useGetFromAPI(`/api/dinners/${id}/`, immediate);
   // The DinnerList cannot be undefined, thus it returns a default dinner
-  const [dinner, setDinner] = useState(defaultDinner);
-  // Update dinner when the dinnertAPI changes, but not on first render
-  // because then the dinnerAPI is null
-  useDidMountEffect(() => {
-    setDinner(dinnerAPI);
-  }, [dinnerAPI]);
-  return dinner as Dinner;
+  return dinnerAPI || defaultDinner;
 };
 
 /**
  * A post request to post a dinner to the API
- * @param dinner The dinner object to POST to the API.
+ * @param dinner - The dinner object to POST to the API.
  * @returns The http status number
  * @remarks
  * The request is not sent the first time, but when the dinner object is changed.
@@ -112,7 +106,7 @@ export const usePostDinnerToAPI = (dinner: Dinner): number => {
 
 /**
  * Hook to sign the user that is logged in for a dinner.
- * @param dinnerID The dinner to sign up for
+ * @param dinnerID - The dinner to sign up for
  * @returns A HTTP status number
  * @remarks The PUT request is not sent the first time, but when the dinnerID is changed.
  */
@@ -128,7 +122,7 @@ export const useSignupForDinner = (dinnerID: number): number => {
   }
 
   // The post request is not performed at hook declaration, but after the value is changed
-  useDidMountEffect(() => {
+  useEffect(() => {
     axios
       .put(`/api/dinners/${dinnerID}/signup/`, JSON.stringify({}), {
         headers: headers,
@@ -145,63 +139,56 @@ export const useSignupForDinner = (dinnerID: number): number => {
 
 /**
  * A GET request to fetch all the allergies registered in the API
- * @return All the Allergies registered in the API
+ * @returns All the Allergies registered in the API
  */
 export const useGetAllAllergiesFromAPI = (): Allergy[] => {
-  const allergiesAPI = useGetFromAPI('/api/allergies/');
-  const [allergies, setAllergies] = useState([defaultAllergy]);
-
-  useDidMountEffect(() => {
-    setAllergies(allergiesAPI);
-  }, [allergiesAPI]);
-  return allergies as Allergy[];
+  const allergiesAPI = useGetFromAPI('/api/allergies/', true);
+  return allergiesAPI || [defaultAllergy];
 };
 
 /**
  * A GET request to fetch one allergy by their ID
- * @return An array consisting of: an allergy (default en emtpy allergy) and a function to get the allergy by the id
+ * @param allergyID - The allergyID of the allergy to fetch
+ * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
+ * @returns An array consisting of: an allergy (default en emtpy allergy) and a function to get the allergy by the id
  */
-export const useGetAllergyFromAPI = (allergyID: number): Allergy => {
-  const allergyAPI = useGetFromAPI(`/api/allergies/${allergyID}/`);
-  const [allergy, setAllergy] = useState(defaultAllergy);
-
-  useDidMountEffect(() => {
-    setAllergy(allergyAPI);
-  }, [allergyAPI]);
-  return allergy as Allergy;
+export const useGetAllergyFromAPI = (allergyID: number, immediate = true): Allergy => {
+  const allergyAPI = useGetFromAPI(`/api/allergies/${allergyID}/`, immediate);
+  return allergyAPI || defaultAllergy;
 };
 
 /**
  * Hook t o get all users from API
- * @return All users in the API (not including password)
+ * @returns All users in the API (not including password)
  */
 export const useGetAllUsersFromAPI = (): User[] => {
-  const usersAPI = useGetFromAPI('/api/users/');
+  const usersAPI = useGetFromAPI('/api/users/', true);
   const [users, setUsers] = useState([defaultUser]);
 
-  useDidMountEffect(() => {
-    setUsers(usersAPI);
+  useEffect(() => {
+    setUsers(usersAPI as User[]);
   }, [usersAPI]);
   return users as User[];
 };
 /**
  * Hook to get the data for a single user from the API
- * @param userID The  id of the use to get
+ * @param userID - The  id of the use to get
+ * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
  * @returns A user object for the user
  */
-export const useGetUserFromAPI = (userID: number): User => {
-  const userAPI = useGetFromAPI(`/api/users/${userID}/`);
+export const useGetUserFromAPI = (userID: number, immediate = true): User => {
+  const userAPI = useGetFromAPI(`/api/users/${userID}/`, immediate);
   const [user, setUser] = useState(defaultUser);
 
   useDidMountEffect(() => {
-    setUser(userAPI);
+    setUser(userAPI as User);
   }, [userAPI]);
   return user as User;
 };
 
 /**
  * A hook register a user to the API
- * @param user The user object to post
+ * @param user - The user object to post
  * @returns A HTTP status number
  * @remarks The request is not sent the first time, but when the registerUser is changed.
  */
@@ -247,7 +234,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
 
 /**
  * A hook to login a user with a username and password. Setting the userToken as well
- * @param loginUserv object with username and password to log in with
+ * @param loginUser - object with username and password to log in with
  * @returns A status code that indicates the result of the request
  * @remarks The request is not sent the first time, but when the loginUser is changed.
  */

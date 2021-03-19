@@ -9,7 +9,7 @@ import UserContext from './util/UserContext';
 import LogInPage from './pages/LogIn';
 import RegInPage from './pages/RegIn';
 import ProfilePage from './pages/ProfilePage';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FunctionComponent = () => {
@@ -33,6 +33,7 @@ const App: React.FunctionComponent = () => {
           position="top-center"
           autoClose={5000}
           newestOnTop
+          limit={3}
           closeOnClick
           rtl={false}
           pauseOnFocusLoss
