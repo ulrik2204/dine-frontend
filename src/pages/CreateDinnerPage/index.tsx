@@ -1,4 +1,4 @@
-import React, { SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
@@ -11,6 +11,7 @@ import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
 import Select from '@material-ui/core/Select';
 import { Checkbox, FormControl, Input, ListItemText, MenuItem } from '@material-ui/core';
+import { toast } from 'react-toastify';
 
 /**
  * The component page for creating a dinner element
@@ -33,7 +34,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
     (dish: string, cuisine: string, date: string, location: string, owner: number, description: string) => {
       // Check if the input is correct
       if (dish === '' || cuisine === '' || location === '' || owner == undefined) {
-        alert('Du må skrive inn alle feltene');
+        toast.warn('Du må fylle inn alle feltene');
         return;
       }
       // Not checking date, as a datefield is used to secure this.
@@ -55,11 +56,15 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
-    if (status == 201) {
-      alert('Middagen ble opprettet!');
+    if (status === 201) {
+      toast.info('Middagen ble opprettet!');
       history.push('/');
-    } else {
-      alert('Noe gikk galt, prøv på nytt');
+    } else if (status === 200) {
+      toast.info('Middagen ble ikke opprettet');
+    } else if (status === 400) {
+      toast.error('Noe gikk galt');
+    } else if (status === 401) {
+      toast.error('Du er ikke logget inn');
     }
   }, [status]);
 
