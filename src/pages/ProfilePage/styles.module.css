@@ -1,0 +1,39 @@
+.profilePage{
+    width: 40%;
+    margin-top: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 30%;
+    padding-top: 30px;
+    padding-bottom: 60px;
+}
+
+.inputText{
+    margin: 30px 10px 1px 10px;
+    text-align: left;
+    width: 80%;
+    margin-left: 0%;
+    color: #e85d04;
+}
+
+.input{
+    width: 80%;
+    margin-left: 10%;
+    margin: 5px 10px 10px 10px;
+    border-bottom: #e85d04 solid 1px;
+
+}
+
+.changeButton{
+    background-color: #e85d04;
+    padding: 5px;
+    margin: 15px;
+    margin-bottom: 2px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    width: 35%;
+    color: white;
+    font-size: 15px;
+}

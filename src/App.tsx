@@ -6,6 +6,9 @@ import Menu from './components/Menu';
 import DinnerPage from './pages/DinnerPage';
 import CreateDinnerPage from './pages/CreateDinnerPage';
 import UserContext from './util/UserContext';
+import LogInPage from './pages/LogIn';
+import RegInPage from './pages/RegIn';
+import ProfilePage from './pages/ProfilePage';
 
 const App: React.FunctionComponent = () => {
   // Intermediate values to set the startValueToken: Tries to find it locally first
@@ -30,6 +33,9 @@ const App: React.FunctionComponent = () => {
             <Route exact path="/" component={Overview} />
             <Route path="/dinner/:dinnerID" render={(props) => <DinnerPage dinnerID={props.match.params.dinnerID} />} />
             <Route path="/createdinnerevent" component={CreateDinnerPage} />
+            <Route exact path="/login" component={LogInPage} />
+            <Route exact path="/regin" component={RegInPage} />
+            <Route exact path="/profile" component={ProfilePage} />
           </Switch>
         </UserContext.Provider>
       </div>
