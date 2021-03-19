@@ -21,6 +21,8 @@
     width: 80%;
     margin-left: 10%;
     margin: 5px 10px 10px 10px;
+    border-bottom: #e85d04 solid 1px;
+
 }
 
 .changeButton{

@@ -32,7 +32,7 @@ export type User = {
   last_name: string;
   address: string;
   allergies?: number[];
-  aboutMe?: string;
+  about_me?: string;
 };
 
 export type RegistrationUser = {

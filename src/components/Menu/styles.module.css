@@ -12,6 +12,22 @@
     padding: 10px;
     cursor: pointer;
 }
+.userIcon{
+    width: 40px;
+    height: 40px;
+    object-fit: fill;
+    padding: 10px;
+    cursor: pointer;
+}
+.login{
+    font-size: 15px;
+    cursor: pointer;
+}
+/*.userIcon{
+    background-image: url('../../assets/user.png');
+    cursor: pointer;
+    padding: 50px;
+}*/
 
 .appbar {
     background: #370617;

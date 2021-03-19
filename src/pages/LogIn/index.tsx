@@ -4,9 +4,12 @@ import { useCallback } from 'react';
 import { useState } from 'react';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 
 
 const LogInPage: React.FunctionComponent = () => {
+  const history = useHistory();
+  
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,6 +19,7 @@ const LogInPage: React.FunctionComponent = () => {
       alert('Du må skrive inn i begge feltene');
       return;
     }
+    console.log(userName);
   }, []);
 
   return (
@@ -28,7 +32,7 @@ const LogInPage: React.FunctionComponent = () => {
         <h2 className={styles.inputText}>Passord</h2>
         <TextField className={styles.input} value={password} type="password" onChange={(event) => setPassword(event.target.value)}>
         </TextField>
-        <p className={styles.link}>Har du ikke bruker? Registrer deg her</p>
+        <p className={styles.link} onClick={() => history.push('/regin')} >Har du ikke bruker? Registrer deg her</p>
         <Button className={styles.logInButton} onClick={() => sendLogIn(userName, password)}>
           Logg inn
         </Button>
