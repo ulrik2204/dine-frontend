@@ -9,6 +9,8 @@ import UserContext from './util/UserContext';
 import LogInPage from './pages/LogIn';
 import RegInPage from './pages/RegIn';
 import ProfilePage from './pages/ProfilePage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FunctionComponent = () => {
   // Intermediate values to set the startValueToken: Tries to find it locally first
@@ -27,6 +29,15 @@ const App: React.FunctionComponent = () => {
   return (
     <Router>
       <div>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
         <UserContext.Provider value={providerValue}>
           <Menu />
           <Switch>
