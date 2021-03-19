@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
-import { useGetAllAllergiesFromAPI, usePostDinnerToAPI } from '../../actions/apiCalls';
-import { Dinner } from '../../util/types';
+import { useGetAllAllergiesFromAPI, useGetAllergyFromAPI, usePostDinnerToAPI } from '../../actions/apiCalls';
+import { Allergy, Dinner } from '../../util/types';
 import { useHistory } from 'react-router-dom';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
@@ -22,7 +22,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  const [allergy, setAllergy] = useState<string[]>([]);
+  const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
   const status = usePostDinnerToAPI(dinnerState);
@@ -31,7 +31,15 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
   // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback(
-    (dish: string, cuisine: string, date: string, location: string, owner: number, description: string) => {
+    (
+      dish: string,
+      cuisine: string,
+      date: string,
+      location: string,
+      owner: number,
+      description: string,
+      allergies: number[],
+    ) => {
       // Check if the input is correct
       if (dish === '' || cuisine === '' || location === '' || owner == undefined) {
         toast.warn('Du må fylle inn alle feltene');
@@ -42,12 +50,15 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       //the backend will handle that
 
       // The sent dinner event
+
       const dinner: Dinner = {
         dish: dish,
         cuisine: cuisine,
         date: date,
         location: location,
         owner: owner,
+        description: description,
+        allergies: allergies,
       };
       setDinnerState(dinner);
     },
@@ -69,7 +80,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   }, [status]);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAllergy(event.target.value as string[]);
+    setAllergyIDs(event.target.value as number[]);
   };
 
   return (
@@ -132,14 +143,18 @@ const CreateDinnerPage: React.FunctionComponent = () => {
             labelId="demo-mutiple-checkbox-label"
             id="demo-mutiple-checkbox"
             multiple
-            value={allergy}
+            value={allergyIDs}
             onChange={handleChange}
             input={<Input />}
-            renderValue={(selected) => (selected as string[]).join(', ')}
+            renderValue={(selected) =>
+              (selected as number[])
+                .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
+                .join(', ')
+            }
           >
             {allergies.map((item) => (
-              <MenuItem key={item.id} value={item.allergy}>
-                <Checkbox checked={allergy.indexOf(item.allergy) > -1} />
+              <MenuItem key={item.id} value={item.id}>
+                <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
                 <ListItemText primary={item.allergy} />
               </MenuItem>
             ))}
@@ -152,7 +167,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description)}
+            onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
             className={styles.buttonField}
           >
             Opprett
