@@ -1,10 +1,15 @@
 import { act } from 'react-dom/test-utils';
-import CreateDinnerPage from '../index';
-import { render, fireEvent, getByTestId } from '@testing-library/react';
+import CreateDinnerPage from '../pages/CreateDinnerPage/index';
+import { render, fireEvent, getByTestId, getByText } from '@testing-library/react';
+import { toast, ToastContainer } from 'react-toastify';
+import { Toast } from 'react-toastify/dist/components';
+import App from '../App';
 
 beforeEach(() => {
   act(() => {
-    const { getByTestId } = render(<CreateDinnerPage />);
+    const site = render(<CreateDinnerPage />);
+    render(<ToastContainer autoClose={false} />);
+    const { getByTestId } = site;
     const dishInput = getByTestId('dishInput');
     const locationInput = getByTestId('locationInput');
     const descriptionInput = getByTestId('descriptionInput');
@@ -13,46 +18,45 @@ beforeEach(() => {
     fireEvent.change(locationInput, { target: { value: 'abc' } });
     fireEvent.change(descriptionInput, { target: { value: 'abc' } });
     fireEvent.change(dateTimeInput, { target: { value: '123' } });
-    jest.spyOn(window, 'alert');
   });
 });
 
-it('Error if dish empty', () => {
+test('Error if dish empty', () => {
   act(() => {
     const input = getByTestId(document.body, 'dishInput');
     fireEvent.change(input, { target: { value: '' } });
     const button = getByTestId(document.body, 'sendKnapp');
     fireEvent.click(button);
   });
-  expect(window.alert).toHaveBeenCalledWith('Du må skrive inn alle feltene');
+  getByText(document.body, 'Du må fylle inn alle feltene');
 });
 
-it('Error if location empty', () => {
+test('Error if location empty', () => {
   act(() => {
     const input = getByTestId(document.body, 'locationInput');
     fireEvent.change(input, { target: { value: '' } });
     const button = getByTestId(document.body, 'sendKnapp');
     fireEvent.click(button);
   });
-  expect(window.alert).toHaveBeenCalledWith('Du må skrive inn alle feltene');
+  expect(<ToastContainer />).toBeInTheDocument;
 });
 
-it('Error if description empty', () => {
+test('Error if description empty', () => {
   act(() => {
     const input = getByTestId(document.body, 'descriptionInput');
     fireEvent.change(input, { target: { value: '' } });
     const button = getByTestId(document.body, 'sendKnapp');
     fireEvent.click(button);
   });
-  expect(window.alert).toHaveBeenCalledWith('Du må skrive inn alle feltene');
+  expect(<ToastContainer />).toBeInTheDocument;
 });
 
-it('Error if dateTime empty', () => {
+test('Error if dateTime empty', () => {
   act(() => {
     const input = getByTestId(document.body, 'dateTimeInput');
     fireEvent.change(input, { target: { value: '' } });
     const button = getByTestId(document.body, 'sendKnapp');
     fireEvent.click(button);
   });
-  expect(window.alert).toHaveBeenCalledWith('Du må skrive inn alle feltene');
+  expect(<ToastContainer />).toBeInTheDocument;
 });
