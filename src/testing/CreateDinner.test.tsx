@@ -1,36 +1,39 @@
 import { act } from 'react-dom/test-utils';
 import CreateDinnerPage from '../pages/CreateDinnerPage/index';
-import { render, fireEvent, getByTestId, getByText } from '@testing-library/react';
-import { toast, ToastContainer } from 'react-toastify';
-import { Toast } from 'react-toastify/dist/components';
-import App from '../App';
+import { render, fireEvent, getByTestId, getByText, screen, getByRole, waitFor } from '@testing-library/react';
+import { ToastContainer } from 'react-toastify';
+import Button from '@material-ui/core/Button';
+import { createMount } from '@material-ui/core/test-utils';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { shallow, configure } from 'enzyme';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 
-beforeEach(() => {
-  act(() => {
-    const site = render(<CreateDinnerPage />);
-    render(<ToastContainer autoClose={false} />);
-    const { getByTestId } = site;
-    const dishInput = getByTestId('dishInput');
-    const locationInput = getByTestId('locationInput');
-    const descriptionInput = getByTestId('descriptionInput');
-    const dateTimeInput = getByTestId('dateTimeInput');
-    fireEvent.change(dishInput, { target: { value: 'abc' } });
-    fireEvent.change(locationInput, { target: { value: 'abc' } });
-    fireEvent.change(descriptionInput, { target: { value: 'abc' } });
-    fireEvent.change(dateTimeInput, { target: { value: '123' } });
+configure({ adapter: new Adapter() });
+describe('Testing the CreateDinnerPage', () => {
+  let mount: any;
+  let wrapper: any;
+  beforeEach(() => {
+    // Mock the allergies response
+    const mock = new MockAdapter(axios);
+    const data = [{ id: 1, allergy: 'bløtdyr' }];
+    mock.onGet('/api/allergies/').reply(200, data);
+    mount = createMount();
+    act(() => {
+      wrapper = mount(
+        <div>
+          <ToastContainer /> <CreateDinnerPage />
+        </div>,
+      );
+    });
   });
-});
 
-test('Error if dish empty', () => {
-  act(() => {
-    const input = getByTestId(document.body, 'dishInput');
-    fireEvent.change(input, { target: { value: '' } });
-    const button = getByTestId(document.body, 'sendKnapp');
-    fireEvent.click(button);
+  test('Testing if toast pops up if everything is empty', async () => {
+    const button = wrapper.find(Button);
+    button.simulate('click');
+    await screen.findByText('Du må fylle inn alle feltene');
   });
-  getByText(document.body, 'Du må fylle inn alle feltene');
-});
-
+  /*
 test('Error if location empty', () => {
   act(() => {
     const input = getByTestId(document.body, 'locationInput');
@@ -59,4 +62,9 @@ test('Error if dateTime empty', () => {
     fireEvent.click(button);
   });
   expect(<ToastContainer />).toBeInTheDocument;
+});
+*/
+  afterEach(() => {
+    mount.cleanUp();
+  });
 });

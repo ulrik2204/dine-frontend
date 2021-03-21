@@ -10,8 +10,9 @@ import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
 import Select from '@material-ui/core/Select';
-import { Checkbox, FormControl, Input, ListItemText, MenuItem } from '@material-ui/core';
+import { Checkbox, FormControl, FormHelperText, Input, ListItemText, MenuItem } from '@material-ui/core';
 import { toast } from 'react-toastify';
+import { truncate } from 'node:fs';
 
 /**
  * The component page for creating a dinner element
@@ -19,7 +20,7 @@ import { toast } from 'react-toastify';
 const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('Andre');
+  const [cuisine, setCuisine] = useState('');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
   const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
@@ -67,6 +68,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
+    console.log(status);
     if (status === 201) {
       toast.info('Middagen ble opprettet!');
       history.push('/');
@@ -89,14 +91,22 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <h1 className={'title'}>Opprett Middag</h1>
         <h2 className={styles.createDinnerH2}>Rett</h2>
         <TextField
-          inputProps={{ 'data-testid': 'dishInput' }}
+          placeholder="Navn på retten"
           className={styles.inputField}
           value={dish}
           onChange={(event) => setDish(event.target.value)}
         ></TextField>
         <br></br>
         <h2 className={styles.createDinnerH2}>Kjøkken</h2>
-        <NativeSelect className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
+        <NativeSelect
+          value={cuisine}
+          placeholder="Kjøkkenet retten kommer fra"
+          className={styles.inputField}
+          onChange={(e) => setCuisine(e.target.value)}
+        >
+          <option disabled value="" color="gray">
+            Velg kjøkken
+          </option>
           <option value={'Andre'}>Andre</option>
           <option value={'Fransk'}>Fransk</option>
           <option value={'Indisk'}>Indisk</option>
@@ -111,9 +121,8 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <form noValidate>
           <TextField
             onChange={(event) => setDateTime(event.target.value)}
-            inputProps={{ 'data-testid': 'dateTimeInput' }}
             id="datetime-local"
-            label="Next appointment"
+            label="Tidspunkt middagen finner sted"
             type="datetime-local"
             value={dateTime}
             className={styles.inputField}
@@ -125,7 +134,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <br></br>
         <h2 className={styles.createDinnerH2}>Sted</h2>
         <TextField
-          inputProps={{ 'data-testid': 'locationInput' }}
+          placeholder="Der middagen finner sted"
           className={styles.inputField}
           value={location}
           onChange={(event) => setLocation(event.target.value)}
@@ -134,42 +143,42 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <br></br>
         <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
         <TextField
-          inputProps={{ 'data-testid': 'descriptionInput' }}
+          placeholder="Beskrivelse av middagen"
           className={styles.inputField}
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
         <h2 className={styles.createDinnerH2}>Allergi</h2>
         <br></br>
-
-        <FormControl className={styles.inputField}>
-          <Select
-            labelId="demo-mutiple-checkbox-label"
-            id="demo-mutiple-checkbox"
-            multiple
-            value={allergyIDs}
-            onChange={handleChange}
-            input={<Input />}
-            renderValue={(selected) =>
-              (selected as number[])
-                .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
-                .join(', ')
+        <Select
+          className={styles.inputField}
+          multiple
+          displayEmpty
+          value={allergy}
+          onChange={handleChange}
+          input={<Input />}
+          renderValue={(selected) => {
+            if ((selected as string[]).length === 0) {
+              return 'Velg allergener i middagen';
             }
-          >
-            {allergies.map((item) => (
-              <MenuItem key={item.id} value={item.id}>
-                <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
-                <ListItemText primary={item.allergy} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            return (selected as string[]).join(', ');
+          }}
+        >
+          <MenuItem key="-1" disabled value="">
+            Velg allergener
+          </MenuItem>
+          {allergies.map((item) => (
+            <MenuItem key={item.id} value={item.allergy}>
+              <Checkbox key={(item.id as number) * 20} checked={allergy.indexOf(item.allergy) > -1} />
+              <ListItemText key={(item.id as number) * 40} primary={item.allergy} />
+            </MenuItem>
+          ))}
+        </Select>
         <br></br>
         <br></br>
 
         <div className={styles.buttonDiv}>
           <Button
-            data-testid="sendKnapp"
             variant="contained"
             color="primary"
             onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
