@@ -15,6 +15,13 @@ configure({ adapter: new Adapter() });
 describe('Testing the CreateDinnerPage', () => {
   let mount: any;
   let wrapper: any;
+
+  // The input fields
+  let dishInput: any;
+  let cuisine: any;
+  let locationInput: any;
+  let descriptionInput: any;
+  let button: any;
   beforeEach(() => {
     // Mock the allergies response
     const data = [{ id: 1, allergy: 'bløtdyr' }];
@@ -25,44 +32,40 @@ describe('Testing the CreateDinnerPage', () => {
         <ToastContainer /> <CreateDinnerPage />
       </div>,
     );
+    dishInput = screen.getByPlaceholderText('Navn på retten');
+    cuisine = screen.getByText('Velg kjøkken');
+    locationInput = screen.getByPlaceholderText('Der middagen finner sted');
+    descriptionInput = screen.getByPlaceholderText('Beskrivelse av middagen');
+    button = wrapper.find(Button);
+    fireEvent.change(dishInput, { target: { value: 'abc' } });
+    fireEvent.click(cuisine);
+    fireEvent.keyDown(cuisine, { key: 'ArrowDown', code: 'ArrowDown' });
+    fireEvent.keyDown(cuisine, { key: 'Enter', code: 'Enter' });
+    fireEvent.change(locationInput, { target: { value: 'abc' } });
+    fireEvent.change(descriptionInput, { target: { value: 'abc' } });
   });
 
   test('Testing if toast pops up if everything is empty', async () => {
-    const button = wrapper.find(Button);
+    fireEvent.change(dishInput, { target: { value: '' } });
+    fireEvent.change(locationInput, { target: { value: '' } });
+    fireEvent.change(descriptionInput, { target: { value: '' } });
     button.simulate('click');
     await screen.findByText('Du må fylle inn alle feltene');
   });
-  /*
-test('Error if location empty', () => {
-  act(() => {
-    const input = getByTestId(document.body, 'locationInput');
-    fireEvent.change(input, { target: { value: '' } });
-    const button = getByTestId(document.body, 'sendKnapp');
-    fireEvent.click(button);
-  });
-  expect(<ToastContainer />).toBeInTheDocument;
-});
 
-test('Error if description empty', () => {
-  act(() => {
-    const input = getByTestId(document.body, 'descriptionInput');
-    fireEvent.change(input, { target: { value: '' } });
-    const button = getByTestId(document.body, 'sendKnapp');
-    fireEvent.click(button);
+  test('Testing if a toast pops up if dish is empty', async () => {
+    fireEvent.change(dishInput, { target: { value: '' } });
+    button.simulate('click');
+    await screen.findByText('Du må fylle inn alle feltene');
   });
-  expect(<ToastContainer />).toBeInTheDocument;
-});
 
-test('Error if dateTime empty', () => {
-  act(() => {
-    const input = getByTestId(document.body, 'dateTimeInput');
-    fireEvent.change(input, { target: { value: '' } });
-    const button = getByTestId(document.body, 'sendKnapp');
-    fireEvent.click(button);
+  test('Test if toas pops up if location is empty', async () => {
+    fireEvent.change(locationInput, { target: { value: '' } });
+    button.simulate('click');
+    await screen.findByText('Du må fylle inn alle feltene');
   });
-  expect(<ToastContainer />).toBeInTheDocument;
-});
-*/
+
+  // Clean up after the tests
   afterEach(() => {
     mount.cleanUp();
   });

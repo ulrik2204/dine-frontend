@@ -99,7 +99,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <h2 className={styles.createDinnerH2}>Kjøkken</h2>
         <NativeSelect
           value={cuisine}
-          placeholder="Kjøkkenet retten kommer fra"
           className={styles.inputField}
           onChange={(e) => setCuisine(e.target.value)}
         >
@@ -121,7 +120,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <TextField
             onChange={(event) => setDateTime(event.target.value)}
             id="datetime-local"
-            label="Tidspunkt middagen finner sted"
+            label="Tidspunktet middagen finner sted"
             type="datetime-local"
             value={dateTime}
             className={styles.inputField}
@@ -180,7 +179,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
         <div className={styles.buttonDiv}>
           <Button
-            
             variant="contained"
             color="primary"
             onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
