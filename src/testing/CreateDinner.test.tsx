@@ -6,26 +6,25 @@ import Button from '@material-ui/core/Button';
 import { createMount } from '@material-ui/core/test-utils';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { shallow, configure } from 'enzyme';
-import MockAdapter from 'axios-mock-adapter';
+// import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 configure({ adapter: new Adapter() });
 describe('Testing the CreateDinnerPage', () => {
   let mount: any;
   let wrapper: any;
   beforeEach(() => {
     // Mock the allergies response
-    const mock = new MockAdapter(axios);
     const data = [{ id: 1, allergy: 'bløtdyr' }];
-    mock.onGet('/api/allergies/').reply(200, data);
+    mockedAxios.get.mockResolvedValue(data);
     mount = createMount();
-    act(() => {
-      wrapper = mount(
-        <div>
-          <ToastContainer /> <CreateDinnerPage />
-        </div>,
-      );
-    });
+    wrapper = mount(
+      <div>
+        <ToastContainer /> <CreateDinnerPage />
+      </div>,
+    );
   });
 
   test('Testing if toast pops up if everything is empty', async () => {

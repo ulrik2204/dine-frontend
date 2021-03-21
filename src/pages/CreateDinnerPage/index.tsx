@@ -12,7 +12,6 @@ import { defaultDinner } from '../../util/constants';
 import Select from '@material-ui/core/Select';
 import { Checkbox, FormControl, FormHelperText, Input, ListItemText, MenuItem } from '@material-ui/core';
 import { toast } from 'react-toastify';
-import { truncate } from 'node:fs';
 
 /**
  * The component page for creating a dinner element
@@ -154,23 +153,25 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           className={styles.inputField}
           multiple
           displayEmpty
-          value={allergy}
+          value={allergyIDs}
           onChange={handleChange}
           input={<Input />}
           renderValue={(selected) => {
             if ((selected as string[]).length === 0) {
               return 'Velg allergener i middagen';
             }
-            return (selected as string[]).join(', ');
+            return (selected as number[])
+              .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
+              .join(', ');
           }}
         >
-          <MenuItem key="-1" disabled value="">
+          <MenuItem key="-1" disabled value={[]}>
             Velg allergener
           </MenuItem>
           {allergies.map((item) => (
-            <MenuItem key={item.id} value={item.allergy}>
-              <Checkbox key={(item.id as number) * 20} checked={allergy.indexOf(item.allergy) > -1} />
-              <ListItemText key={(item.id as number) * 40} primary={item.allergy} />
+            <MenuItem key={item.id} value={item.id}>
+              <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
+              <ListItemText primary={item.allergy} />
             </MenuItem>
           ))}
         </Select>
@@ -179,6 +180,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
         <div className={styles.buttonDiv}>
           <Button
+            
             variant="contained"
             color="primary"
             onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
