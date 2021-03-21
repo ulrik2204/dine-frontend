@@ -16,7 +16,7 @@ const App: React.FunctionComponent = () => {
   // Intermediate values to set the startValueToken: Tries to find it locally first
   // These are values not rendreed on the screen, thus they do not need to be in a hook
   const localToken = localStorage.getItem('userToken');
-  const startValueToken = localToken == null ? '' : localToken;
+  const startValueToken = localToken == null || localToken == 'null' ? '' : localToken;
   // The userToken and its startValue, in addtion to the function to set the token
   const [userToken, setUserToken] = useState<string>(startValueToken);
   const providerValue = useMemo(() => ({ userToken, setUserToken }), [userToken, setUserToken]);
