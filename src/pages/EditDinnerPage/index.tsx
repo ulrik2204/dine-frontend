@@ -10,16 +10,16 @@ import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
 import Select from '@material-ui/core/Select';
-import { Checkbox, FormControl, FormHelperText, Input, ListItemText, MenuItem } from '@material-ui/core';
+import { Checkbox, FormControl, Input, ListItemText, MenuItem } from '@material-ui/core';
 import { toast } from 'react-toastify';
 
 /**
  * The component page for creating a dinner element
  */
-const CreateDinnerPage: React.FunctionComponent = () => {
+const EditDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('');
+  const [cuisine, setCuisine] = useState('Andre');
   const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
   const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
@@ -29,7 +29,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const history = useHistory();
   const allergies = useGetAllAllergiesFromAPI();
 
-  // The function for taking in the form input and sending it as a post request to the backend
+  // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback(
     (
       dish: string,
@@ -67,7 +67,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
-    console.log(status);
     if (status === 201) {
       toast.info('Middagen ble opprettet!');
       history.push('/');
@@ -86,24 +85,16 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
   return (
     <StylesProvider injectFirst>
-      <div className={styles.createDinnerContainer}>
-        <h1 className={'title'}>Opprett middag</h1>
-        <h2 className={styles.createDinnerH2}>Rett</h2>
+      <div className={styles.editDinnerContainer}>
+        <h1 className={'title'}>Endre middag</h1>
+        <h2 className={styles.editDinnerH2}>Rett</h2>
         <TextField
-          placeholder="Navn på retten"
           className={styles.inputField}
           value={dish}
           onChange={(event) => setDish(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>Kjøkken</h2>
-        <NativeSelect
-          value={cuisine}
-          className={styles.inputField}
-          onChange={(e) => setCuisine(e.target.value)}
-        >
-          <option disabled value="" color="gray">
-            Velg kjøkken
-          </option>
+        <h2 className={styles.editDinnerH2}>Kjøkken</h2>
+        <NativeSelect className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
           <option value={'Andre'}>Andre</option>
           <option value={'Fransk'}>Fransk</option>
           <option value={'Indisk'}>Indisk</option>
@@ -113,12 +104,12 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <option value={'Meksikansk'}>Meksikansk</option>
           <option value={'Norsk'}>Norsk</option>
         </NativeSelect>
-        <h2 className={styles.createDinnerH2}>Tidspunkt</h2>
+        <h2 className={styles.editDinnerH2}>Tidspunkt</h2>
         <form noValidate>
           <TextField
             onChange={(event) => setDateTime(event.target.value)}
             id="datetime-local"
-            label="Tidspunktet middagen finner sted"
+            label="Next appointment"
             type="datetime-local"
             value={dateTime}
             className={styles.inputField}
@@ -127,51 +118,42 @@ const CreateDinnerPage: React.FunctionComponent = () => {
             }}
           />
         </form>
-        <h2 className={styles.createDinnerH2}>Sted</h2>
+        <h2 className={styles.editDinnerH2}>Sted</h2>
         <TextField
-          placeholder="Der middagen finner sted"
           className={styles.inputField}
           value={location}
           onChange={(event) => setLocation(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
+        <h2 className={styles.editDinnerH2}>Beskrivelse</h2>
         <TextField
-          placeholder="Beskrivelse av middagen"
           className={styles.inputField}
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>Allergi</h2>
-        <br></br>
-        <Select
-          className={styles.inputField}
-          multiple
-          displayEmpty
-          value={allergyIDs}
-          onChange={handleChange}
-          input={<Input />}
-          renderValue={(selected) => {
-            if ((selected as string[]).length === 0) {
-              return 'Velg allergener i middagen';
-            }
-            return (selected as number[])
-              .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
-              .join(', ');
-          }}
-        >
-          <MenuItem key="-1" disabled value={[]}>
-            Velg allergener
-          </MenuItem>
-          {allergies.map((item) => (
-            <MenuItem key={item.id} value={item.id}>
-              <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
-              <ListItemText primary={item.allergy} />
-            </MenuItem>
-          ))}
-        </Select>
-        <br></br>
-        <br></br>
+        <h2 className={styles.editDinnerH2}>Allergi</h2>
 
+        <FormControl className={styles.inputField}>
+          <Select
+            labelId="demo-mutiple-checkbox-label"
+            id="demo-mutiple-checkbox"
+            multiple
+            value={allergyIDs}
+            onChange={handleChange}
+            input={<Input />}
+            renderValue={(selected) =>
+              (selected as number[])
+                .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
+                .join(', ')
+            }
+          >
+            {allergies.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
+                <ListItemText primary={item.allergy} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <div className={styles.buttonDiv}>
           <Button
             variant="contained"
@@ -179,11 +161,11 @@ const CreateDinnerPage: React.FunctionComponent = () => {
             onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
             className={styles.buttonField}
           >
-            Opprett
+            Endre
           </Button>
         </div>
       </div>
     </StylesProvider>
   );
 };
-export default CreateDinnerPage;
+export default EditDinnerPage;

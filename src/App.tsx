@@ -9,8 +9,10 @@ import UserContext from './util/UserContext';
 import LogInPage from './pages/LogIn';
 import RegInPage from './pages/RegIn';
 import ProfilePage from './pages/ProfilePage';
+import EditDinnerPage from './pages/EditDinnerPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminPage from './pages/AdminPage';
 
 const App: React.FunctionComponent = () => {
   // Intermediate values to set the startValueToken: Tries to find it locally first
@@ -48,6 +50,9 @@ const App: React.FunctionComponent = () => {
             <Route exact path="/login" component={LogInPage} />
             <Route exact path="/regin" component={RegInPage} />
             <Route exact path="/profile" component={ProfilePage} />
+            <Route exact path="/edit" component={EditDinnerPage}/>
+            <Route exact path="/admin" component={AdminPage}/>
+
           </Switch>
         </UserContext.Provider>
       </div>
