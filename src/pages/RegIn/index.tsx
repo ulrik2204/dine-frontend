@@ -1,5 +1,5 @@
 import { Button, TextField } from '@material-ui/core';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useState } from 'react';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
@@ -11,6 +11,10 @@ import { ListItemText } from '@material-ui/core';
 import { Checkbox } from '@material-ui/core';
 import { useGetAllAllergiesFromAPI } from '../../actions/apiCalls';
 import { toast } from 'react-toastify';
+import { defaultRegistrationUser } from '../../util/constants';
+import { useRegisterUser } from '../../actions/apiCalls';
+import { RegistrationUser } from '../../util/types';
+import useDidMountEffect from '../../actions/useDidMountEffect';
 
 const RegInPage: React.FunctionComponent = () => {
   const [name, setName] = useState('');
@@ -21,6 +25,9 @@ const RegInPage: React.FunctionComponent = () => {
   const [password2, setPassword2] = useState('');
   const allergies = useGetAllAllergiesFromAPI();
 
+  const [registerUser, setRegisterUser] = useState(defaultRegistrationUser);
+  const registerStatus = useRegisterUser(registerUser);
+
   const sendRegIn = useCallback(
     (name: string, userName: string, address: string, allergy: string[], password: string, password2: string) => {
       // Check if the input is correct
@@ -28,9 +35,30 @@ const RegInPage: React.FunctionComponent = () => {
         toast.warn('Du må skrive inn i alle feltene');
         return;
       }
+      console.log(userName);
+      const fullName = name.split(' ');
+      const RegisterUserInput: RegistrationUser = {
+        username: userName,
+        first_name: fullName[0],
+        last_name: fullName[1],
+        address: address,
+        password: password,
+        password2: password2,
+      };
+      setRegisterUser(RegisterUserInput);
     },
     [],
   );
+
+  useDidMountEffect(() => {
+    if (registerStatus === 400) {
+      toast.warn('Registering mislykkes!');
+    }
+  }, [registerStatus]);
+
+  useEffect(() => {
+    console.log(registerStatus);
+  }, [registerStatus]);
 
   // Handle changes for dropdown allergy
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {

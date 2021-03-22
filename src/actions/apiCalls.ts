@@ -201,6 +201,8 @@ export const useRegisterUser = (user: RegistrationUser): number => {
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
+    console.log('Prøver å resgistrere');
+    console.log(localStorage.getItem('userToken'));
     axios
       .post('/api/users/register/', JSON.stringify(user), {
         headers: headers,
