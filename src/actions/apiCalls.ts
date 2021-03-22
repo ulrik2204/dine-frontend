@@ -219,7 +219,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
   }, [setStatusToken, user]);
 
   // When token is updated, the context userToken should also be updated if token is not empty
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
       console.log('Hei');
