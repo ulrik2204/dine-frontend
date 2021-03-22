@@ -6,12 +6,18 @@ import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { defaultLoginUser } from '../../util/constants';
+import { useLoginUser } from '../../actions/apiCalls';
+import useDidMountEffect from '../../actions/useDidMountEffect';
+import { LoginUser } from '../../util/types';
 
 const LogInPage: React.FunctionComponent = () => {
   const history = useHistory();
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [loginUser, setLoginUser] = useState(defaultLoginUser);
+  const loginStatus = useLoginUser(loginUser);
 
   const sendLogIn = useCallback((userName: string, password: string) => {
     // Check if the input is correct
@@ -20,7 +26,15 @@ const LogInPage: React.FunctionComponent = () => {
       return;
     }
     console.log(userName);
+    const loginUserInput: LoginUser = { username: userName, password: password };
+    setLoginUser(loginUserInput);
   }, []);
+
+  useDidMountEffect(() => {
+    if (loginStatus === 400) {
+      toast.warn('Ingen bruker');
+    }
+  }, [loginStatus]);
 
   return (
     <StylesProvider injectFirst>

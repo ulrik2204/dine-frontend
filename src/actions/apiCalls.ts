@@ -201,6 +201,8 @@ export const useRegisterUser = (user: RegistrationUser): number => {
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
+    console.log('Prøver å resgistrere');
+    console.log(localStorage.getItem('userToken'));
     axios
       .post('/api/users/register/', JSON.stringify(user), {
         headers: headers,
@@ -217,7 +219,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
   }, [setStatusToken, user]);
 
   // When token is updated, the context userToken should also be updated if token is not empty
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
       console.log('Hei');
@@ -247,6 +249,8 @@ export const useLoginUser = (loginUser: LoginUser): number => {
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
+    console.log('Tryign to log in user, token: ', localStorage.getItem('userToken'));
+
     axios
       .post('/api/users/login/', JSON.stringify(loginUser), {
         headers: headers,
@@ -263,7 +267,7 @@ export const useLoginUser = (loginUser: LoginUser): number => {
   }, [setStatusToken, loginUser]);
 
   // When token is updated, the context userToken should also be updated if token is not empty
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
       console.log('Hei');
