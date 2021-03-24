@@ -8,12 +8,8 @@ import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { retrieveAllergies } from '../../actions/retrieve';
 
-type ProfilePageProps = {
-  userID: number;
-};
-
-const ProfilePage: React.FunctionComponent<ProfilePageProps> = (props: ProfilePageProps) => {
-  const user = useGetUserFromAPI(props.userID);
+const ProfilePage: React.FunctionComponent = () => {
+  const user = useGetUserFromAPI(true);
   const { setUserToken } = useContext(UserContext);
   const allergies = retrieveAllergies(user.allergies as number[]);
   const history = useHistory();
@@ -31,7 +27,9 @@ const ProfilePage: React.FunctionComponent<ProfilePageProps> = (props: ProfilePa
         <h2 className={styles.inputText}>Adresse</h2>
         <h3 className={styles.input}>{user.address}</h3>
         <h2 className={styles.inputText}>Allergier</h2>
-        <h3 className={styles.input}>{allergies.join(', ')}</h3>
+        <h3 className={styles.input}>{allergies.join(', ') || 'Ingen allergier'}</h3>
+        <h2 className={styles.inputText}>Om meg</h2>
+        <h3 className={styles.input}>{user.about_me || 'Ingen allergier'}</h3>
 
         <Button
           className={styles.changeButton}

@@ -18,6 +18,7 @@ export const defaultAllergy: Allergy = {
 
 // An empty, default User object
 export const defaultUser: User = {
+  id: -1,
   username: '',
   first_name: '',
   last_name: '',

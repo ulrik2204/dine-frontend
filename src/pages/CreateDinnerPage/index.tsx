@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import TextField from '@material-ui/core/TextField';
@@ -9,9 +9,10 @@ import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
-import Select from '@material-ui/core/Select';
 import { Checkbox, FormControl, FormHelperText, Input, ListItemText, MenuItem } from '@material-ui/core';
 import { toast } from 'react-toastify';
+import AllergyMultiselect from '../../components/AllergyMultiselect';
+import UserContext from '../../util/UserContext';
 
 /**
  * The component page for creating a dinner element
@@ -20,29 +21,29 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
   const [cuisine, setCuisine] = useState('');
-  const [dateTime, setDateTime] = useState(new Date().toISOString());
+  const [date, setDate] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
+  // The list of allergyIDs of this dinner
+  const [allergies, setAllergies] = useState<number[]>([]);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
-  const status = usePostDinnerToAPI(dinnerState);
+  const {status, resetStatus} = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
-  const allergies = useGetAllAllergiesFromAPI();
+  const { userToken } = useContext(UserContext);
 
   // The function for taking in the form input and sending it as a post request to the backend
-  const sendForm = useCallback(
-    (
-      dish: string,
+  const sendForm = useCallback(() =>
+    /*       dish: string,
       cuisine: string,
       date: string,
       location: string,
       owner: number,
       description: string,
-      allergies: number[],
-    ) => {
+      allergies: number[], */
+    {
       // Check if the input is correct
-      if (dish === '' || cuisine === '' || location === '' || owner == undefined) {
-        toast.warn('Du må fylle inn alle feltene');
+      if (dish === '' || cuisine === '' || location === '') {
+        toast.warn('Du må fylle inn navnet på retten, kjøkken og sted');
         return;
       }
       // Not checking date, as a datefield is used to secure this.
@@ -52,18 +53,15 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       // The sent dinner event
 
       const dinner: Dinner = {
-        dish: dish,
-        cuisine: cuisine,
-        date: date,
-        location: location,
-        owner: owner,
-        description: description,
-        allergies: allergies,
+        dish,
+        cuisine,
+        date,
+        location,
+        description,
+        allergies,
       };
       setDinnerState(dinner);
-    },
-    [],
-  );
+    }, [dish, cuisine, date, location, description, allergies, setDinnerState]);
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
@@ -73,16 +71,15 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       history.push('/');
     } else if (status === 200) {
       toast.info('Middagen ble ikke opprettet');
+      resetStatus()
     } else if (status === 400) {
       toast.error('Noe gikk galt');
+      resetStatus()
     } else if (status === 401) {
       toast.error('Du er ikke logget inn');
+      resetStatus()
     }
   }, [status]);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAllergyIDs(event.target.value as number[]);
-  };
 
   return (
     <StylesProvider injectFirst>
@@ -96,11 +93,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setDish(event.target.value)}
         ></TextField>
         <h2 className={styles.createDinnerH2}>Kjøkken</h2>
-        <NativeSelect
-          value={cuisine}
-          className={styles.inputField}
-          onChange={(e) => setCuisine(e.target.value)}
-        >
+        <NativeSelect value={cuisine} className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
           <option disabled value="" color="gray">
             Velg kjøkken
           </option>
@@ -116,11 +109,11 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         <h2 className={styles.createDinnerH2}>Tidspunkt</h2>
         <form noValidate>
           <TextField
-            onChange={(event) => setDateTime(event.target.value)}
+            onChange={(event) => setDate(event.target.value)}
             id="datetime-local"
             label="Tidspunktet middagen finner sted"
             type="datetime-local"
-            value={dateTime}
+            value={date}
             className={styles.inputField}
             InputLabelProps={{
               shrink: true,
@@ -143,42 +136,12 @@ const CreateDinnerPage: React.FunctionComponent = () => {
         ></TextField>
         <h2 className={styles.createDinnerH2}>Allergi</h2>
         <br></br>
-        <Select
-          className={styles.inputField}
-          multiple
-          displayEmpty
-          value={allergyIDs}
-          onChange={handleChange}
-          input={<Input />}
-          renderValue={(selected) => {
-            if ((selected as string[]).length === 0) {
-              return 'Velg allergener i middagen';
-            }
-            return (selected as number[])
-              .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
-              .join(', ');
-          }}
-        >
-          <MenuItem key="-1" disabled value={[]}>
-            Velg allergener
-          </MenuItem>
-          {allergies.map((item) => (
-            <MenuItem key={item.id} value={item.id}>
-              <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
-              <ListItemText primary={item.allergy} />
-            </MenuItem>
-          ))}
-        </Select>
+        <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
         <br></br>
         <br></br>
 
         <div className={styles.buttonDiv}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
-            className={styles.buttonField}
-          >
+          <Button variant="contained" color="primary" onClick={() => sendForm()} className={styles.buttonField}>
             Opprett
           </Button>
         </div>

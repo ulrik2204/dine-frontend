@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { defaultAllergy, defaultDinner, defaultUser } from '../util/constants';
 import { Allergy, Dinner, User, RegistrationUser, LoginUser } from '../util/types';
 import UserContext from '../util/UserContext';
@@ -44,7 +44,7 @@ const useGetFromAPI = (urlPath: string, immediate = true): any => {
  * @remarks
  * The request is not sent the first time, but when the onject or urlPath is changed.
  */
-const usePostToAPI = (urlPath: string, obj: unknown): number => {
+const usePostToAPI = (urlPath: string, obj: unknown): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
   const { userToken } = useContext(UserContext);
   const headers = {
@@ -65,10 +65,15 @@ const usePostToAPI = (urlPath: string, obj: unknown): number => {
       .then((res) => setStatus(res.status))
       .catch((err) => {
         console.log(err);
-        setStatus(400);
+        setStatus(err.response.status);
       });
   }, [setStatus, urlPath, obj]);
-  return status;
+
+  const resetStatus = useCallback(() => {
+    setStatus(0);
+  }, [setStatus]);
+
+  return { status, resetStatus };
 };
 
 /**
@@ -100,7 +105,7 @@ export const useGetDinnerFromAPI = (id: number, immediate = true): Dinner => {
  * @remarks
  * The request is not sent the first time, but when the dinner object is changed.
  */
-export const usePostDinnerToAPI = (dinner: Dinner): number => {
+export const usePostDinnerToAPI = (dinner: Dinner): { status: number; resetStatus: () => void } => {
   return usePostToAPI('/api/dinners/', dinner);
 };
 
@@ -131,9 +136,10 @@ export const useSignupForDinner = (dinnerID: number): number => {
       .then((res) => setStatus(res.status))
       .catch((err) => {
         console.log(err);
-        setStatus(400);
+        setStatus(err.response.status);
       });
   }, [setStatus, dinnerID]);
+
   return status;
 };
 
@@ -163,27 +169,17 @@ export const useGetAllergyFromAPI = (allergyID: number, immediate = true): Aller
  */
 export const useGetAllUsersFromAPI = (): User[] => {
   const usersAPI = useGetFromAPI('/api/users/', true);
-  const [users, setUsers] = useState([defaultUser]);
 
-  useEffect(() => {
-    setUsers(usersAPI as User[]);
-  }, [usersAPI]);
-  return users as User[];
+  return usersAPI || [defaultUser];
 };
 /**
- * Hook to get the data for a single user from the API
- * @param userID - The  id of the use to get
+ * Hook to get the data for a single user from the API by the token.
  * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
  * @returns A user object for the user
  */
-export const useGetUserFromAPI = (userID: number, immediate = true): User => {
-  const userAPI = useGetFromAPI(`/api/users/${userID}/`, immediate);
-  const [user, setUser] = useState(defaultUser);
-
-  useDidMountEffect(() => {
-    setUser(userAPI as User);
-  }, [userAPI]);
-  return user as User;
+export const useGetUserFromAPI = (immediate = true): User => {
+  const user = useGetFromAPI(`/api/users/getbytokenheader/`, immediate);
+  return user?.user || defaultUser;
 };
 
 /**
@@ -192,7 +188,7 @@ export const useGetUserFromAPI = (userID: number, immediate = true): User => {
  * @returns A HTTP status number
  * @remarks The request is not sent the first time, but when the registerUser is changed.
  */
-export const useRegisterUser = (user: RegistrationUser): number => {
+export const useRegisterUser = (user: RegistrationUser): { status: number; resetStatus: () => void } => {
   const [{ status, token }, setStatusToken] = useState<{ status: number; token: string }>({ status: 0, token: '' });
   const { userToken, setUserToken } = useContext(UserContext);
   const headers = {
@@ -202,7 +198,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
     console.log('Prøver å resgistrere');
-    console.log(localStorage.getItem('userToken'));
+    console.log('Usertoken from useRegUser', localStorage.getItem('userToken'));
     axios
       .post('/api/users/register/', JSON.stringify(user), {
         headers: headers,
@@ -214,7 +210,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
       )
       .catch((err) => {
         console.log(err);
-        return setStatusToken({ status: 400, token: '' });
+        return setStatusToken({ status: err.response.status, token: '' });
       });
   }, [setStatusToken, user]);
 
@@ -222,16 +218,16 @@ export const useRegisterUser = (user: RegistrationUser): number => {
   useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
-      console.log('Hei');
+      console.log('Setting the use token');
       setUserToken(token);
       console.log(userToken);
-    } else {
-      // Else, it is a bad request, this should aldready have been logged
-      setStatusToken({ status: 400, token: '' });
     }
   }, [token]);
+  const resetStatus = useCallback(() => {
+    setStatusToken({ status: 0, token: token });
+  }, [setStatusToken]);
 
-  return status;
+  return { status, resetStatus };
 };
 
 /**
@@ -240,7 +236,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
  * @returns A status code that indicates the result of the request
  * @remarks The request is not sent the first time, but when the loginUser is changed.
  */
-export const useLoginUser = (loginUser: LoginUser): number => {
+export const useLoginUser = (loginUser: LoginUser): { status: number; resetStatus: () => void } => {
   const [{ status, token }, setStatusToken] = useState<{ status: number; token: string }>({ status: 0, token: '' });
   const { setUserToken } = useContext(UserContext);
   const headers = {
@@ -262,7 +258,7 @@ export const useLoginUser = (loginUser: LoginUser): number => {
       )
       .catch((err) => {
         console.log(err);
-        return setStatusToken({ status: 400, token: '' });
+        return setStatusToken({ status: err.response.status, token: '' });
       });
   }, [setStatusToken, loginUser]);
 
@@ -270,13 +266,14 @@ export const useLoginUser = (loginUser: LoginUser): number => {
   useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
-      console.log('Hei');
+      console.log('Setting the user token', token);
       setUserToken(token);
-    } else {
-      // Else, it is a bad request, this should aldready have been logged
-      setStatusToken({ status: 400, token: '' });
     }
   }, [token]);
 
-  return status;
+  const resetStatus = useCallback(() => {
+    setStatusToken({ status: 0, token: token });
+  }, [setStatusToken]);
+
+  return { status, resetStatus };
 };

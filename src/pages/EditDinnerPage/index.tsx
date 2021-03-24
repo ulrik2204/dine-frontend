@@ -9,9 +9,8 @@ import useDidMountEffect from '../../actions/useDidMountEffect';
 import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
 import { defaultDinner } from '../../util/constants';
-import Select from '@material-ui/core/Select';
-import { Checkbox, FormControl, Input, ListItemText, MenuItem } from '@material-ui/core';
 import { toast } from 'react-toastify';
+import AllergyMultiselect from '../../components/AllergyMultiselect';
 
 /**
  * The component page for creating a dinner element
@@ -25,9 +24,8 @@ const EditDinnerPage: React.FunctionComponent = () => {
   const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
-  const status = usePostDinnerToAPI(dinnerState);
+  const { status, resetStatus } = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
-  const allergies = useGetAllAllergiesFromAPI();
 
   // The function for taking in the form input and sening it as a post request to the backend
   const sendForm = useCallback(
@@ -68,20 +66,19 @@ const EditDinnerPage: React.FunctionComponent = () => {
   // When the status is recieved, move to the
   useDidMountEffect(() => {
     if (status === 201) {
-      toast.info('Middagen ble opprettet!');
+      toast.info('Middagen ble endret!');
       history.push('/');
     } else if (status === 200) {
-      toast.info('Middagen ble ikke opprettet');
+      toast.info('Middagen ble ikke endret');
+      resetStatus();
     } else if (status === 400) {
       toast.error('Noe gikk galt');
+      resetStatus();
     } else if (status === 401) {
       toast.error('Du er ikke logget inn');
+      resetStatus();
     }
   }, [status]);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAllergyIDs(event.target.value as number[]);
-  };
 
   return (
     <StylesProvider injectFirst>
@@ -131,29 +128,8 @@ const EditDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
         <h2 className={styles.editDinnerH2}>Allergi</h2>
+        <AllergyMultiselect allergyIDs={allergyIDs} setAllergyIDs={setAllergyIDs} className={styles.inputField} />
 
-        <FormControl className={styles.inputField}>
-          <Select
-            labelId="demo-mutiple-checkbox-label"
-            id="demo-mutiple-checkbox"
-            multiple
-            value={allergyIDs}
-            onChange={handleChange}
-            input={<Input />}
-            renderValue={(selected) =>
-              (selected as number[])
-                .map((sel) => (allergies.find((item) => item.id === sel) as Allergy).allergy)
-                .join(', ')
-            }
-          >
-            {allergies.map((item) => (
-              <MenuItem key={item.id} value={item.id}>
-                <Checkbox checked={allergyIDs.indexOf(item.id as number) > -1} />
-                <ListItemText primary={item.allergy} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
         <div className={styles.buttonDiv}>
           <Button
             variant="contained"

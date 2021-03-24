@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../../fonts/Roboto-Thin.ttf';
 import styles from './styles.module.css';
 import { useGetDinnerFromAPI } from '../../actions/apiCalls';
@@ -15,6 +15,11 @@ type DinnerPageProps = {
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
   const dinner = useGetDinnerFromAPI(props.dinnerID);
   const allergies = retrieveAllergies(dinner.allergies as number[]);
+
+  useEffect(() => {
+    console.log(allergies.length == 0);
+    console.log(dinner.description);
+  }, []);
 
   return (
     <div className={styles.dinnerPageContainer}>
@@ -34,13 +39,13 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
       <h3 className={styles.dinnerPageH3}>{new Date(dinner?.date).toLocaleString()}</h3>
 
       <h1 className={styles.dinnerPageH1}>Sted</h1>
-      <h3 className={styles.dinnerPageH3}>{dinner?.location}</h3>
+      <h3 className={styles.dinnerPageH3}>{dinner.location}</h3>
 
       <h1 className={styles.dinnerPageH1}>Allergier</h1>
-      <h3 className={styles.dinnerPageH3}>{allergies.join(', ')}</h3>
+      <h3 className={styles.dinnerPageH3}>{allergies.join(', ') || 'Ingen allergier'}</h3>
 
       <h1 className={styles.dinnerPageH1}>Beskrivelse</h1>
-      <h3 className={styles.dinnerPageH3}>{dinner?.description}</h3>
+      <h3 className={styles.dinnerPageH3}>{dinner.description || 'Ingen beskrivelse'}</h3>
       {/* 
       <button className={classes.signUp}>
         Meld på

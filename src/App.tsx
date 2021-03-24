@@ -17,8 +17,11 @@ import AdminPage from './pages/AdminPage';
 const App: React.FunctionComponent = () => {
   // Intermediate values to set the startValueToken: Tries to find it locally first
   // These are values not rendreed on the screen, thus they do not need to be in a hook
-  const localToken = localStorage.getItem('userToken');
-  const startValueToken = localToken == null || localToken == 'null' ? '' : localToken;
+  const startValueToken = useMemo(() => {
+    const localToken = localStorage.getItem('userToken');
+    console.log('App localtoken', localToken);
+    return localToken == null || ['null', undefined, 'undefined'].indexOf(localToken) > -1 ? '' : localToken;
+  }, [localStorage.getItem('userToken')]);
   // The userToken and its startValue, in addtion to the function to set the token
   const [userToken, setUserToken] = useState<string>(startValueToken);
   const providerValue = useMemo(() => ({ userToken, setUserToken }), [userToken, setUserToken]);
@@ -50,9 +53,8 @@ const App: React.FunctionComponent = () => {
             <Route exact path="/login" component={LogInPage} />
             <Route exact path="/regin" component={RegInPage} />
             <Route exact path="/profile" component={ProfilePage} />
-            <Route exact path="/edit" component={EditDinnerPage}/>
-            <Route exact path="/admin" component={AdminPage}/>
-
+            <Route exact path="/edit" component={EditDinnerPage} />
+            <Route exact path="/admin" component={AdminPage} />
           </Switch>
         </UserContext.Provider>
       </div>
