@@ -49,19 +49,19 @@ describe('Testing the CreateDinnerPage', () => {
     fireEvent.change(locationInput, { target: { value: '' } });
     fireEvent.change(descriptionInput, { target: { value: '' } });
     button.simulate('click');
-    await screen.findByText('Du må fylle inn alle feltene');
+    await screen.findByText('Du må fylle inn navnet på retten, kjøkken og sted');
   });
 
   test('Testing if a toast pops up if dish is empty', async () => {
     fireEvent.change(dishInput, { target: { value: '' } });
     button.simulate('click');
-    await screen.findByText('Du må fylle inn alle feltene');
+    await screen.findByText('Du må fylle inn navnet på retten, kjøkken og sted');
   });
 
   test('Test if toas pops up if location is empty', async () => {
     fireEvent.change(locationInput, { target: { value: '' } });
     button.simulate('click');
-    await screen.findByText('Du må fylle inn alle feltene');
+    await screen.findByText('Du må fylle inn navnet på retten, kjøkken og sted');
   });
 
   // Clean up after the tests
