@@ -10,28 +10,29 @@
 }
 
 .buttonDiv {
+    margin-top: 30px;
     width: 100%;
     text-align: center;
-    margin-top: 30px;
 }
 
-.createDinnerContainer {
+.editDinnerContainer {
     flex-direction: column;
     align-items: left;
     margin-left: 30%;
     width: 40%;
     margin-top: 100px;
 }
-
-.createDinnerH1 {
+/*
+.editDinnerH1 {
     text-align: center;
     color: #e85d04;
     width: 80%;
     margin-left: 10%;
     color: #e85d04;
 }
+*/
 
-.createDinnerH2 {
+.editDinnerH2 {
     margin-bottom: 0%;
     text-align: left;
     font-family: 'Roboto', sans-serif;

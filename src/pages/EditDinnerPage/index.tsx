@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { StylesProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { usePostDinnerToAPI } from '../../actions/apiCalls';
@@ -10,58 +10,66 @@ import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
 import { defaultDinner } from '../../util/constants';
 import { Dinner } from '../../util/types';
-import UserContext from '../../util/UserContext';
 import styles from './styles.module.css';
 
 /**
  * The component page for creating a dinner element
  */
-const CreateDinnerPage: React.FunctionComponent = () => {
+const EditDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('');
-  const [date, setDate] = useState(new Date().toISOString());
+  const [cuisine, setCuisine] = useState('Andre');
+  const [dateTime, setDateTime] = useState(new Date().toISOString());
   const [location, setLocation] = useState('');
-  // The list of allergyIDs of this dinner
-  const [allergies, setAllergies] = useState<number[]>([]);
+  const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
   const { status, resetStatus } = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
-  const { userToken } = useContext(UserContext);
 
-  // The function for taking in the form input and sending it as a post request to the backend
-  const sendForm = useCallback(() => {
-    // Check if the input is correct
-    if (dish === '' || cuisine === '' || location === '') {
-      toast.warn('Du må fylle inn navnet på retten, kjøkken og sted');
-      return;
-    }
-    // Not checking date, as a datefield is used to secure this.
-    // If a request with a bad date is sent directly to the backend,
-    //the backend will handle that
+  // The function for taking in the form input and sening it as a post request to the backend
+  const sendForm = useCallback(
+    (
+      dish: string,
+      cuisine: string,
+      date: string,
+      location: string,
+      owner: number,
+      description: string,
+      allergies: number[],
+    ) => {
+      // Check if the input is correct
+      if (dish === '' || cuisine === '' || location === '' || owner == undefined) {
+        toast.warn('Du må fylle inn alle feltene');
+        return;
+      }
+      // Not checking date, as a datefield is used to secure this.
+      // If a request with a bad date is sent directly to the backend,
+      //the backend will handle that
 
-    // The sent dinner event
+      // The sent dinner event
 
-    const dinner: Dinner = {
-      dish,
-      cuisine,
-      date,
-      location,
-      description,
-      allergies,
-    };
-    setDinnerState(dinner);
-  }, [dish, cuisine, date, location, description, allergies, setDinnerState]);
+      const dinner: Dinner = {
+        dish: dish,
+        cuisine: cuisine,
+        date: date,
+        location: location,
+        owner: owner,
+        description: description,
+        allergies: allergies,
+      };
+      setDinnerState(dinner);
+    },
+    [],
+  );
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
-    console.log(status);
     if (status === 201) {
-      toast.info('Middagen ble opprettet!');
+      toast.info('Middagen ble endret!');
       history.push('/');
     } else if (status === 200) {
-      toast.info('Middagen ble ikke opprettet');
+      toast.info('Middagen ble ikke endret');
       resetStatus();
     } else if (status === 400) {
       toast.error('Noe gikk galt');
@@ -74,20 +82,16 @@ const CreateDinnerPage: React.FunctionComponent = () => {
 
   return (
     <StylesProvider injectFirst>
-      <div className={styles.createDinnerContainer}>
-        <h1 className={'title'}>Opprett middag</h1>
-        <h2 className={styles.createDinnerH2}>Rett</h2>
+      <div className={styles.editDinnerContainer}>
+        <h1 className={'title'}>Endre middag</h1>
+        <h2 className={styles.editDinnerH2}>Rett</h2>
         <TextField
-          placeholder="Navn på retten"
           className={styles.inputField}
           value={dish}
           onChange={(event) => setDish(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>Kjøkken</h2>
-        <NativeSelect value={cuisine} className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
-          <option disabled value="" color="gray">
-            Velg kjøkken
-          </option>
+        <h2 className={styles.editDinnerH2}>Kjøkken</h2>
+        <NativeSelect className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
           <option value={'Andre'}>Andre</option>
           <option value={'Fransk'}>Fransk</option>
           <option value={'Indisk'}>Indisk</option>
@@ -97,47 +101,47 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           <option value={'Meksikansk'}>Meksikansk</option>
           <option value={'Norsk'}>Norsk</option>
         </NativeSelect>
-        <h2 className={styles.createDinnerH2}>Tidspunkt</h2>
+        <h2 className={styles.editDinnerH2}>Tidspunkt</h2>
         <form noValidate>
           <TextField
-            onChange={(event) => setDate(event.target.value)}
+            onChange={(event) => setDateTime(event.target.value)}
             id="datetime-local"
-            label="Tidspunktet middagen finner sted"
+            label="Next appointment"
             type="datetime-local"
-            value={date}
+            value={dateTime}
             className={styles.inputField}
             InputLabelProps={{
               shrink: true,
             }}
           />
         </form>
-        <h2 className={styles.createDinnerH2}>Sted</h2>
+        <h2 className={styles.editDinnerH2}>Sted</h2>
         <TextField
-          placeholder="Der middagen finner sted"
           className={styles.inputField}
           value={location}
           onChange={(event) => setLocation(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>Beskrivelse</h2>
+        <h2 className={styles.editDinnerH2}>Beskrivelse</h2>
         <TextField
-          placeholder="Beskrivelse av middagen"
           className={styles.inputField}
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
-        <h2 className={styles.createDinnerH2}>Allergi</h2>
-        <br></br>
-        <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
-        <br></br>
-        <br></br>
+        <h2 className={styles.editDinnerH2}>Allergi</h2>
+        <AllergyMultiselect allergyIDs={allergyIDs} setAllergyIDs={setAllergyIDs} className={styles.inputField} />
 
         <div className={styles.buttonDiv}>
-          <Button variant="contained" color="primary" onClick={() => sendForm()} className={styles.buttonField}>
-            Opprett
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
+            className={styles.buttonField}
+          >
+            Endre
           </Button>
         </div>
       </div>
     </StylesProvider>
   );
 };
-export default CreateDinnerPage;
+export default EditDinnerPage;

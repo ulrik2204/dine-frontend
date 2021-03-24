@@ -1,8 +1,8 @@
 import React from 'react';
+import { useGetDinnerFromAPI, useGetUserByIDFromAPI } from '../../actions/apiCalls';
+import { retrieveAllergies } from '../../actions/retrieve';
 import '../../fonts/Roboto-Thin.ttf';
 import styles from './styles.module.css';
-import { useGetDinnerFromAPI } from '../../actions/apiCalls';
-import { retrieveAllergies } from '../../actions/retrieve';
 
 // All you need to see a dinner page is the dinnerID
 type DinnerPageProps = {
@@ -14,6 +14,7 @@ type DinnerPageProps = {
  */
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
   const dinner = useGetDinnerFromAPI(props.dinnerID);
+  const user = useGetUserByIDFromAPI(dinner.owner as number);
   const allergies = retrieveAllergies(dinner.allergies as number[]);
 
   return (
@@ -25,7 +26,7 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
         alt="Matbilde"
       />
       <h1 className={styles.dinnerPageH1}>Vert</h1>
-      <h3 className={styles.dinnerPageH3}>{dinner.owner}</h3>
+      <h3 className={styles.dinnerPageH3}>{user.first_name + ' ' + user.last_name}</h3>
 
       <h1 className={styles.dinnerPageH1}>Kjøkken</h1>
       <h3 className={styles.dinnerPageH3}>{dinner.cuisine}</h3>
@@ -34,13 +35,13 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
       <h3 className={styles.dinnerPageH3}>{new Date(dinner?.date).toLocaleString()}</h3>
 
       <h1 className={styles.dinnerPageH1}>Sted</h1>
-      <h3 className={styles.dinnerPageH3}>{dinner?.location}</h3>
+      <h3 className={styles.dinnerPageH3}>{dinner.location}</h3>
 
       <h1 className={styles.dinnerPageH1}>Allergier</h1>
-      <h3 className={styles.dinnerPageH3}>{allergies.join(', ')}</h3>
+      <h3 className={styles.dinnerPageH3}>{allergies.join(', ') || 'Ingen allergier'}</h3>
 
       <h1 className={styles.dinnerPageH1}>Beskrivelse</h1>
-      <h3 className={styles.dinnerPageH3}>{dinner?.description}</h3>
+      <h3 className={styles.dinnerPageH3}>{dinner.description || 'Ingen beskrivelse'}</h3>
       {/* 
       <button className={classes.signUp}>
         Meld på

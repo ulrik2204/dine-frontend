@@ -1,82 +1,84 @@
 import { Button, TextField } from '@material-ui/core';
-import React, { useCallback, useEffect } from 'react';
-import { useState } from 'react';
-import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
-import { Select } from '@material-ui/core';
-import { FormControl } from '@material-ui/core';
-import { Input } from '@material-ui/core';
-import { MenuItem } from '@material-ui/core';
-import { ListItemText } from '@material-ui/core';
-import { Checkbox } from '@material-ui/core';
-import { useGetAllAllergiesFromAPI } from '../../actions/apiCalls';
+import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { defaultRegistrationUser } from '../../util/constants';
 import { useRegisterUser } from '../../actions/apiCalls';
-import { RegistrationUser } from '../../util/types';
 import useDidMountEffect from '../../actions/useDidMountEffect';
+import AllergyMultiselect from '../../components/AllergyMultiselect';
+import { defaultRegistrationUser } from '../../util/constants';
+import { RegistrationUser } from '../../util/types';
+import styles from './styles.module.css';
 
 const RegInPage: React.FunctionComponent = () => {
-  const [name, setName] = useState('');
-  const [userName, setUserName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
+  const [username, setUserName] = useState('');
   const [address, setAddress] = useState('');
-  const [allergy, setAllergy] = useState<string[]>([]);
+  const [allergies, setAllergies] = useState<number[]>([]);
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
-  const allergies = useGetAllAllergiesFromAPI();
-
   const [registerUser, setRegisterUser] = useState(defaultRegistrationUser);
-  const registerStatus = useRegisterUser(registerUser);
+  const { status, resetStatus } = useRegisterUser(registerUser);
+  const history = useHistory();
 
-  const sendRegIn = useCallback(
-    (name: string, userName: string, address: string, allergy: string[], password: string, password2: string) => {
-      // Check if the input is correct
-      if (name === '' || userName === '' || address === '' || password === '' || password2 === '') {
-        toast.warn('Du må skrive inn i alle feltene');
-        return;
-      }
-      console.log(userName);
-      const fullName = name.split(' ');
-      const RegisterUserInput: RegistrationUser = {
-        username: userName,
-        first_name: fullName[0],
-        last_name: fullName[1],
-        address: address,
-        password: password,
-        password2: password2,
-      };
-      setRegisterUser(RegisterUserInput);
-    },
-    [],
-  );
+  const sendRegIn = useCallback(() => {
+    // Check if the input is correct
+    if ([username, last_name, last_name, address, password, password2].indexOf('') > -1) {
+      toast.warn('Du må skrive inn i alle feltene');
+      return;
+    }
+
+    if (password != password2) {
+      toast.warn('Passordene er ikke like');
+      return;
+    }
+    const RegisterUserInput: RegistrationUser = {
+      username,
+      first_name,
+      last_name,
+      address,
+      allergies,
+      password,
+      password2,
+    };
+    setRegisterUser(RegisterUserInput);
+  }, [setRegisterUser, username, first_name, last_name, address, allergies, password, password2]);
 
   useDidMountEffect(() => {
-    if (registerStatus === 400) {
-      toast.warn('Registering mislykkes!');
+    console.log(status);
+    if (status === 400) {
+      toast.error('Registering mislykkes!');
+      resetStatus();
+    } else if (status === 200) {
+      toast.info('Brukeren ble opprettet!');
+      history.push('/');
     }
-  }, [registerStatus]);
-
-  useEffect(() => {
-    console.log(registerStatus);
-  }, [registerStatus]);
-
-  // Handle changes for dropdown allergy
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAllergy(event.target.value as string[]);
-  };
+  }, [status]);
 
   return (
     <StylesProvider injectFirst>
       <div className={styles.regInPage}>
         <h1>Register deg</h1>
-        <h2 className={styles.inputText}>Navn</h2>
-        <TextField className={styles.input} value={name} onChange={(event) => setName(event.target.value)}></TextField>
-        <h2 className={styles.inputText}>Epost</h2>
+        <h2 className={styles.inputText}>Brukernavn</h2>
         <TextField
           className={styles.input}
-          value={userName}
+          value={username}
           onChange={(event) => setUserName(event.target.value)}
         ></TextField>
+        <h2 className={styles.inputText}>Fornavn</h2>
+        <TextField
+          className={styles.input}
+          value={first_name}
+          onChange={(event) => setFirstName(event.target.value)}
+        ></TextField>
+        <h2 className={styles.inputText}>Etternavn</h2>
+        <TextField
+          className={styles.input}
+          value={last_name}
+          onChange={(event) => setLastName(event.target.value)}
+        ></TextField>
+
         <h2 className={styles.inputText}>Adresse</h2>
         <TextField
           className={styles.input}
@@ -84,24 +86,7 @@ const RegInPage: React.FunctionComponent = () => {
           onChange={(event) => setAddress(event.target.value)}
         ></TextField>
         <h2 className={styles.inputText}>Allergier</h2>
-        <FormControl className={styles.input}>
-          <Select
-            labelId="demo-mutiple-checkbox-label"
-            id="demo-mutiple-checkbox"
-            multiple
-            value={allergy}
-            onChange={handleChange}
-            input={<Input />}
-            renderValue={(selected) => (selected as string[]).join(', ')}
-          >
-            {allergies.map((item) => (
-              <MenuItem key={item.id} value={item.allergy}>
-                <Checkbox checked={allergy.indexOf(item.allergy) > -1} />
-                <ListItemText primary={item.allergy} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputText} />
         <h2 className={styles.inputText}>Passord</h2>
         <TextField
           className={styles.input}
@@ -116,10 +101,8 @@ const RegInPage: React.FunctionComponent = () => {
           type="password"
           onChange={(event) => setPassword2(event.target.value)}
         ></TextField>
-        <Button
-          className={styles.regInButton}
-          onClick={() => sendRegIn(name, userName, address, allergy, password, password2)}
-        >
+
+        <Button className={styles.regInButton} onClick={() => sendRegIn()}>
           Registrer
         </Button>
       </div>

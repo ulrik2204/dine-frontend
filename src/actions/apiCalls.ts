@@ -1,26 +1,36 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { defaultAllergy, defaultDinner, defaultUser } from '../util/constants';
 import { Allergy, Dinner, User, RegistrationUser, LoginUser } from '../util/types';
 import UserContext from '../util/UserContext';
 import useDidMountEffect from './useDidMountEffect';
 
 /**
+ * A function to get the headers ot be send for a request.
+ * @param userToken The token of the user logged in.
+ * @returns A headers object.
+ */
+const getHeaders = (userToken: string) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: '',
+  };
+  if (['', 'null', null, undefined, 'undefined'].indexOf(userToken) === -1) {
+    headers.Authorization = 'Token ' + userToken;
+  }
+  return headers;
+};
+
+/**
  * A hook for retrieving the data from the backend
  * @param urlPath - The path of the url to get from after https://localhost:8000
- * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
+ * @param immediate If the reqeust should be send immediately, default true.
  * @returns The data fetched from the API
  */
 const useGetFromAPI = (urlPath: string, immediate = true): any => {
   const [data, setData] = useState<any>();
   const { userToken } = useContext(UserContext);
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: '',
-  };
-  if (userToken != '') {
-    headers.Authorization = 'Token ' + userToken;
-  }
+  const headers = getHeaders(userToken);
   // The function to perform the GET request.
   useDidMountEffect(
     () => {
@@ -41,19 +51,14 @@ const useGetFromAPI = (urlPath: string, immediate = true): any => {
  * The hook to perform a POST request to the API
  * @param urlPath - The urlpath to send the post request to (path after localhost:8000)
  * @param obj - The object to post
+ * @returns An object of the status of the request, and a method, resetStatus to set status to 0
  * @remarks
  * The request is not sent the first time, but when the onject or urlPath is changed.
  */
-const usePostToAPI = (urlPath: string, obj: unknown): number => {
+const usePostToAPI = (urlPath: string, obj: unknown): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
   const { userToken } = useContext(UserContext);
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: '',
-  };
-  if (userToken != '') {
-    headers.Authorization = 'Token ' + userToken;
-  }
+  const headers = getHeaders(userToken);
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
@@ -65,15 +70,20 @@ const usePostToAPI = (urlPath: string, obj: unknown): number => {
       .then((res) => setStatus(res.status))
       .catch((err) => {
         console.log(err);
-        setStatus(400);
+        setStatus(err.response.status);
       });
   }, [setStatus, urlPath, obj]);
-  return status;
+
+  const resetStatus = useCallback(() => {
+    setStatus(0);
+  }, [setStatus]);
+
+  return { status, resetStatus };
 };
 
 /**
  * Hook to get all Dinners from the API
- * @returns All dinners in the API
+ * @returns All dinners in the API as a list of Dinner objects
  */
 export const useGetAllDinnersFromAPI = (): Dinner[] => {
   const dinnerListAPI = useGetFromAPI('/api/dinners/', true);
@@ -84,7 +94,7 @@ export const useGetAllDinnersFromAPI = (): Dinner[] => {
 /**
  * A hook to get a single Dinner from the API
  * @param id - The id of the dinner you want to fetch from the API
- * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
+ * @param immediate If the reqeust should be send immediately, default true.
  * @returns The dinner with that id in the API
  */
 export const useGetDinnerFromAPI = (id: number, immediate = true): Dinner => {
@@ -96,30 +106,23 @@ export const useGetDinnerFromAPI = (id: number, immediate = true): Dinner => {
 /**
  * A post request to post a dinner to the API
  * @param dinner - The dinner object to POST to the API.
- * @returns The http status number
- * @remarks
- * The request is not sent the first time, but when the dinner object is changed.
+ * @returns An object of the status of the request, and a method, resetStatus to set status to 0
+ * @remarks The request is not sent the first time, but when the dinner object is changed.
  */
-export const usePostDinnerToAPI = (dinner: Dinner): number => {
+export const usePostDinnerToAPI = (dinner: Dinner): { status: number; resetStatus: () => void } => {
   return usePostToAPI('/api/dinners/', dinner);
 };
 
 /**
  * Hook to sign the user that is logged in for a dinner.
  * @param dinnerID - The dinner to sign up for
- * @returns A HTTP status number
+ * @returns An object of the status of the request, and a method, resetStatus to set status to 0
  * @remarks The PUT request is not sent the first time, but when the dinnerID is changed.
  */
-export const useSignupForDinner = (dinnerID: number): number => {
+export const useSignupForDinner = (dinnerID: number): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
   const { userToken } = useContext(UserContext);
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: '',
-  };
-  if (userToken != '') {
-    headers.Authorization = 'Token ' + userToken;
-  }
+  const headers = getHeaders(userToken);
 
   // The post request is not performed at hook declaration, but after the value is changed
   useEffect(() => {
@@ -131,15 +134,20 @@ export const useSignupForDinner = (dinnerID: number): number => {
       .then((res) => setStatus(res.status))
       .catch((err) => {
         console.log(err);
-        setStatus(400);
+        setStatus(err.response.status);
       });
   }, [setStatus, dinnerID]);
-  return status;
+
+  const resetStatus = useCallback(() => {
+    setStatus(0);
+  }, [setStatus]);
+
+  return { status, resetStatus };
 };
 
 /**
  * A GET request to fetch all the allergies registered in the API
- * @returns All the Allergies registered in the API
+ * @returns All the Allergies registered in the API as a list of Allergy objects
  */
 export const useGetAllAllergiesFromAPI = (): Allergy[] => {
   const allergiesAPI = useGetFromAPI('/api/allergies/', true);
@@ -149,8 +157,8 @@ export const useGetAllAllergiesFromAPI = (): Allergy[] => {
 /**
  * A GET request to fetch one allergy by their ID
  * @param allergyID - The allergyID of the allergy to fetch
- * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
- * @returns An array consisting of: an allergy (default en emtpy allergy) and a function to get the allergy by the id
+ * @param immediate If the reqeust should be send immediately, default true.
+ * @returns The allergy object with the given ID
  */
 export const useGetAllergyFromAPI = (allergyID: number, immediate = true): Allergy => {
   const allergyAPI = useGetFromAPI(`/api/allergies/${allergyID}/`, immediate);
@@ -163,46 +171,44 @@ export const useGetAllergyFromAPI = (allergyID: number, immediate = true): Aller
  */
 export const useGetAllUsersFromAPI = (): User[] => {
   const usersAPI = useGetFromAPI('/api/users/', true);
-  const [users, setUsers] = useState([defaultUser]);
-
-  useEffect(() => {
-    setUsers(usersAPI as User[]);
-  }, [usersAPI]);
-  return users as User[];
+  return usersAPI || [defaultUser];
 };
 /**
- * Hook to get the data for a single user from the API
- * @param userID - The  id of the use to get
- * @param immediate - A boolean to decide if the get request should be performed immediately (true) or if the hooks should wait until the arguments are changed
- * @returns A user object for the user
+ * Hook to get the data for a single user from the API by the token.
+ * @param immediate If the reqeust should be send immediately, default true.
+ * @returns A user object for the user logged in
  */
-export const useGetUserFromAPI = (userID: number, immediate = true): User => {
-  const userAPI = useGetFromAPI(`/api/users/${userID}/`, immediate);
-  const [user, setUser] = useState(defaultUser);
+export const useGetUserByTokenFromAPI = (immediate = true): User => {
+  const user = useGetFromAPI(`/api/users/getbytokenheader/`, immediate);
+  return user?.user || defaultUser;
+};
 
-  useDidMountEffect(() => {
-    setUser(userAPI as User);
-  }, [userAPI]);
-  return user as User;
+/**
+ * Hook to get the user data by their id from the API
+ * @param userID The ID of the user to get.
+ * @param immediate If the reqeust should be send immediately, default true.
+ * @returns The user with that id.
+ */
+export const useGetUserByIDFromAPI = (userID: number, immediate = true): User => {
+  const user = useGetFromAPI(`/api/users/${userID}/`, immediate);
+  return user || defaultUser;
 };
 
 /**
  * A hook register a user to the API
  * @param user - The user object to post
- * @returns A HTTP status number
+ * @returns An object of the status of the request, and a method, resetStatus to set status to 0
  * @remarks The request is not sent the first time, but when the registerUser is changed.
  */
-export const useRegisterUser = (user: RegistrationUser): number => {
+export const useRegisterUser = (user: RegistrationUser): { status: number; resetStatus: () => void } => {
   const [{ status, token }, setStatusToken] = useState<{ status: number; token: string }>({ status: 0, token: '' });
-  const { userToken, setUserToken } = useContext(UserContext);
+  const { setUserToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
   };
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
-    console.log('Prøver å resgistrere');
-    console.log(localStorage.getItem('userToken'));
     axios
       .post('/api/users/register/', JSON.stringify(user), {
         headers: headers,
@@ -214,7 +220,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
       )
       .catch((err) => {
         console.log(err);
-        return setStatusToken({ status: 400, token: '' });
+        return setStatusToken({ status: err.response.status, token: '' });
       });
   }, [setStatusToken, user]);
 
@@ -222,16 +228,16 @@ export const useRegisterUser = (user: RegistrationUser): number => {
   useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
-      console.log('Hei');
       setUserToken(token);
-      console.log(userToken);
-    } else {
-      // Else, it is a bad request, this should aldready have been logged
-      setStatusToken({ status: 400, token: '' });
     }
   }, [token]);
 
-  return status;
+  // The function to reset the status
+  const resetStatus = useCallback(() => {
+    setStatusToken({ status: 0, token: token });
+  }, [setStatusToken]);
+
+  return { status, resetStatus };
 };
 
 /**
@@ -240,7 +246,7 @@ export const useRegisterUser = (user: RegistrationUser): number => {
  * @returns A status code that indicates the result of the request
  * @remarks The request is not sent the first time, but when the loginUser is changed.
  */
-export const useLoginUser = (loginUser: LoginUser): number => {
+export const useLoginUser = (loginUser: LoginUser): { status: number; resetStatus: () => void } => {
   const [{ status, token }, setStatusToken] = useState<{ status: number; token: string }>({ status: 0, token: '' });
   const { setUserToken } = useContext(UserContext);
   const headers = {
@@ -262,7 +268,7 @@ export const useLoginUser = (loginUser: LoginUser): number => {
       )
       .catch((err) => {
         console.log(err);
-        return setStatusToken({ status: 400, token: '' });
+        return setStatusToken({ status: err.response.status, token: '' });
       });
   }, [setStatusToken, loginUser]);
 
@@ -270,13 +276,14 @@ export const useLoginUser = (loginUser: LoginUser): number => {
   useDidMountEffect(() => {
     if (token != '') {
       // Set the userToken - and we have a successful login
-      console.log('Hei');
       setUserToken(token);
-    } else {
-      // Else, it is a bad request, this should aldready have been logged
-      setStatusToken({ status: 400, token: '' });
     }
   }, [token]);
 
-  return status;
+  // Function ot reset the status
+  const resetStatus = useCallback(() => {
+    setStatusToken({ status: 0, token: token });
+  }, [setStatusToken]);
+
+  return { status, resetStatus };
 };
