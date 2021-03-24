@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useGetDinnerFromAPI, useGetUserByIDFromAPI } from '../../actions/apiCalls';
+import { retrieveAllergies } from '../../actions/retrieve';
 import '../../fonts/Roboto-Thin.ttf';
 import styles from './styles.module.css';
-import { useGetDinnerFromAPI } from '../../actions/apiCalls';
-import { retrieveAllergies } from '../../actions/retrieve';
 
 // All you need to see a dinner page is the dinnerID
 type DinnerPageProps = {
@@ -14,12 +14,8 @@ type DinnerPageProps = {
  */
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
   const dinner = useGetDinnerFromAPI(props.dinnerID);
+  const user = useGetUserByIDFromAPI(dinner.owner as number);
   const allergies = retrieveAllergies(dinner.allergies as number[]);
-
-  useEffect(() => {
-    console.log(allergies.length == 0);
-    console.log(dinner.description);
-  }, []);
 
   return (
     <div className={styles.dinnerPageContainer}>
@@ -30,7 +26,7 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
         alt="Matbilde"
       />
       <h1 className={styles.dinnerPageH1}>Vert</h1>
-      <h3 className={styles.dinnerPageH3}>{dinner.owner}</h3>
+      <h3 className={styles.dinnerPageH3}>{user.first_name + ' ' + user.last_name}</h3>
 
       <h1 className={styles.dinnerPageH1}>Kjøkken</h1>
       <h3 className={styles.dinnerPageH3}>{dinner.cuisine}</h3>

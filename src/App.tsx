@@ -1,25 +1,24 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Overview from './pages/Overview';
 import React, { useEffect, useMemo, useState } from 'react';
-import Menu from './components/Menu';
-import DinnerPage from './pages/DinnerPage';
-import CreateDinnerPage from './pages/CreateDinnerPage';
-import UserContext from './util/UserContext';
-import LogInPage from './pages/LogIn';
-import RegInPage from './pages/RegIn';
-import ProfilePage from './pages/ProfilePage';
-import EditDinnerPage from './pages/EditDinnerPage';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import Menu from './components/Menu';
 import AdminPage from './pages/AdminPage';
+import CreateDinnerPage from './pages/CreateDinnerPage';
+import DinnerPage from './pages/DinnerPage';
+import EditDinnerPage from './pages/EditDinnerPage';
+import LogInPage from './pages/LogIn';
+import Overview from './pages/Overview';
+import ProfilePage from './pages/ProfilePage';
+import RegInPage from './pages/RegIn';
+import UserContext from './util/UserContext';
 
 const App: React.FunctionComponent = () => {
   // Intermediate values to set the startValueToken: Tries to find it locally first
   // These are values not rendreed on the screen, thus they do not need to be in a hook
   const startValueToken = useMemo(() => {
     const localToken = localStorage.getItem('userToken');
-    console.log('App localtoken', localToken);
     return localToken == null || ['null', undefined, 'undefined'].indexOf(localToken) > -1 ? '' : localToken;
   }, [localStorage.getItem('userToken')]);
   // The userToken and its startValue, in addtion to the function to set the token

@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import { AppBar } from '@material-ui/core';
+import { StylesProvider } from '@material-ui/core/styles';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ReactComponent as ReactLogo } from '../../assets/dine_logo.svg';
 import { ReactComponent as UserIcon } from '../../assets/user.svg';
-import { AppBar } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
-import styles from './styles.module.css';
-import { StylesProvider } from '@material-ui/core/styles';
 import UserContext from '../../util/UserContext';
-import { useContext } from 'react';
-import { useGetUserFromAPI } from '../../actions/apiCalls';
+import styles from './styles.module.css';
 
 /**
  * Menu component

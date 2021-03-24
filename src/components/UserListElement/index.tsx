@@ -1,10 +1,9 @@
-import React from 'react';
-import { User } from '../../util/types';
 import { Avatar, Grid, Paper, Typography } from '@material-ui/core';
-import UserAvatar from '../../assets/italian.jpg';
-import { useHistory } from 'react-router-dom';
-import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+import React from 'react';
+import UserAvatar from '../../assets/italian.jpg';
+import { User } from '../../util/types';
+import styles from './styles.module.css';
 
 // Props for the UserListelement
 type UserLEProps = {
@@ -16,12 +15,10 @@ type UserLEProps = {
  * @param props The user element to diplay in the list element
  */
 const UserListElement: React.FunctionComponent<UserLEProps> = (props: UserLEProps) => {
-  const history = useHistory();
-
   return (
     <div className={styles.root}>
       <StylesProvider injectFirst>
-        <Paper className={styles.paper} onClick={() => history.push(`/user/${props.user.id}`)}>
+        <Paper className={styles.paper}>
           <Grid container spacing={2}>
             <Grid item>
               <Avatar className={styles.image}>

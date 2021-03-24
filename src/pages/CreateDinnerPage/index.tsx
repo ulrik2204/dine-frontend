@@ -1,18 +1,17 @@
-import React, { useCallback, useContext, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
-import TextField from '@material-ui/core/TextField';
-import { useGetAllAllergiesFromAPI, useGetAllergyFromAPI, usePostDinnerToAPI } from '../../actions/apiCalls';
-import { Allergy, Dinner } from '../../util/types';
-import { useHistory } from 'react-router-dom';
-import useDidMountEffect from '../../actions/useDidMountEffect';
-import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
-import { defaultDinner } from '../../util/constants';
-import { Checkbox, FormControl, FormHelperText, Input, ListItemText, MenuItem } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import React, { useCallback, useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { usePostDinnerToAPI } from '../../actions/apiCalls';
+import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
+import { defaultDinner } from '../../util/constants';
+import { Dinner } from '../../util/types';
 import UserContext from '../../util/UserContext';
+import styles from './styles.module.css';
 
 /**
  * The component page for creating a dinner element
@@ -27,41 +26,33 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [allergies, setAllergies] = useState<number[]>([]);
   const [description, setDescription] = useState('');
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
-  const {status, resetStatus} = usePostDinnerToAPI(dinnerState);
+  const { status, resetStatus } = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
   const { userToken } = useContext(UserContext);
 
   // The function for taking in the form input and sending it as a post request to the backend
-  const sendForm = useCallback(() =>
-    /*       dish: string,
-      cuisine: string,
-      date: string,
-      location: string,
-      owner: number,
-      description: string,
-      allergies: number[], */
-    {
-      // Check if the input is correct
-      if (dish === '' || cuisine === '' || location === '') {
-        toast.warn('Du må fylle inn navnet på retten, kjøkken og sted');
-        return;
-      }
-      // Not checking date, as a datefield is used to secure this.
-      // If a request with a bad date is sent directly to the backend,
-      //the backend will handle that
+  const sendForm = useCallback(() => {
+    // Check if the input is correct
+    if (dish === '' || cuisine === '' || location === '') {
+      toast.warn('Du må fylle inn navnet på retten, kjøkken og sted');
+      return;
+    }
+    // Not checking date, as a datefield is used to secure this.
+    // If a request with a bad date is sent directly to the backend,
+    //the backend will handle that
 
-      // The sent dinner event
+    // The sent dinner event
 
-      const dinner: Dinner = {
-        dish,
-        cuisine,
-        date,
-        location,
-        description,
-        allergies,
-      };
-      setDinnerState(dinner);
-    }, [dish, cuisine, date, location, description, allergies, setDinnerState]);
+    const dinner: Dinner = {
+      dish,
+      cuisine,
+      date,
+      location,
+      description,
+      allergies,
+    };
+    setDinnerState(dinner);
+  }, [dish, cuisine, date, location, description, allergies, setDinnerState]);
 
   // When the status is recieved, move to the
   useDidMountEffect(() => {
@@ -71,13 +62,13 @@ const CreateDinnerPage: React.FunctionComponent = () => {
       history.push('/');
     } else if (status === 200) {
       toast.info('Middagen ble ikke opprettet');
-      resetStatus()
+      resetStatus();
     } else if (status === 400) {
       toast.error('Noe gikk galt');
-      resetStatus()
+      resetStatus();
     } else if (status === 401) {
       toast.error('Du er ikke logget inn');
-      resetStatus()
+      resetStatus();
     }
   }, [status]);
 

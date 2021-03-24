@@ -1,15 +1,14 @@
 import { Button, TextField } from '@material-ui/core';
-import React, { useCallback, useEffect } from 'react';
-import { useState } from 'react';
-import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { defaultRegistrationUser } from '../../util/constants';
 import { useRegisterUser } from '../../actions/apiCalls';
-import { RegistrationUser } from '../../util/types';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
-import { useHistory } from 'react-router-dom';
+import { defaultRegistrationUser } from '../../util/constants';
+import { RegistrationUser } from '../../util/types';
+import styles from './styles.module.css';
 
 const RegInPage: React.FunctionComponent = () => {
   const [first_name, setFirstName] = useState('');

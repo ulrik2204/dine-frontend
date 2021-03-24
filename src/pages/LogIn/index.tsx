@@ -1,15 +1,13 @@
 import { Button, TextField } from '@material-ui/core';
-import React from 'react';
-import { useCallback } from 'react';
-import { useState } from 'react';
-import styles from './styles.module.css';
 import { StylesProvider } from '@material-ui/core/styles';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { defaultLoginUser } from '../../util/constants';
 import { useLoginUser } from '../../actions/apiCalls';
 import useDidMountEffect from '../../actions/useDidMountEffect';
+import { defaultLoginUser } from '../../util/constants';
 import { LoginUser } from '../../util/types';
+import styles from './styles.module.css';
 
 const LogInPage: React.FunctionComponent = () => {
   const history = useHistory();
@@ -31,7 +29,7 @@ const LogInPage: React.FunctionComponent = () => {
 
   useDidMountEffect(() => {
     if (status === 400) {
-      toast.warn('Ukjent brukernavn og passord');
+      toast.warn('Ukjent brukernavn / passord');
       resetStatus();
     }
     if (status === 200) {
@@ -41,8 +39,7 @@ const LogInPage: React.FunctionComponent = () => {
   }, [status]);
 
   return (
-    <StylesProvider injectFirst>
-      <div className={styles.logInPage}>
+    <div className={styles.logInPage}>
         <h1>Logg inn</h1>
         <h2 className={styles.inputText}>Brukernavn</h2>
         <TextField
@@ -60,11 +57,12 @@ const LogInPage: React.FunctionComponent = () => {
         <p className={styles.link} onClick={() => history.push('/regin')}>
           Har du ikke bruker? Registrer deg her
         </p>
+      <StylesProvider injectFirst>
         <Button className={styles.logInButton} onClick={() => sendLogIn(username, password)}>
           Logg inn
         </Button>
-      </div>
-    </StylesProvider>
+      </StylesProvider>
+    </div>
   );
 };
 export default LogInPage;
