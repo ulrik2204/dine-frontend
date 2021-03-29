@@ -19,7 +19,7 @@ const LogInPage: React.FunctionComponent = () => {
   const sendLogIn = useCallback((username: string, password: string) => {
     // Check if the input is correct
     if (username === '' || password === '') {
-      toast.warn('Du må skrive inn i begge feltene');
+      toast.warn('Du må skrive inn begge feltene');
       return;
     }
     console.log(username);
@@ -40,23 +40,25 @@ const LogInPage: React.FunctionComponent = () => {
 
   return (
     <div className={styles.logInPage}>
-        <h1>Logg inn</h1>
-        <h2 className={styles.inputText}>Brukernavn</h2>
-        <TextField
-          className={styles.input}
-          value={username}
-          onChange={(event) => setUserName(event.target.value)}
-        ></TextField>
-        <h2 className={styles.inputText}>Passord</h2>
-        <TextField
-          className={styles.input}
-          value={password}
-          type="password"
-          onChange={(event) => setPassword(event.target.value)}
-        ></TextField>
-        <p className={styles.link} onClick={() => history.push('/regin')}>
-          Har du ikke bruker? Registrer deg her
-        </p>
+      <h1>Logg inn</h1>
+      <h2 className={styles.inputText}>Brukernavn</h2>
+      <TextField
+        className={styles.input}
+        value={username}
+        placeholder={'brukernavn'}
+        onChange={(event) => setUserName(event.target.value)}
+      ></TextField>
+      <h2 className={styles.inputText}>Passord</h2>
+      <TextField
+        className={styles.input}
+        value={password}
+        placeholder={'passord'}
+        type="password"
+        onChange={(event) => setPassword(event.target.value)}
+      ></TextField>
+      <p className={styles.link} onClick={() => history.push('/regin')}>
+        Har du ikke bruker? Registrer deg her
+      </p>
       <StylesProvider injectFirst>
         <Button className={styles.logInButton} onClick={() => sendLogIn(username, password)}>
           Logg inn
