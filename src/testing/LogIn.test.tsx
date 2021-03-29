@@ -18,7 +18,6 @@ describe('Testing LogIn Page', () => {
   let usernameInput: any;
   let passwordInput: any;
   beforeEach(() => {
-    //mockedAxios.get.mockResolvedValue();
     mount = createMount();
     wrapper = mount(
       <div>
