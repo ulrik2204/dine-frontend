@@ -7,9 +7,25 @@ import LogInPage from '../pages/LogIn/index';
 import { Button } from '@material-ui/core';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
+import axios from 'axios';
 
 configure({ adapter: new Adapter() });
+
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+const err = {
+  response: {
+    status: 400,
+    data: 'Bad request',
+  },
+  isAxiosError: true,
+};
+
+const res = {
+  data: { token: 'raghoi4qtadrfohjig43' }, // just some arbitrarily chosen token
+  status: 200,
+  statusText: 'OK',
+};
 
 describe('Testing LogIn Page', () => {
   let mount: any;
@@ -50,6 +66,20 @@ describe('Testing LogIn Page', () => {
   test('Testing clicking register redirects to register page', async () => {
     fireEvent.click(registerLink);
     expect(history.location.pathname).toBe('/regin');
+  });
+  test('Testing failed login', async () => {
+    fireEvent.change(usernameInput, { target: { value: 'abc' } });
+    fireEvent.change(passwordInput, { target: { value: '123' } });
+    button.simulate('click');
+    mockedAxios.post.mockRejectedValue(err);
+    await screen.findByText('Ukjent brukernavn / passord');
+  });
+  test('Testing successful login', async () => {
+    fireEvent.change(usernameInput, { target: { value: 'abc' } });
+    fireEvent.change(passwordInput, { target: { value: '123' } });
+    button.simulate('click');
+    mockedAxios.post.mockResolvedValue(res);
+    await screen.findByText('Du er logget inn!');
   });
 
   // Clean up after the tests
