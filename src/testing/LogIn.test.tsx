@@ -10,12 +10,6 @@ import { Router } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
 configure({ adapter: new Adapter() });
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-}));
 
 describe('Testing LogIn Page', () => {
   let mount: any;
