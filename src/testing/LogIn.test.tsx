@@ -10,10 +10,10 @@ import { Router } from 'react-router-dom';
 import axios from 'axios';
 
 configure({ adapter: new Adapter() });
-
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+//Mock responses
 const err = {
   response: {
     status: 400,
@@ -21,7 +21,6 @@ const err = {
   },
   isAxiosError: true,
 };
-
 const res = {
   data: { token: 'raghoi4qtadrfohjig43' }, // just some arbitrarily chosen token
   status: 200,
@@ -31,13 +30,13 @@ const res = {
 describe('Testing LogIn Page', () => {
   let mount: any;
   let wrapper: any;
-  let button: any;
-  let registerLink: any;
   const history = createMemoryHistory();
 
-  //The input fields
+  //The UI elements
   let usernameInput: any;
   let passwordInput: any;
+  let button: any;
+  let registerLink: any;
 
   beforeEach(() => {
     mount = createMount();
