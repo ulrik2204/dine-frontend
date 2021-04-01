@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useCallback, useContext, useEffect, useState } from 'react';
+import axios from '../myaxios';
 import { defaultAllergy, defaultDinner, defaultUser } from '../util/constants';
-import { Allergy, Dinner, User, RegistrationUser, LoginUser } from '../util/types';
+import { Allergy, Dinner, LoginUser, RegistrationUser, User } from '../util/types';
 import UserContext from '../util/UserContext';
 import useDidMountEffect from './useDidMountEffect';
 

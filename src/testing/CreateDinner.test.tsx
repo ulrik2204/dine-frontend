@@ -2,13 +2,13 @@ import Button from '@material-ui/core/Button';
 import { createMount } from '@material-ui/core/test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-// import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
 import { configure } from 'enzyme';
 import { ToastContainer } from 'react-toastify';
+// import MockAdapter from 'axios-mock-adapter';
+import axios from '../myaxios';
 import CreateDinnerPage from '../pages/CreateDinnerPage/index';
 
-jest.mock('axios');
+jest.mock('../myaxios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 configure({ adapter: new Adapter() });
 describe('Testing the CreateDinnerPage', () => {
