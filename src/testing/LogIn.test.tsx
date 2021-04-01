@@ -11,6 +11,7 @@ import axios from 'axios';
 
 configure({ adapter: new Adapter() });
 
+jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 const err = {
@@ -70,15 +71,15 @@ describe('Testing LogIn Page', () => {
   test('Testing failed login', async () => {
     fireEvent.change(usernameInput, { target: { value: 'abc' } });
     fireEvent.change(passwordInput, { target: { value: '123' } });
-    button.simulate('click');
     mockedAxios.post.mockRejectedValue(err);
+    button.simulate('click');
     await screen.findByText('Ukjent brukernavn / passord');
   });
   test('Testing successful login', async () => {
     fireEvent.change(usernameInput, { target: { value: 'abc' } });
     fireEvent.change(passwordInput, { target: { value: '123' } });
-    button.simulate('click');
     mockedAxios.post.mockResolvedValue(res);
+    button.simulate('click');
     await screen.findByText('Du er logget inn!');
   });
 
