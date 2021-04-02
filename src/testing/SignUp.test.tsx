@@ -28,7 +28,7 @@ const mockUser = {
   password: 'test',
 };
 
-const data = { status: 201 };
+const data = { status: 201, data: { token: 'raghoi4qtadrfohjig43' }, statusText: 'OK' };
 
 describe('Testing signing up for dinner', () => {
   let mount: any;
