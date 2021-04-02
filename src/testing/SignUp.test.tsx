@@ -48,7 +48,6 @@ describe('Testing signing up for dinner', () => {
 
   test('Test you appear on attendee list when clicking signup button', async () => {
     signUpButton = wrapper.find(Button);
-
     mockedAxios.get.mockResolvedValue(data);
     signUpButton.simulate('click');
     await screen.findByText('Haakon Selnes');
