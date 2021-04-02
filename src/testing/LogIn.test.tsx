@@ -7,10 +7,10 @@ import LogInPage from '../pages/LogIn/index';
 import { Button } from '@material-ui/core';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../myaxios';
 
 configure({ adapter: new Adapter() });
-jest.mock('axios');
+jest.mock('../myaxios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 //Mock responses
