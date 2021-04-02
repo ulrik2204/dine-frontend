@@ -1,11 +1,11 @@
-import Button from '@material-ui/core/Button';
 import { createMount } from '@material-ui/core/test-utils';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
 import { ToastContainer } from 'react-toastify';
 import axios from '../myaxios';
 import DinnerPage from '../pages/DinnerPage/index';
+import UserContext from '../util/UserContext';
 
 jest.mock('../myaxios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -40,22 +40,25 @@ describe('Testing signing up for dinner', () => {
     mockedAxios.get.mockResolvedValue(data);
     wrapper = mount(
       <div>
-        <ToastContainer /> <DinnerPage dinnerID={-1} />
+        <ToastContainer />
+        <UserContext.Provider value={{ userToken: 'fdsagsd', setUserToken: () => {} }}>
+          <ToastContainer /> <DinnerPage dinnerID={-1} />
+        </UserContext.Provider>
       </div>,
     );
-    signUpButton = screen.getByText('Meld på');
   });
 
   test('Test you appear on attendee list when clicking signup button', async () => {
-    signUpButton = wrapper.find(Button);
-    mockedAxios.get.mockResolvedValue(data);
-    signUpButton.simulate('click');
+    signUpButton = screen.getByText('Meld på');
+    mockedAxios.get.mockResolvedValue(mockUser);
+    fireEvent.click(signUpButton);
     await screen.findByText('Haakon Selnes');
   });
 
   test('Test that signup button is gone when you are already signed up', async () => {
     try {
-      signUpButton = wrapper.find(Button);
+      signUpButton = screen.getByText('Meld på');
+      throw new Error('Signup button was found');
     } catch {}
   });
 });
