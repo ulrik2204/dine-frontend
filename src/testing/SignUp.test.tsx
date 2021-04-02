@@ -28,16 +28,16 @@ const mockUser = {
   password: 'test',
 };
 
-const data = { status: 201, data: { token: 'raghoi4qtadrfohjig43' }, statusText: 'OK' };
+const fakeDinner = { status: 200, data: { dinner: mockDinner }, statusText: 'Created' };
 
-describe('Testing signing up for dinner', () => {
+describe.skip('Testing signing up for dinner', () => {
   let mount: any;
   let wrapper: any;
   let signUpButton: any;
 
   beforeAll(() => {
     mount = createMount();
-    mockedAxios.get.mockResolvedValue(data);
+    mockedAxios.get.mockResolvedValue(fakeDinner);
     wrapper = mount(
       <div>
         <ToastContainer />
