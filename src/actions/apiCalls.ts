@@ -255,8 +255,6 @@ export const useLoginUser = (loginUser: LoginUser): { status: number; resetStatu
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
-    console.log('Tryign to log in user, token: ', localStorage.getItem('userToken'));
-
     axios
       .post('/api/users/login/', JSON.stringify(loginUser), {
         headers: headers,
@@ -286,4 +284,13 @@ export const useLoginUser = (loginUser: LoginUser): { status: number; resetStatu
   }, [setStatusToken]);
 
   return { status, resetStatus };
+};
+
+/**
+ * Hook to determine of the logged in user is admin
+ * @param immedate If the request should be sent immediately or not
+ * @returns True if the User is a superuser (admin) and false otherwise
+ */
+export const useIsLoggedInUserAdmin = (immedate = true): boolean => {
+  return useGetFromAPI('/api/users/isadmin', immedate)?.is_admin ?? false;
 };
