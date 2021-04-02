@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
 import { createMount } from '@material-ui/core/test-utils';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
 import { ToastContainer } from 'react-toastify';
@@ -28,15 +28,16 @@ const mockUser = {
   password: 'test',
 };
 
+const data = { status: 201 };
+
 describe('Testing signing up for dinner', () => {
   let mount: any;
   let wrapper: any;
-
   let signUpButton: any;
-  let attendees: any;
 
-  beforeEach(() => {
+  beforeAll(() => {
     mount = createMount();
+    mockedAxios.get.mockResolvedValue(data);
     wrapper = mount(
       <div>
         <ToastContainer /> <DinnerPage dinnerID={-1} />
@@ -46,9 +47,16 @@ describe('Testing signing up for dinner', () => {
   });
 
   test('Test you appear on attendee list when clicking signup button', async () => {
-    signUpButton = screen.getByText('Meld på');
-    const data = { status: 201 };
+    signUpButton = wrapper.find(Button);
+
     mockedAxios.get.mockResolvedValue(data);
     signUpButton.simulate('click');
+    await screen.findByText('Haakon Selnes');
+  });
+
+  test('Test that signup button is gone when you are already signed up', async () => {
+    try {
+      signUpButton = wrapper.find(Button);
+    } catch {}
   });
 });
