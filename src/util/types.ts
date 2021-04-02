@@ -25,6 +25,18 @@ export type Dinner = {
   signed_up_users?: number[]; // A list of the ids of users signed up for this dinner
 };
 
+/**
+ * A EditDinner type representing the parameters of dinner that are possible to edit
+ */
+export type EditDinner = {
+  dish?: string;
+  cuisine?: string;
+  date?: string;
+  location?: string;
+  description?: string;
+  allergies?: number[]; // A list of allergy ids
+};
+
 export type User = {
   id?: number;
   username: string;
