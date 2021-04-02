@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import axios from '../myaxios';
 import { defaultAllergy, defaultDinner, defaultUser } from '../util/constants';
-import { Allergy, Dinner, LoginUser, RegistrationUser, User } from '../util/types';
+import { Allergy, Dinner, EditDinner, LoginUser, RegistrationUser, User } from '../util/types';
 import UserContext from '../util/UserContext';
 import useDidMountEffect from './useDidMountEffect';
 
@@ -111,6 +111,38 @@ export const useGetDinnerFromAPI = (id: number, immediate = true): Dinner => {
  */
 export const usePostDinnerToAPI = (dinner: Dinner): { status: number; resetStatus: () => void } => {
   return usePostToAPI('/api/dinners/', dinner);
+};
+
+/**
+ * The hook to edit a dinner
+ * @param dinnerID The id of the dinner to edit
+ * @param editDinner Edit dinner object of the parameters to edit
+ * @returns An object of the status of the request, and a method, resetStatus to set status to 0
+ * @remarks The request is not sent the first time, but when the dinner object is changed.
+ */
+export const useEditDinner = (
+  dinnerID: number,
+  editDinner: EditDinner,
+): { status: number; resetStatus: () => void } => {
+  const [status, setStatus] = useState<number>(0);
+  const { userToken } = useContext(UserContext);
+  const headers = getHeaders(userToken);
+
+  // Making the patch request
+  useDidMountEffect(() => {
+    axios
+      .patch(`/api/dinners/${dinnerID}/`, editDinner, { headers })
+      .then((res) => setStatus(res.status))
+      .catch((err) => {
+        console.log(err);
+        setStatus(err.response.status);
+      });
+  }, [dinnerID, editDinner, setStatus]);
+
+  const resetStatus = useCallback(() => {
+    setStatus(0);
+  }, [setStatus]);
+  return { status, resetStatus };
 };
 
 /**
