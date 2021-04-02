@@ -11,36 +11,44 @@ jest.mock('../myaxios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 configure({ adapter: new Adapter() });
 
+const mockDinner = {
+  dish: 'Spaghetti',
+  cuisine: 'Italiensk',
+  date: 'Tue Nov 14 2017 15:03:43 GMT+0530 (IST)',
+  location: 'Oslo',
+  description: 'beskrivelse',
+  allergies: null,
+};
+
+const mockUser = {
+  username: 'Haakon',
+  first_name: 'Haakon',
+  last_name: 'Selnes',
+  allergies: null,
+  password: 'test',
+};
+
 describe('Testing signing up for dinner', () => {
   let mount: any;
   let wrapper: any;
 
-  // The input fields
-  let dishInput: any;
-  let cuisine: any;
-  let locationInput: any;
-  let descriptionInput: any;
-  let button: any;
+  let signUpButton: any;
+  let attendees: any;
+
   beforeEach(() => {
-    // Mock the allergies response
-    const data = [{ id: 1, allergy: 'bløtdyr' }];
-    mockedAxios.get.mockResolvedValue(data);
     mount = createMount();
     wrapper = mount(
       <div>
-        <ToastContainer /> <DinnerPage />
+        <ToastContainer /> <DinnerPage dinnerID={-1} />
       </div>,
     );
-    dishInput = screen.getByPlaceholderText('Navn på retten');
-    cuisine = screen.getByText('Velg kjøkken');
-    locationInput = screen.getByPlaceholderText('Der middagen finner sted');
-    descriptionInput = screen.getByPlaceholderText('Beskrivelse av middagen');
-    button = wrapper.find(Button);
-    fireEvent.change(dishInput, { target: { value: 'abc' } });
-    fireEvent.click(cuisine);
-    fireEvent.keyDown(cuisine, { key: 'ArrowDown', code: 'ArrowDown' });
-    fireEvent.keyDown(cuisine, { key: 'Enter', code: 'Enter' });
-    fireEvent.change(locationInput, { target: { value: 'abc' } });
-    fireEvent.change(descriptionInput, { target: { value: 'abc' } });
+    signUpButton = screen.getByText('Meld på');
   });
 
+  test('Test you appear on attendee list when clicking signup button', async () => {
+    signUpButton = screen.getByText('Meld på');
+    const data = { status: 201 };
+    mockedAxios.get.mockResolvedValue(data);
+    signUpButton.simulate('click');
+  });
+});
