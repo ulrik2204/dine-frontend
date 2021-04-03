@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import { ReactComponent as ReactLogo } from './assets/dine_logo.svg';
 import Menu from './components/Menu';
 import AdminPage from './pages/AdminPage';
 import CreateDinnerPage from './pages/CreateDinnerPage';
@@ -64,6 +65,10 @@ const App: React.FunctionComponent = () => {
             <Route exact path="/admin" component={AdminPage} />
           </Switch>
         </UserContext.Provider>
+        <div className="footerDiv">
+          <ReactLogo className="bottomDineLogo"></ReactLogo>
+          <p>For å dele minner</p>
+        </div>
       </div>
     </Router>
   );

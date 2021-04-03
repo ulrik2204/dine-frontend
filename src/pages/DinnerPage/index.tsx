@@ -1,5 +1,7 @@
-import React from 'react';
-import { useGetDinnerFromAPI, useGetUserByIDFromAPI } from '../../actions/apiCalls';
+import { Button } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import { useGetDinnerFromAPI, useGetUserByIDFromAPI, useGetUserByTokenFromAPI } from '../../actions/apiCalls';
 import { retrieveAllergies } from '../../actions/retrieve';
 import '../../fonts/Roboto-Thin.ttf';
 import styles from './styles.module.css';
@@ -14,8 +16,20 @@ type DinnerPageProps = {
  */
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
   const dinner = useGetDinnerFromAPI(props.dinnerID);
+  const loginUser = useGetUserByTokenFromAPI(true);
   const user = useGetUserByIDFromAPI(dinner.owner as number, false);
   const allergies = retrieveAllergies(dinner.allergies as number[], false);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (loginUser.id == -1 || dinner.id == -1) {
+      return;
+    }
+    if (loginUser.id == dinner.owner) {
+      setIsOwner(true);
+    }
+  }, [dinner, loginUser]);
 
   return (
     <div className={styles.dinnerPageContainer}>
@@ -46,6 +60,15 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
       <button className={classes.signUp}>
         Meld på
       </button> */}
+      {(() => {
+        if (isOwner) {
+          return (
+            <Button variant="contained" color="default" onClick={() => history.push(`/dinner/${props.dinnerID}/edit`)}>
+              Endre middag
+            </Button>
+          );
+        }
+      })()}
     </div>
   );
 };

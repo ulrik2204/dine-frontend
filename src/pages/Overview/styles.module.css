@@ -4,17 +4,13 @@
     background-image: url('../../assets/ingredients3.jpg');
     background-repeat: no-repeat;
     height: 100%;
-    
+    background-attachment: fixed;
 }
 
 .overviewContent {
     margin-top: 100px;
 }
 
-.dinnerList{ 
-    overflow: auto;
-     max-height: 75vh;
-}
 .buttonDiv{ 
     text-align: center; 
     margin-bottom: 1vh;
