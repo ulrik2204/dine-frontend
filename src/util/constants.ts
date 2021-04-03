@@ -1,4 +1,4 @@
-import { Dinner, Allergy, User, RegistrationUser, LoginUser } from './types';
+import { Allergy, Dinner, LoginUser, RegistrationUser, User } from './types';
 
 // A default, emtpy dinner object
 export const defaultDinner: Dinner = {
@@ -7,7 +7,7 @@ export const defaultDinner: Dinner = {
   cuisine: '',
   date: '2021-03-15',
   location: '',
-  owner: 1,
+  owner: -1,
 };
 
 // A default, empty Allergy element
