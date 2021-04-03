@@ -37,13 +37,6 @@
 }
 
 .signUp {
-    background-color: #e85d04;
-    padding: 20px;
-    margin: 15px;
-    text-align: center;
-    border-radius: 5px;
-    border: none;
-    width: 20%;
-    color: white;
-    font-size: 18px;
+    background-color: #e85d04!important;
+    width: 150px;
 }

@@ -14,22 +14,24 @@ configure({ adapter: new Adapter() });
 const mockDinner = {
   dish: 'Spaghetti',
   cuisine: 'Italiensk',
-  date: 'Tue Nov 14 2017 15:03:43 GMT+0530 (IST)',
+  date: '2021-04-03T20:00',
   location: 'Oslo',
   description: 'beskrivelse',
-  allergies: null,
+  allergies: [],
 };
 
 const mockUser = {
   username: 'Haakon',
   first_name: 'Haakon',
   last_name: 'Selnes',
-  allergies: null,
+  allergies: [],
   password: 'test',
 };
 
 const fakeDinner = { status: 200, data: { dinner: mockDinner }, statusText: 'Created' };
 
+// This test had to mock different responses for different GET requests for it to work
+// this is possble, but requires more work, thus this test is diabled
 describe.skip('Testing signing up for dinner', () => {
   let mount: any;
   let wrapper: any;
@@ -42,14 +44,14 @@ describe.skip('Testing signing up for dinner', () => {
       <div>
         <ToastContainer />
         <UserContext.Provider value={{ userToken: 'fdsagsd', setUserToken: () => {} }}>
-          <ToastContainer /> <DinnerPage dinnerID={-1} />
+          <ToastContainer /> <DinnerPage dinnerID={1} />
         </UserContext.Provider>
       </div>,
     );
   });
 
   test('Test you appear on attendee list when clicking signup button', async () => {
-    signUpButton = screen.getByText('Meld på');
+    signUpButton = screen.getByText('Meld deg på');
     mockedAxios.get.mockResolvedValue(mockUser);
     fireEvent.click(signUpButton);
     await screen.findByText('Haakon Selnes');
@@ -57,7 +59,7 @@ describe.skip('Testing signing up for dinner', () => {
 
   test('Test that signup button is gone when you are already signed up', async () => {
     try {
-      signUpButton = screen.getByText('Meld på');
+      signUpButton = screen.getByText('Meld deg på');
       throw new Error('Signup button was found');
     } catch {}
   });

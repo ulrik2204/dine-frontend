@@ -1,8 +1,14 @@
 import { Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useGetDinnerFromAPI, useGetUserByIDFromAPI, useGetUserByTokenFromAPI } from '../../actions/apiCalls';
-import { retrieveAllergies } from '../../actions/retrieve';
+import {
+  useGetDinnerFromAPI,
+  useGetUserByIDFromAPI,
+  useGetUserByTokenFromAPI,
+  useSignupForDinner,
+} from '../../actions/apiCalls';
+import { retrieveAllergies, retrieveUsers } from '../../actions/retrieve';
+import useDidMountEffect from '../../actions/useDidMountEffect';
 import '../../fonts/Roboto-Thin.ttf';
 import styles from './styles.module.css';
 
@@ -21,6 +27,13 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
   const allergies = retrieveAllergies(dinner.allergies as number[], false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const history = useHistory();
+  const [signupDinner, setSignupDinner] = useState(-1);
+  const { status, resetStatus } = useSignupForDinner(signupDinner, false);
+  const signuedUpUsers = retrieveUsers(dinner.signed_up_users ?? [], false);
+
+  useDidMountEffect(() => {
+    console.log(status);
+  }, [status]);
 
   useEffect(() => {
     if (loginUser.id == -1 || dinner.id == -1) {
@@ -61,15 +74,28 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
 
       <h1 className={styles.dinnerPageH1}>Beskrivelse</h1>
       <h3 className={styles.dinnerPageH3}>{dinner.description || 'Ingen beskrivelse'}</h3>
-      {/* 
-      <button className={classes.signUp}>
-        Meld på
-      </button> */}
+
+      <h1 className={styles.dinnerPageH1}>Påmeldte</h1>
+      <h3 className={styles.dinnerPageH3}>{signuedUpUsers.join(', ') || 'Ingen påmeldte'}</h3>
       {(() => {
         if (isOwner) {
           return (
             <Button variant="contained" color="default" onClick={() => history.push(`/dinner/${props.dinnerID}/edit`)}>
               Endre middag
+            </Button>
+          );
+        } else if (!isOwner && dinner.signed_up_users?.indexOf(loginUser.id as number) === -1) {
+          return (
+            <Button
+              variant="contained"
+              color="primary"
+              className={styles.signUp}
+              onClick={() => {
+                setSignupDinner(props.dinnerID);
+                window.location.reload();
+              }}
+            >
+              Meld deg på
             </Button>
           );
         }

@@ -151,13 +151,13 @@ export const useEditDinner = (
  * @returns An object of the status of the request, and a method, resetStatus to set status to 0
  * @remarks The PUT request is not sent the first time, but when the dinnerID is changed.
  */
-export const useSignupForDinner = (dinnerID: number): { status: number; resetStatus: () => void } => {
+export const useSignupForDinner = (dinnerID: number, immediate=true): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
   const { userToken } = useContext(UserContext);
   const headers = getHeaders(userToken);
 
   // The post request is not performed at hook declaration, but after the value is changed
-  useEffect(() => {
+  useDidMountEffect(() => {
     axios
       .put(`/api/dinners/${dinnerID}/signup/`, JSON.stringify({}), {
         headers: headers,
@@ -168,7 +168,7 @@ export const useSignupForDinner = (dinnerID: number): { status: number; resetSta
         console.log(err);
         setStatus(err.response.status);
       });
-  }, [setStatus, dinnerID]);
+  }, [setStatus, dinnerID], immediate);
 
   const resetStatus = useCallback(() => {
     setStatus(0);
