@@ -33,6 +33,11 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
 
   return (
     <div className={styles.dinnerPageContainer}>
+      {(() => {
+        if (dinner.is_canceled) {
+          return <h1 color="red">Denne middagen er avlyst</h1>;
+        }
+      })()}
       <h1 className="title">{dinner?.dish}</h1>
       <img
         className={styles.dinnerPageImage}

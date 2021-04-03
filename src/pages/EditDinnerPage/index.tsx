@@ -47,7 +47,7 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
   }, [dinnerAPI, setDish, setCuisine, setDate, setLocation, setAllergies, setDescription]);
 
   // The function for taking in the form input and sening it as a post request to the backend
-  const sendForm = useCallback(() => {
+  const sendEditDinner = useCallback(() => {
     // Check if the input is correct
 
     const editDinner: EditDinner = {
@@ -61,6 +61,28 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
     setEditDinnerState(editDinner);
   }, [setEditDinnerState, dish, cuisine, date, location, allergies]);
 
+  // The function to cancel a dinner
+  const sendCancelDinner = useCallback(() => {
+    toast(({ closeToast }) => (
+      <div>
+        Er du sikker på at du vil avbryte middagen?
+        <br />
+        <br />
+        <Button
+          variant="contained"
+          color="default"
+          onClick={() => {
+            setEditDinnerState({ is_canceled: true });
+          }}
+        >
+          Ja
+        </Button>
+        <Button color="secondary" onClick={closeToast}>
+          Nei
+        </Button>
+      </div>
+    ));
+  }, []);
   // When the page is rendered, check if the user has permission, and if not redirect to home
   useDidMountEffect(() => {
     if (user.id === -1 || dinnerAPI.owner === -1) {
@@ -141,12 +163,32 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
         <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
 
         <div className={styles.buttonDiv}>
-          <Button variant="contained" color="primary" onClick={() => sendForm()} className={styles.buttonField}>
-            Endre
-          </Button>
-          <Button variant="contained" color="default" onClick={() => history.push('/')} className={styles.buttonField2}>
-            Avbryt
-          </Button>
+          <StylesProvider injectFirst>
+            <Button variant="contained" color="primary" onClick={() => sendEditDinner()} className={styles.buttonField}>
+              Endre middag
+            </Button>
+
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => sendCancelDinner()}
+              className={styles.buttonField2}
+            >
+              Avlys middag
+            </Button>
+
+            <br />
+            <br />
+            <br />
+            <Button
+              variant="contained"
+              color="default"
+              onClick={() => history.push(`/dinner/${dinnerID}`)}
+              className={styles.buttonField2}
+            >
+              Avbryt
+            </Button>
+          </StylesProvider>
         </div>
       </div>
     </StylesProvider>

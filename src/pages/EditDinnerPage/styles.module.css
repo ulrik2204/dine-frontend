@@ -4,14 +4,14 @@
 }
 
 .buttonField {
-    width: 120px;
+    width: 140px;
     text-align: center;
     background-color: #e85d04!important;
-    margin-right: 5%;
+    margin-right: 5%!important;
 }
 
 .buttonField2 {
-    width: 120px;
+    width: 140px!important;
     text-align: center;
 }
 .buttonDiv {

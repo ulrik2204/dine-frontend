@@ -23,6 +23,7 @@ export type Dinner = {
   description?: string;
   allergies?: number[]; // A list of allergy ids
   signed_up_users?: number[]; // A list of the ids of users signed up for this dinner
+  is_canceled?: boolean;
 };
 
 /**
@@ -35,6 +36,7 @@ export type EditDinner = {
   location?: string;
   description?: string;
   allergies?: number[]; // A list of allergy ids
+  is_canceled?: boolean;
 };
 
 export type User = {

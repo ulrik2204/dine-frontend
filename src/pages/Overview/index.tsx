@@ -29,7 +29,9 @@ const Overview: React.FunctionComponent = () => {
             const content: JSX.Element[] = [];
             if (dinnerList != undefined) {
               dinnerList.forEach((dinner: Dinner) => {
-                content.push(<DinnerListElement dinner={dinner} key={dinner.id} />);
+                if (!dinner.is_canceled) {
+                  content.push(<DinnerListElement dinner={dinner} key={dinner.id} />);
+                }
               });
             }
             return content;
