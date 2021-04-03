@@ -14,8 +14,8 @@ type DinnerPageProps = {
  */
 const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageProps) => {
   const dinner = useGetDinnerFromAPI(props.dinnerID);
-  const user = useGetUserByIDFromAPI(dinner.owner as number);
-  const allergies = retrieveAllergies(dinner.allergies as number[]);
+  const user = useGetUserByIDFromAPI(dinner.owner as number, false);
+  const allergies = retrieveAllergies(dinner.allergies as number[], false);
 
   return (
     <div className={styles.dinnerPageContainer}>

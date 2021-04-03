@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { StylesProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import moment from 'moment';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -27,7 +28,7 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
   // Input
   const [dish, setDish] = useState('');
   const [cuisine, setCuisine] = useState('');
-  const [date, setDate] = useState(new Date().toISOString());
+  const [date, setDate] = useState(moment().format('YYYY-MM-DDTkk:mm'));
   const [location, setLocation] = useState('');
   const [allergies, setAllergies] = useState<number[]>([]);
   const [description, setDescription] = useState('');
@@ -39,7 +40,7 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
   useDidMountEffect(() => {
     setDish(dinnerAPI.dish);
     setCuisine(dinnerAPI.cuisine);
-    setDate(dinnerAPI.date);
+    setDate(moment(dinnerAPI.date).format('YYYY-MM-DDTkk:mm'));
     setLocation(dinnerAPI.location);
     setAllergies(dinnerAPI.allergies ?? []);
     setDescription(dinnerAPI.description ?? '');
@@ -57,14 +58,11 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
       description: description != dinnerAPI.description ? description : undefined,
       allergies: allergies != dinnerAPI.allergies ? allergies : undefined,
     };
-    console.log(editDinner);
     setEditDinnerState(editDinner);
   }, [setEditDinnerState, dish, cuisine, date, location, allergies]);
 
   // When the page is rendered, check if the user has permission, and if not redirect to home
   useDidMountEffect(() => {
-    console.log(user.id);
-    console.log(dinnerAPI.owner);
     if (user.id === -1 || dinnerAPI.owner === -1) {
       // Then the data from the API is not loaded yet
       return;
