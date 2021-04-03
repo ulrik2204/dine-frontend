@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import { ReactComponent as ReactLogo } from './assets/dine_logo.svg';
 import Menu from './components/Menu';
 import AdminPage from './pages/AdminPage';
 import CreateDinnerPage from './pages/CreateDinnerPage';
@@ -47,15 +48,27 @@ const App: React.FunctionComponent = () => {
           <Menu />
           <Switch>
             <Route exact path="/" component={Overview} />
-            <Route path="/dinner/:dinnerID" render={(props) => <DinnerPage dinnerID={props.match.params.dinnerID} />} />
-            <Route path="/createdinnerevent" component={CreateDinnerPage} />
+            <Route
+              exact
+              path="/dinner/:dinnerID"
+              render={(props) => <DinnerPage dinnerID={props.match.params.dinnerID} />}
+            />
+            <Route exact path="/createdinnerevent" component={CreateDinnerPage} />
             <Route exact path="/login" component={LogInPage} />
             <Route exact path="/regin" component={RegInPage} />
             <Route exact path="/profile" component={ProfilePage} />
-            <Route exact path="/edit" component={EditDinnerPage} />
+            <Route
+              exact
+              path="/dinner/:dinnerID/edit"
+              render={(props) => <EditDinnerPage dinnerID={props.match.params.dinnerID} />}
+            />
             <Route exact path="/admin" component={AdminPage} />
           </Switch>
         </UserContext.Provider>
+        <div className="footerDiv">
+          <ReactLogo className="bottomDineLogo"></ReactLogo>
+          <p>For å dele minner</p>
+        </div>
       </div>
     </Router>
   );

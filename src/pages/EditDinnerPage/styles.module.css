@@ -4,11 +4,16 @@
 }
 
 .buttonField {
-    width: 150px;
+    width: 140px;
     text-align: center;
     background-color: #e85d04!important;
+    margin-right: 5%!important;
 }
 
+.buttonField2 {
+    width: 140px!important;
+    text-align: center;
+}
 .buttonDiv {
     margin-top: 30px;
     width: 100%;

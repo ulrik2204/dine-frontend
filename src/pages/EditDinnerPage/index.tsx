@@ -2,80 +2,112 @@ import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { StylesProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import moment from 'moment';
 import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { usePostDinnerToAPI } from '../../actions/apiCalls';
+import { useEditDinner, useGetDinnerFromAPI, useGetUserByTokenFromAPI } from '../../actions/apiCalls';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
 import { defaultDinner } from '../../util/constants';
-import { Dinner } from '../../util/types';
+import { EditDinner } from '../../util/types';
 import styles from './styles.module.css';
+
+type EditDinnerPageProps = {
+  dinnerID: number;
+};
 
 /**
  * The component page for creating a dinner element
  */
-const EditDinnerPage: React.FunctionComponent = () => {
+const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID }) => {
+  // Getting the dinner by the ID
+  const dinnerAPI = useGetDinnerFromAPI(dinnerID, true);
+  // Getting the user
+  const user = useGetUserByTokenFromAPI(true);
   // Input
   const [dish, setDish] = useState('');
-  const [cuisine, setCuisine] = useState('Andre');
-  const [dateTime, setDateTime] = useState(new Date().toISOString());
+  const [cuisine, setCuisine] = useState('');
+  const [date, setDate] = useState(moment().format('YYYY-MM-DDTkk:mm'));
   const [location, setLocation] = useState('');
-  const [allergyIDs, setAllergyIDs] = useState<number[]>([]);
+  const [allergies, setAllergies] = useState<number[]>([]);
   const [description, setDescription] = useState('');
-  const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
-  const { status, resetStatus } = usePostDinnerToAPI(dinnerState);
+  const [editDinnerState, setEditDinnerState] = useState<EditDinner>(defaultDinner);
+  const { status, resetStatus } = useEditDinner(dinnerID, editDinnerState);
   const history = useHistory();
 
-  // The function for taking in the form input and sening it as a post request to the backend
-  const sendForm = useCallback(
-    (
-      dish: string,
-      cuisine: string,
-      date: string,
-      location: string,
-      owner: number,
-      description: string,
-      allergies: number[],
-    ) => {
-      // Check if the input is correct
-      if (dish === '' || cuisine === '' || location === '' || owner == undefined) {
-        toast.warn('Du må fylle inn alle feltene');
-        return;
-      }
-      // Not checking date, as a datefield is used to secure this.
-      // If a request with a bad date is sent directly to the backend,
-      //the backend will handle that
-
-      // The sent dinner event
-
-      const dinner: Dinner = {
-        dish: dish,
-        cuisine: cuisine,
-        date: date,
-        location: location,
-        owner: owner,
-        description: description,
-        allergies: allergies,
-      };
-      setDinnerState(dinner);
-    },
-    [],
-  );
-
-  // When the status is recieved, move to the
+  // When the api calls are recieved, update the input fields
   useDidMountEffect(() => {
-    if (status === 201) {
+    setDish(dinnerAPI.dish);
+    setCuisine(dinnerAPI.cuisine);
+    setDate(moment(dinnerAPI.date).format('YYYY-MM-DDTkk:mm'));
+    setLocation(dinnerAPI.location);
+    setAllergies(dinnerAPI.allergies ?? []);
+    setDescription(dinnerAPI.description ?? '');
+  }, [dinnerAPI, setDish, setCuisine, setDate, setLocation, setAllergies, setDescription]);
+
+  // The function for taking in the form input and sening it as a post request to the backend
+  const sendEditDinner = useCallback(() => {
+    // Check if the input is correct
+
+    const editDinner: EditDinner = {
+      dish: dish != dinnerAPI.dish ? dish : undefined,
+      cuisine: cuisine != dinnerAPI.cuisine ? cuisine : undefined,
+      date: date != dinnerAPI.date ? date : undefined,
+      location: location != dinnerAPI.location ? location : undefined,
+      description: description != dinnerAPI.description ? description : undefined,
+      allergies: allergies != dinnerAPI.allergies ? allergies : undefined,
+    };
+    setEditDinnerState(editDinner);
+  }, [setEditDinnerState, dish, cuisine, date, location, allergies]);
+
+  // The function to cancel a dinner
+  const sendCancelDinner = useCallback(() => {
+    toast(({ closeToast }) => (
+      <div>
+        Er du sikker på at du vil avbryte middagen?
+        <br />
+        <br />
+        <Button
+          variant="contained"
+          color="default"
+          onClick={() => {
+            setEditDinnerState({ is_canceled: true });
+          }}
+        >
+          Ja
+        </Button>
+        <Button color="secondary" onClick={closeToast}>
+          Nei
+        </Button>
+      </div>
+    ));
+  }, []);
+  // When the page is rendered, check if the user has permission, and if not redirect to home
+  useDidMountEffect(() => {
+    if (user.id === -1 || dinnerAPI.owner === -1) {
+      // Then the data from the API is not loaded yet
+      return;
+    }
+    if (user.id != dinnerAPI.owner) {
+      toast.warning('Du har ikke lov til å redigere denne middagen');
+      history.push('/');
+    }
+  }, [dinnerAPI, user]);
+
+  // When the status is recieved, play a suitable message
+  useDidMountEffect(() => {
+    if (status === 200) {
       toast.info('Middagen ble endret!');
       history.push('/');
-    } else if (status === 200) {
-      toast.info('Middagen ble ikke endret');
-      resetStatus();
     } else if (status === 400) {
       toast.error('Noe gikk galt');
       resetStatus();
     } else if (status === 401) {
-      toast.error('Du er ikke logget inn');
+      toast.warning('Du er ikke logget inn');
+      resetStatus();
+    } else if (status === 403) {
+      toast.warning('Du har ikke lov til å endre denne middagen');
       resetStatus();
     }
   }, [status]);
@@ -104,11 +136,11 @@ const EditDinnerPage: React.FunctionComponent = () => {
         <h2 className={styles.editDinnerH2}>Tidspunkt</h2>
         <form noValidate>
           <TextField
-            onChange={(event) => setDateTime(event.target.value)}
+            onChange={(event) => setDate(event.target.value)}
             id="datetime-local"
             label="Next appointment"
             type="datetime-local"
-            value={dateTime}
+            value={date}
             className={styles.inputField}
             InputLabelProps={{
               shrink: true,
@@ -124,21 +156,39 @@ const EditDinnerPage: React.FunctionComponent = () => {
         <h2 className={styles.editDinnerH2}>Beskrivelse</h2>
         <TextField
           className={styles.inputField}
-          value={description}
+          value={description || 'Ingen beskrivelse'}
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
         <h2 className={styles.editDinnerH2}>Allergi</h2>
-        <AllergyMultiselect allergyIDs={allergyIDs} setAllergyIDs={setAllergyIDs} className={styles.inputField} />
+        <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
 
         <div className={styles.buttonDiv}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => sendForm(dish, cuisine, dateTime, location, 1, description, allergyIDs)}
-            className={styles.buttonField}
-          >
-            Endre
-          </Button>
+          <StylesProvider injectFirst>
+            <Button variant="contained" color="primary" onClick={() => sendEditDinner()} className={styles.buttonField}>
+              Endre middag
+            </Button>
+
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => sendCancelDinner()}
+              className={styles.buttonField2}
+            >
+              Avlys middag
+            </Button>
+
+            <br />
+            <br />
+            <br />
+            <Button
+              variant="contained"
+              color="default"
+              onClick={() => history.push(`/dinner/${dinnerID}`)}
+              className={styles.buttonField2}
+            >
+              Avbryt
+            </Button>
+          </StylesProvider>
         </div>
       </div>
     </StylesProvider>

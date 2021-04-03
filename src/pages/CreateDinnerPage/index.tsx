@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { StylesProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import moment from 'moment';
 import React, { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -20,7 +21,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   // Input
   const [dish, setDish] = useState('');
   const [cuisine, setCuisine] = useState('');
-  const [date, setDate] = useState(new Date().toISOString());
+  const [date, setDate] = useState(moment().format('YYYY-MM-DDTkk:mm'));
   const [location, setLocation] = useState('');
   // The list of allergyIDs of this dinner
   const [allergies, setAllergies] = useState<number[]>([]);

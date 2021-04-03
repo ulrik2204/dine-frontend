@@ -1,9 +1,9 @@
 import { Button, List } from '@material-ui/core';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useGetAllDinnersFromAPI } from '../../actions/apiCalls';
 import DinnerListElement from '../../components/DinnerListElement';
 import { Dinner } from '../../util/types';
-import { useHistory } from 'react-router-dom';
 import styles from './styles.module.css';
 
 /**
@@ -24,12 +24,14 @@ const Overview: React.FunctionComponent = () => {
           </Button>
         </div>
 
-        <List className={styles.dinnerList}>
+        <List>
           {(() => {
             const content: JSX.Element[] = [];
             if (dinnerList != undefined) {
               dinnerList.forEach((dinner: Dinner) => {
-                content.push(<DinnerListElement dinner={dinner} key={dinner.id} />);
+                if (!dinner.is_canceled) {
+                  content.push(<DinnerListElement dinner={dinner} key={dinner.id} />);
+                }
               });
             }
             return content;

@@ -19,7 +19,7 @@ type DinnerLEProps = {
  */
 const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: DinnerLEProps) => {
   const history = useHistory();
-  const owner = useGetUserByIDFromAPI(props.dinner.owner as number);
+  const owner = useGetUserByIDFromAPI(props.dinner.owner as number, props.dinner.id === -1 ? false : true);
 
   return (
     <div className={styles.root}>
