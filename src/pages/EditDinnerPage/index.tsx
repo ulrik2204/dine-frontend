@@ -10,6 +10,7 @@ import { useEditDinner, useGetDinnerFromAPI, useGetUserByTokenFromAPI } from '..
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
 import { defaultDinner } from '../../util/constants';
+import { areYouSure } from '../../util/toastTemplates';
 import { EditDinner } from '../../util/types';
 import styles from './styles.module.css';
 
@@ -63,25 +64,8 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
 
   // The function to cancel a dinner
   const sendCancelDinner = useCallback(() => {
-    toast(({ closeToast }) => (
-      <div>
-        Er du sikker på at du vil avbryte middagen?
-        <br />
-        <br />
-        <Button
-          variant="contained"
-          color="default"
-          onClick={() => {
-            setEditDinnerState({ is_canceled: true });
-          }}
-        >
-          Ja
-        </Button>
-        <Button color="secondary" onClick={closeToast}>
-          Nei
-        </Button>
-      </div>
-    ));
+    areYouSure("Avlyse middagen?", () => setEditDinnerState({ is_canceled: true }))
+    
   }, []);
   // When the page is rendered, check if the user has permission, and if not redirect to home
   useDidMountEffect(() => {

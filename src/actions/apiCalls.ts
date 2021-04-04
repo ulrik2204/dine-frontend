@@ -1,4 +1,5 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { AxiosRequestConfig } from 'axios';
+import { useCallback, useContext, useState } from 'react';
 import axios from '../myaxios';
 import { defaultAllergy, defaultDinner, defaultUser } from '../util/constants';
 import { Allergy, Dinner, EditDinner, LoginUser, RegistrationUser, User } from '../util/types';
@@ -10,7 +11,8 @@ import useDidMountEffect from './useDidMountEffect';
  * @param userToken The token of the user logged in.
  * @returns A headers object.
  */
-const getHeaders = (userToken: string) => {
+export const getHeaders = () => {
+  const { userToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
     Authorization: '',
@@ -29,8 +31,7 @@ const getHeaders = (userToken: string) => {
  */
 const useGetFromAPI = (urlPath: string, immediate = true): any => {
   const [data, setData] = useState<any>();
-  const { userToken } = useContext(UserContext);
-  const headers = getHeaders(userToken);
+  const headers = getHeaders();
   // The function to perform the GET request.
   useDidMountEffect(
     () => {
@@ -57,8 +58,7 @@ const useGetFromAPI = (urlPath: string, immediate = true): any => {
  */
 const usePostToAPI = (urlPath: string, obj: unknown): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
-  const { userToken } = useContext(UserContext);
-  const headers = getHeaders(userToken);
+  const headers = getHeaders();
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
@@ -125,8 +125,7 @@ export const useEditDinner = (
   editDinner: EditDinner,
 ): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
-  const { userToken } = useContext(UserContext);
-  const headers = getHeaders(userToken);
+  const headers = getHeaders();
 
   // Making the patch request
   useDidMountEffect(() => {
@@ -151,24 +150,27 @@ export const useEditDinner = (
  * @returns An object of the status of the request, and a method, resetStatus to set status to 0
  * @remarks The PUT request is not sent the first time, but when the dinnerID is changed.
  */
-export const useSignupForDinner = (dinnerID: number, immediate=true): { status: number; resetStatus: () => void } => {
+export const useSignupForDinner = (dinnerID: number, immediate = true): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
-  const { userToken } = useContext(UserContext);
-  const headers = getHeaders(userToken);
+  const headers = getHeaders();
 
   // The post request is not performed at hook declaration, but after the value is changed
-  useDidMountEffect(() => {
-    axios
-      .put(`/api/dinners/${dinnerID}/signup/`, JSON.stringify({}), {
-        headers: headers,
-      })
-      // After a response is recieved, retrieve its status code
-      .then((res) => setStatus(res.status))
-      .catch((err) => {
-        console.log(err);
-        setStatus(err.response.status);
-      });
-  }, [setStatus, dinnerID], immediate);
+  useDidMountEffect(
+    () => {
+      axios
+        .put(`/api/dinners/${dinnerID}/signup/`, JSON.stringify({}), {
+          headers: headers,
+        })
+        // After a response is recieved, retrieve its status code
+        .then((res) => setStatus(res.status))
+        .catch((err) => {
+          console.log(err);
+          setStatus(err.response.status);
+        });
+    },
+    [setStatus, dinnerID],
+    immediate,
+  );
 
   const resetStatus = useCallback(() => {
     setStatus(0);
@@ -325,4 +327,27 @@ export const useLoginUser = (loginUser: LoginUser): { status: number; resetStatu
  */
 export const useIsLoggedInUserAdmin = (immedate = true): boolean => {
   return useGetFromAPI('/api/users/isadmin', immedate)?.is_admin ?? false;
+};
+
+export const deleteUser = (userID: number, headers?: AxiosRequestConfig['headers']): Promise<number> => {
+  // The delete request is not performed immediately
+  if (userID !== -1) {
+    return (
+      axios
+        .delete(`/api/users/${userID}/`, {
+          headers: headers,
+        })
+        // After a response is recieved, retrieve its status code
+        .then((res) => res.status)
+        .catch((err) => {
+          console.log(err);
+          return err.response.status;
+        })
+    );
+  }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(0);
+    }, 1);
+  });
 };

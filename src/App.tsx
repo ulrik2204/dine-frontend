@@ -33,7 +33,7 @@ const App: React.FunctionComponent = () => {
 
   return (
     <Router>
-      <div>
+      <div className="topDiv">
         <ToastContainer
           position="top-center"
           autoClose={5000}
@@ -65,10 +65,10 @@ const App: React.FunctionComponent = () => {
             <Route exact path="/admin" component={AdminPage} />
           </Switch>
         </UserContext.Provider>
-        <div className="footerDiv">
-          <ReactLogo className="bottomDineLogo"></ReactLogo>
-          <p>For å dele minner</p>
-        </div>
+      </div>
+      <div className="footerDiv">
+        <ReactLogo className="bottomDineLogo"></ReactLogo>
+        <p>For å dele minner</p>
       </div>
     </Router>
   );
