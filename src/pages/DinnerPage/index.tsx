@@ -1,15 +1,17 @@
 import { Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { toast } from 'react-toastify';
 import {
   useGetDinnerFromAPI,
   useGetUserByIDFromAPI,
   useGetUserByTokenFromAPI,
-  useSignupForDinner,
+  useSignupForDinner
 } from '../../actions/apiCalls';
 import { retrieveAllergies, retrieveUsers } from '../../actions/retrieve';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import '../../fonts/Roboto-Thin.ttf';
+import { isLoggedIn } from '../../util/checks';
 import styles from './styles.module.css';
 
 // All you need to see a dinner page is the dinnerID
@@ -32,26 +34,28 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
   const signuedUpUsers = retrieveUsers(dinner.signed_up_users ?? [], false);
 
   useDidMountEffect(() => {
-    console.log(status);
+    if (status === 400) {
+      toast.error('Kunne ikke melde deg på middagen. Prøv igjen senere.');
+      resetStatus();
+    }
   }, [status]);
 
   useEffect(() => {
-    if (loginUser.id == -1 || dinner.id == -1) {
-      return;
-    }
-    if (loginUser.id == dinner.owner) {
+    if (loginUser.id === -1 || dinner.id === -1) {
+      setIsOwner(false);
+    } else if (loginUser.id === dinner.owner) {
       setIsOwner(true);
     }
-  }, [dinner, loginUser]);
+  }, [dinner, loginUser, setIsOwner]);
 
   return (
     <div className={styles.dinnerPageContainer}>
+      <h1 className="title">{dinner?.dish}</h1>
       {(() => {
         if (dinner.is_canceled) {
-          return <h1 color="red">Denne middagen er avlyst</h1>;
+          return <h1 style={{color: "red"}}>Denne middagen er avlyst</h1>;
         }
       })()}
-      <h1 className="title">{dinner?.dish}</h1>
       <img
         className={styles.dinnerPageImage}
         src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
@@ -78,13 +82,13 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
       <h1 className={styles.dinnerPageH1}>Påmeldte</h1>
       <h3 className={styles.dinnerPageH3}>{signuedUpUsers.join(', ') || 'Ingen påmeldte'}</h3>
       {(() => {
-        if (isOwner) {
+        if (isOwner && isLoggedIn()) {
           return (
             <Button variant="contained" color="default" onClick={() => history.push(`/dinner/${props.dinnerID}/edit`)}>
               Endre middag
             </Button>
           );
-        } else if (!isOwner && dinner.signed_up_users?.indexOf(loginUser.id as number) === -1) {
+        } else if (!isOwner && dinner.signed_up_users?.indexOf(loginUser.id as number) === -1 && isLoggedIn()) {
           return (
             <Button
               variant="contained"
