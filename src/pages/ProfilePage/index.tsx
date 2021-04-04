@@ -2,7 +2,7 @@ import { Button } from '@material-ui/core';
 import { StylesProvider } from '@material-ui/core/styles';
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useGetUserByTokenFromAPI } from '../../actions/apiCalls';
+import { useGetUserByTokenFromAPI, useIsLoggedInUserAdmin } from '../../actions/apiCalls';
 import { retrieveAllergies } from '../../actions/retrieve';
 import UserContext from '../../util/UserContext';
 import styles from './styles.module.css';
@@ -31,10 +31,28 @@ const ProfilePage: React.FunctionComponent = () => {
 
       <StylesProvider injectFirst>
         <div className={styles.buttonDiv}>
+          {(() => {
+            if (useIsLoggedInUserAdmin()) {
+              return (
+                <div>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    className={styles.buttonField}
+                    onClick={() => history.push('/admin')}
+                  >
+                    Administrer brukere
+                  </Button>
+                  <br />
+                  <br />
+                </div>
+              );
+            }
+          })()}
           <Button
-            color="primary"
+            color="default"
             variant="contained"
-            className={styles.buttonField}
+            className={styles.buttonField2}
             onClick={() => {
               setUserToken('');
               history.push('/');

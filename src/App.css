@@ -24,12 +24,15 @@
 }
 .footerDiv {
   background-color:#E85D04; 
-  padding: 30px;
-  margin-top: 80px;
+  padding-bottom: 30px;
+  padding-top: 50px;
   text-align: center;
 }
 .bottomDineLogo{
   width: 4rem;
-
 }
 
+.topDiv {
+  padding-bottom: 100px;
+  min-height: 100vh;
+}
