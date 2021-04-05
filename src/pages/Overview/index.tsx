@@ -2,6 +2,7 @@ import { Button, List } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useGetAllDinnersFromAPI } from '../../actions/apiCalls';
+import ChoosePic from '../../components/ChoosePic';
 import DinnerListElement from '../../components/DinnerListElement';
 import { Dinner } from '../../util/types';
 import styles from './styles.module.css';

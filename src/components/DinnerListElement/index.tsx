@@ -4,8 +4,8 @@ import { StylesProvider } from '@material-ui/core/styles';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useGetUserByIDFromAPI } from '../../actions/apiCalls';
-import DinnerAvatar from '../../assets/italian.jpg';
 import { Dinner } from '../../util/types';
+import ChoosePic from '../ChoosePic';
 import styles from './styles.module.css';
 
 // Props for the DinnerListelement
@@ -28,7 +28,7 @@ const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: Dinner
           <Grid container spacing={2}>
             <Grid item>
               <Avatar className={styles.image}>
-                <img src={DinnerAvatar} alt="Picture" />
+                <ChoosePic cuisine={props.dinner.cuisine} className={styles.image} />
               </Avatar>
             </Grid>
             <Grid item xs={12} sm container>
