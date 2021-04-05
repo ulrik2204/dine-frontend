@@ -1,5 +1,4 @@
 import Button from '@material-ui/core/Button';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import { StylesProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
@@ -9,6 +8,7 @@ import { toast } from 'react-toastify';
 import { usePostDinnerToAPI } from '../../actions/apiCalls';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
+import CuisineDropdown from '../../components/CuisineDropdown';
 import { defaultDinner } from '../../util/constants';
 import { Dinner } from '../../util/types';
 import UserContext from '../../util/UserContext';
@@ -85,19 +85,7 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setDish(event.target.value)}
         ></TextField>
         <h2 className={styles.createDinnerH2}>Kjøkken</h2>
-        <NativeSelect value={cuisine} className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
-          <option disabled value="" color="gray">
-            Velg kjøkken
-          </option>
-          <option value={'Andre'}>Andre</option>
-          <option value={'Fransk'}>Fransk</option>
-          <option value={'Indisk'}>Indisk</option>
-          <option value={'Italiensk'}>Italiensk</option>
-          <option value={'Japansk'}>Japansk</option>
-          <option value={'Kinesisk'}>Kinesisk</option>
-          <option value={'Meksikansk'}>Meksikansk</option>
-          <option value={'Norsk'}>Norsk</option>
-        </NativeSelect>
+        <CuisineDropdown value={cuisine} setValue={setCuisine} className={styles.inputField} />
         <h2 className={styles.createDinnerH2}>Tidspunkt</h2>
         <form noValidate>
           <TextField

@@ -1,5 +1,4 @@
 import Button from '@material-ui/core/Button';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import { StylesProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
@@ -9,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useEditDinner, useGetDinnerFromAPI, useGetUserByTokenFromAPI } from '../../actions/apiCalls';
 import useDidMountEffect from '../../actions/useDidMountEffect';
 import AllergyMultiselect from '../../components/AllergyMultiselect';
+import CuisineDropdown from '../../components/CuisineDropdown';
 import { defaultDinner } from '../../util/constants';
 import { areYouSure } from '../../util/toastTemplates';
 import { EditDinner } from '../../util/types';
@@ -64,8 +64,7 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
 
   // The function to cancel a dinner
   const sendCancelDinner = useCallback(() => {
-    areYouSure("Avlyse middagen?", () => setEditDinnerState({ is_canceled: true }))
-    
+    areYouSure('Avlyse middagen?', () => setEditDinnerState({ is_canceled: true }));
   }, []);
   // When the page is rendered, check if the user has permission, and if not redirect to home
   useDidMountEffect(() => {
@@ -107,16 +106,7 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
           onChange={(event) => setDish(event.target.value)}
         ></TextField>
         <h2 className={styles.editDinnerH2}>Kjøkken</h2>
-        <NativeSelect className={styles.inputField} onChange={(e) => setCuisine(e.target.value)}>
-          <option value={'Andre'}>Andre</option>
-          <option value={'Fransk'}>Fransk</option>
-          <option value={'Indisk'}>Indisk</option>
-          <option value={'Italiensk'}>Italiensk</option>
-          <option value={'Japansk'}>Japansk</option>
-          <option value={'Kinesisk'}>Kinesisk</option>
-          <option value={'Meksikansk'}>Meksikansk</option>
-          <option value={'Norsk'}>Norsk</option>
-        </NativeSelect>
+        <CuisineDropdown value={cuisine} setValue={setCuisine} className={styles.inputField} />
         <h2 className={styles.editDinnerH2}>Tidspunkt</h2>
         <form noValidate>
           <TextField
