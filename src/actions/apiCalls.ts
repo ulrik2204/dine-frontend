@@ -26,16 +26,17 @@ export const useGetHeaders = () => {
  * A hook for retrieving the data from the backend
  * @param urlPath - The path of the url to get from after https://localhost:8000
  * @param immediate If the reqeust should be send immediately, default true.
+ * @param noheaders - If the request should be sent with headers
  * @returns The data fetched from the API
  */
-const useGetFromAPI = (urlPath: string, immediate = true): any => {
+const useGetFromAPI = (urlPath: string, immediate = true, noheaders = false): any => {
   const [data, setData] = useState<any>();
   const headers = useGetHeaders();
   // The function to perform the GET request.
   useDidMountEffect(
     () => {
       axios
-        .get(urlPath, { headers: headers })
+        .get(urlPath, { headers: noheaders ? {} : headers })
         // After the response is recieved, take that data and put it in a state
         .then((res) => setData(res.data))
         .catch((err) => console.log(err));
@@ -85,7 +86,7 @@ const usePostToAPI = (urlPath: string, obj: unknown): { status: number; resetSta
  * @returns All dinners in the API as a list of Dinner objects
  */
 export const useGetAllDinnersFromAPI = (): Dinner[] => {
-  const dinnerListAPI = useGetFromAPI('/api/dinners/', true);
+  const dinnerListAPI = useGetFromAPI('/api/dinners/', true, true);
   // The DinnerList cannot be undefined, thus it returns a default dinner
   return dinnerListAPI || [defaultDinner];
 };
@@ -97,7 +98,7 @@ export const useGetAllDinnersFromAPI = (): Dinner[] => {
  * @returns The dinner with that id in the API
  */
 export const useGetDinnerFromAPI = (id: number, immediate = true): Dinner => {
-  const dinnerAPI = useGetFromAPI(`/api/dinners/${id}/`, immediate);
+  const dinnerAPI = useGetFromAPI(`/api/dinners/${id}/`, immediate, true);
   // The DinnerList cannot be undefined, thus it returns a default dinner
   return dinnerAPI || defaultDinner;
 };
