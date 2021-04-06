@@ -24,6 +24,12 @@ export const retrieveAllergies = (allergyIDs: number[], immediate = true): strin
   return allergies;
 };
 
+/**
+ * A hook converting a list of user IDs to a list of their full names
+ * @param userIDs The user IDs to convert to full names
+ * @param immediate If the request should be done immediately
+ * @returns A list of the correesponding full name to each id.
+ */
 export const retrieveUsers = (userIDs: number[], immediate = true): string[] => {
   const [users, setUsers] = useState<string[]>([]);
 

@@ -19,9 +19,6 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
 .footerDiv {
   background-color:#E85D04; 
   padding-bottom: 30px;
@@ -33,6 +30,9 @@
 }
 
 .topDiv {
-  padding-bottom: 100px;
+  padding-bottom: 50px;
   min-height: 100vh;
 }
+ .rootAppDiv {
+   width: 100%;
+ }

@@ -6,10 +6,11 @@ import {
   useGetDinnerFromAPI,
   useGetUserByIDFromAPI,
   useGetUserByTokenFromAPI,
-  useSignupForDinner
+  useSignupForDinner,
 } from '../../actions/apiCalls';
 import { retrieveAllergies, retrieveUsers } from '../../actions/retrieve';
 import useDidMountEffect from '../../actions/useDidMountEffect';
+import ChoosePic from '../../components/ChoosePic';
 import '../../fonts/Roboto-Thin.ttf';
 import { isLoggedIn } from '../../util/checks';
 import styles from './styles.module.css';
@@ -53,14 +54,10 @@ const DinnerPage: React.FunctionComponent<DinnerPageProps> = (props: DinnerPageP
       <h1 className="title">{dinner?.dish}</h1>
       {(() => {
         if (dinner.is_canceled) {
-          return <h1 style={{color: "red"}}>Denne middagen er avlyst</h1>;
+          return <h1 style={{ color: 'red' }}>Denne middagen er avlyst</h1>;
         }
       })()}
-      <img
-        className={styles.dinnerPageImage}
-        src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
-        alt="Matbilde"
-      />
+      <ChoosePic cuisine={dinner.cuisine} className={styles.dinnerPageImage} />
       <h1 className={styles.dinnerPageH1}>Vert</h1>
       <h3 className={styles.dinnerPageH3}>{user.first_name + ' ' + user.last_name}</h3>
 

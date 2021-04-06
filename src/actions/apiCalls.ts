@@ -7,11 +7,10 @@ import UserContext from '../util/UserContext';
 import useDidMountEffect from './useDidMountEffect';
 
 /**
- * A function to get the headers ot be send for a request.
- * @param userToken The token of the user logged in.
+ * A hook to get the headers to be send for a request.
  * @returns A headers object.
  */
-export const getHeaders = () => {
+export const useGetHeaders = () => {
   const { userToken } = useContext(UserContext);
   const headers = {
     'Content-Type': 'application/json',
@@ -31,7 +30,7 @@ export const getHeaders = () => {
  */
 const useGetFromAPI = (urlPath: string, immediate = true): any => {
   const [data, setData] = useState<any>();
-  const headers = getHeaders();
+  const headers = useGetHeaders();
   // The function to perform the GET request.
   useDidMountEffect(
     () => {
@@ -58,7 +57,7 @@ const useGetFromAPI = (urlPath: string, immediate = true): any => {
  */
 const usePostToAPI = (urlPath: string, obj: unknown): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
-  const headers = getHeaders();
+  const headers = useGetHeaders();
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(() => {
@@ -125,7 +124,7 @@ export const useEditDinner = (
   editDinner: EditDinner,
 ): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
-  const headers = getHeaders();
+  const headers = useGetHeaders();
 
   // Making the patch request
   useDidMountEffect(() => {
@@ -152,7 +151,7 @@ export const useEditDinner = (
  */
 export const useSignupForDinner = (dinnerID: number, immediate = true): { status: number; resetStatus: () => void } => {
   const [status, setStatus] = useState<number>(0);
-  const headers = getHeaders();
+  const headers = useGetHeaders();
 
   // The post request is not performed at hook declaration, but after the value is changed
   useDidMountEffect(
@@ -326,7 +325,11 @@ export const useLoginUser = (loginUser: LoginUser): { status: number; resetStatu
  * @returns True if the User is a superuser (admin) and false otherwise
  */
 export const useIsLoggedInUserAdmin = (immedate = true): boolean => {
-  return useGetFromAPI('/api/users/isadmin', immedate)?.is_admin ?? false;
+  return useGetFromAPI('/api/users/isadmin/', immedate)?.is_admin ?? false;
+};
+
+export const isUserAdmin = (headers?: AxiosRequestConfig['headers']): Promise<boolean> => {
+  return axios.get('/api/users/isadmin/', { headers }).then((res) => res.data.is_admin);
 };
 
 export const deleteUser = (userID: number, headers?: AxiosRequestConfig['headers']): Promise<number> => {
