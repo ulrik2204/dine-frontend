@@ -29,7 +29,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
   const [dinnerState, setDinnerState] = useState<Dinner>(defaultDinner);
   const { status, resetStatus } = usePostDinnerToAPI(dinnerState);
   const history = useHistory();
-  const { userToken } = useContext(UserContext);
 
   // The function for taking in the form input and sending it as a post request to the backend
   const sendForm = useCallback(() => {
@@ -115,7 +114,6 @@ const CreateDinnerPage: React.FunctionComponent = () => {
           onChange={(event) => setDescription(event.target.value)}
         ></TextField>
         <h2 className={styles.createDinnerH2}>Allergi</h2>
-        <br></br>
         <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
         <br></br>
         <br></br>
