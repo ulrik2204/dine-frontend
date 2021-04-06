@@ -6,7 +6,15 @@ import { Allergy } from '../../util/types';
 type AMProps = {
   allergyIDs: number[];
   setAllergyIDs: (a: number[]) => void;
-  className: string;
+  className?: string;
+};
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: '15em',
+    },
+  },
 };
 
 const AllergyMultiselect: React.FunctionComponent<AMProps> = ({ allergyIDs, setAllergyIDs, className }) => {
@@ -18,6 +26,7 @@ const AllergyMultiselect: React.FunctionComponent<AMProps> = ({ allergyIDs, setA
   return (
     <Select
       className={className}
+      autoWidth
       multiple
       displayEmpty
       value={allergyIDs}

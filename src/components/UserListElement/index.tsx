@@ -2,7 +2,7 @@ import { Avatar, Button, Grid, Paper, Typography } from '@material-ui/core';
 import { StylesProvider } from '@material-ui/core/styles';
 import React, { useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { deleteUser, getHeaders } from '../../actions/apiCalls';
+import { deleteUser, useGetHeaders } from '../../actions/apiCalls';
 import { retrieveAllergies } from '../../actions/retrieve';
 import UserAvatar from '../../assets/blankprofilepic.svg';
 import { areYouSure } from '../../util/toastTemplates';
@@ -20,7 +20,7 @@ type UserLEProps = {
  */
 const UserListElement: React.FunctionComponent<UserLEProps> = (props: UserLEProps) => {
   const allergies = retrieveAllergies(props.user.allergies ?? []);
-  const headers = getHeaders();
+  const headers = useGetHeaders();
 
   const performDeleteUser = useCallback(() => {
     areYouSure('Slett denne brukeren?', () => {

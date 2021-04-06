@@ -68,7 +68,7 @@ const App: React.FunctionComponent = () => {
       </div>
       <div className="footerDiv">
         <ReactLogo className="bottomDineLogo"></ReactLogo>
-        <p>For å dele minner</p>
+        <p>For å dele stemning</p>
       </div>
     </Router>
   );
