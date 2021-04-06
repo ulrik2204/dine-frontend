@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { isUserAdmin, useGetAllUsersFromAPI, useGetHeaders } from '../../actions/apiCalls';
 import UserListElement from '../../components/UserListElement';
+import { isLoggedIn } from '../../util/checks';
 import { User } from '../../util/types';
 import styles from './styles.module.css';
 
@@ -11,16 +12,27 @@ const AdminPage: React.FunctionComponent = () => {
   const userList = useGetAllUsersFromAPI();
   const headers = useGetHeaders();
   const history = useHistory();
+  const isLoggedInUser = isLoggedIn();
   // userList = userList.map((item)=>{})
 
   // When the page is rendered, check if the user has permission, and if not redirect to home
   useEffect(() => {
-    isUserAdmin(headers).then((res) => {
-      if (!res) {
-        toast.warning('Du har ikke tillatelse til dette');
-        history.push('/');
-      }
-    });
+    isUserAdmin(headers)
+      .then((res) => {
+        if (!res) {
+          toast.warning('Du har ikke tillatelse til dette');
+          history.push('/');
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          toast.warning('Du er ikke logget inn');
+          history.push('/');
+        } else {
+          toast.warning('Noe galt skjedde');
+          history.push('/');
+        }
+      });
   }, []);
 
   return (
