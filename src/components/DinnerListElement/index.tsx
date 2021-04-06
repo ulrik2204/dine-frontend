@@ -31,7 +31,7 @@ const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: Dinner
                 <ChoosePic cuisine={props.dinner.cuisine} className={styles.image} />
               </Avatar>
             </Grid>
-            <Grid item xs={12} sm container>
+            <Grid item xs container>
               <Grid item xs container direction="column" spacing={2}>
                 <Grid item xs>
                   <Typography gutterBottom variant="h6">
@@ -49,11 +49,6 @@ const DinnerListElement: React.FunctionComponent<DinnerLEProps> = (props: Dinner
                   <Typography variant="body2" gutterBottom>
                     {owner.first_name + ' ' + owner.last_name} er vert
                   </Typography>
-                </Grid>
-                <Grid item>
-                  {/* <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                    Remove
-                </Typography> */}
                 </Grid>
               </Grid>
             </Grid>

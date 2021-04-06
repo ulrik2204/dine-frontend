@@ -1,47 +1,44 @@
 .inputField {
-    width: 80%;
-    margin-left: 10%;
+    width: 80%!important;
+    margin-left: 10%!important;
 }
 
 .buttonField {
-    width: 140px;
+    display: inline-block;
+    width: 150px;
     text-align: center;
+    margin: 1em;
     background-color: #e85d04!important;
-    margin-right: 5%!important;
 }
 
 .buttonField2 {
-    width: 140px!important;
+    width: 150px;
     text-align: center;
+    margin: 1em;
 }
+
 .buttonDiv {
-    margin-top: 30px;
     width: 100%;
     text-align: center;
+    margin-top: 30px;
 }
 
 .editDinnerContainer {
-    flex-direction: column;
-    align-items: left;
-    margin-left: 30%;
-    width: 40%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.overviewDiv {
     margin-top: 100px;
+    width: 100%;
 }
-/*
-.editDinnerH1 {
-    text-align: center;
-    color: #e85d04;
-    width: 80%;
-    margin-left: 10%;
-    color: #e85d04;
-}
-*/
+
 
 .editDinnerH2 {
     margin-bottom: 0%;
     text-align: left;
     font-family: 'Roboto', sans-serif;
-    width: 80%;
-    margin-left: 10%;
-    color: #e85d04;
+    color: #e85d04;    
+    width: 80%!important;
+    margin-left: 10%!important;
 }

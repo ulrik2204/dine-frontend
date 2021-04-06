@@ -33,6 +33,7 @@ const App: React.FunctionComponent = () => {
 
   return (
     <Router>
+      <div className="rootAppDiv">
       <div className="topDiv">
         <ToastContainer
           position="top-center"
@@ -70,6 +71,7 @@ const App: React.FunctionComponent = () => {
         <ReactLogo className="bottomDineLogo"></ReactLogo>
         <p>For å dele stemning</p>
       </div>
+    </div>
     </Router>
   );
 };

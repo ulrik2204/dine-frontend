@@ -97,72 +97,78 @@ const EditDinnerPage: React.FunctionComponent<EditDinnerPageProps> = ({ dinnerID
 
   return (
     <StylesProvider injectFirst>
-      <div className={styles.editDinnerContainer}>
-        <h1 className={'title'}>Endre middag</h1>
-        <h2 className={styles.editDinnerH2}>Rett</h2>
-        <TextField
-          className={styles.inputField}
-          value={dish}
-          onChange={(event) => setDish(event.target.value)}
-        ></TextField>
-        <h2 className={styles.editDinnerH2}>Kjøkken</h2>
-        <CuisineDropdown value={cuisine} setValue={setCuisine} className={styles.inputField} />
-        <h2 className={styles.editDinnerH2}>Tidspunkt</h2>
-        <form noValidate>
+      <div className={styles.overviewDiv}>
+        <div className={styles.editDinnerContainer}>
+          <h1 className={'title'}>Endre middag</h1>
+          <h2 className={styles.editDinnerH2}>Rett</h2>
           <TextField
-            onChange={(event) => setDate(event.target.value)}
-            id="datetime-local"
-            label="Next appointment"
-            type="datetime-local"
-            value={date}
             className={styles.inputField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </form>
-        <h2 className={styles.editDinnerH2}>Sted</h2>
-        <TextField
-          className={styles.inputField}
-          value={location}
-          onChange={(event) => setLocation(event.target.value)}
-        ></TextField>
-        <h2 className={styles.editDinnerH2}>Beskrivelse</h2>
-        <TextField
-          className={styles.inputField}
-          value={description || 'Ingen beskrivelse'}
-          onChange={(event) => setDescription(event.target.value)}
-        ></TextField>
-        <h2 className={styles.editDinnerH2}>Allergi</h2>
-        <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
+            value={dish}
+            onChange={(event) => setDish(event.target.value)}
+          ></TextField>
+          <h2 className={styles.editDinnerH2}>Kjøkken</h2>
+          <CuisineDropdown value={cuisine} setValue={setCuisine} className={styles.inputField} />
+          <h2 className={styles.editDinnerH2}>Tidspunkt</h2>
+          <form noValidate>
+            <TextField
+              onChange={(event) => setDate(event.target.value)}
+              id="datetime-local"
+              label="Next appointment"
+              type="datetime-local"
+              value={date}
+              className={styles.inputField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </form>
+          <h2 className={styles.editDinnerH2}>Sted</h2>
+          <TextField
+            className={styles.inputField}
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+          ></TextField>
+          <h2 className={styles.editDinnerH2}>Beskrivelse</h2>
+          <TextField
+            className={styles.inputField}
+            value={description || 'Ingen beskrivelse'}
+            onChange={(event) => setDescription(event.target.value)}
+          ></TextField>
+          <h2 className={styles.editDinnerH2}>Allergi</h2>
+          <AllergyMultiselect allergyIDs={allergies} setAllergyIDs={setAllergies} className={styles.inputField} />
 
-        <div className={styles.buttonDiv}>
-          <StylesProvider injectFirst>
-            <Button variant="contained" color="primary" onClick={() => sendEditDinner()} className={styles.buttonField}>
-              Endre middag
-            </Button>
+          <div className={styles.buttonDiv}>
+            <StylesProvider injectFirst>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => sendEditDinner()}
+                className={styles.buttonField}
+              >
+                Bekreft
+              </Button>
 
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => sendCancelDinner()}
-              className={styles.buttonField2}
-            >
-              Avlys middag
-            </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => sendCancelDinner()}
+                className={styles.buttonField2}
+              >
+                Avlys middag
+              </Button>
 
-            <br />
-            <br />
-            <br />
-            <Button
-              variant="contained"
-              color="default"
-              onClick={() => history.push(`/dinner/${dinnerID}`)}
-              className={styles.buttonField2}
-            >
-              Avbryt
-            </Button>
-          </StylesProvider>
+              <br />
+              <br />
+              <Button
+                variant="contained"
+                color="default"
+                onClick={() => history.push(`/dinner/${dinnerID}`)}
+                className={styles.buttonField2}
+              >
+                Avbryt
+              </Button>
+            </StylesProvider>
+          </div>
         </div>
       </div>
     </StylesProvider>

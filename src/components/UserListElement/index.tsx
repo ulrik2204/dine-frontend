@@ -45,7 +45,7 @@ const UserListElement: React.FunctionComponent<UserLEProps> = (props: UserLEProp
                 <img src={UserAvatar} alt="Picture" width="130px" />
               </Avatar>
             </Grid>
-            <Grid item xs sm container>
+            <Grid item xs container>
               <Grid item xs container direction="column" spacing={2}>
                 <Grid item xs>
                   <Typography gutterBottom variant="h6">
