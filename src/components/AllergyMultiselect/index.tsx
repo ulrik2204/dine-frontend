@@ -19,6 +19,11 @@ const MenuProps = {
   },
 };
 
+/**
+ * The allergy multiselect
+ * @param props Consisting of the allergyIDs values that are set, a setAllergyIDs to set them, optional className
+ * @returns
+ */
 const AllergyMultiselect: React.FunctionComponent<AMProps> = ({ allergyIDs, setAllergyIDs, className }) => {
   const allergies = useGetAllAllergiesFromAPI();
 

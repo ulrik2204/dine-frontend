@@ -7,6 +7,11 @@ type CuisineDProps = {
   className: string;
 };
 
+/**
+ * The dropdown for cuisines
+ * @param props The value of the dropdown, function to set the value and an optional className
+ * @returns The dropdown for the cuisines for the cuisines
+ */
 const CuisineDropdown: React.FunctionComponent<CuisineDProps> = ({ value, setValue, className }) => {
   return (
     <NativeSelect value={value} className={className} onChange={(e) => setValue(e.target.value)}>

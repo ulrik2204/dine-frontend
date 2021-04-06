@@ -30,6 +30,11 @@ type ChoosePicProps = {
   className?: string;
 };
 
+/**
+ * Chack if the cuisine is supported
+ * @param cuisine
+ * @returns
+ */
 const isSupportedCuisine = (cuisine: string): cuisine is keyof typeof supportedImages => {
   const supportedCuisines = [
     'Fransk',
@@ -45,6 +50,11 @@ const isSupportedCuisine = (cuisine: string): cuisine is keyof typeof supportedI
   return supportedCuisines.indexOf(cuisine) > -1;
 };
 
+/**
+ * The component that returns the correct picure from a cuisine
+ * @param props The cuisine and an optionbal classnama
+ * @returns The image to that cuisine with the className provided
+ */
 const ChoosePic: React.FunctionComponent<ChoosePicProps> = ({ cuisine, className }) => {
   return (() => {
     if (isSupportedCuisine(cuisine)) {
