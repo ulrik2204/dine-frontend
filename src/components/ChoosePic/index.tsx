@@ -39,6 +39,7 @@ const isSupportedCuisine = (cuisine: string): cuisine is keyof typeof supportedI
   const supportedCuisines = [
     'Fransk',
     'Italiensk',
+    'Indisk',
     'Japansk',
     'Kinesisk',
     'Meksikansk',
